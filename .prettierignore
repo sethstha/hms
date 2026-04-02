@@ -1,0 +1,7 @@
+// .prettierignore (root)
+node_modules
+.svelte-kit
+build
+dist
+.wrangler
+pnpm-lock.yaml
