@@ -1,0 +1,24 @@
+import { z } from 'zod'
+
+export const medicationSchema = z.object({
+  name: z.string(),
+  dosage: z.string(),
+  frequency: z.string(),
+  duration: z.string(),
+  route: z.enum(['oral', 'iv', 'im', 'topical', 'inhalation', 'other']).optional(),
+})
+
+export const prescriptionSchema = z.object({
+  id: z.string().uuid(),
+  tenantId: z.string().uuid(),
+  consultationId: z.string().uuid(),
+  patientId: z.string().uuid(),
+  doctorId: z.string().uuid(),
+  medications: z.array(medicationSchema),
+  instructions: z.string().optional(),
+  dispensed: z.boolean().default(false),
+  createdAt: z.string().datetime(),
+})
+
+export type Medication = z.infer<typeof medicationSchema>
+export type Prescription = z.infer<typeof prescriptionSchema>

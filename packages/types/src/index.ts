@@ -1,0 +1,5 @@
+export * from './schemas/patient'
+export * from './schemas/appointment'
+export * from './schemas/consultation'
+export * from './schemas/prescription'
+export * from './schemas/billing'
