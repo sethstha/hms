@@ -23,4 +23,10 @@
       </div>
     {/each}
   </div>
+
+  <form method="POST" action="/logout">
+    <button type="submit" class="...">
+      Logout
+    </button>
+  </form>
 </div>

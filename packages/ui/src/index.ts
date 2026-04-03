@@ -1,0 +1,61 @@
+// Simple components — flat named exports
+// Usage: import { Button, Input } from "@hms/ui"  →  <Button />, <Input />
+export { Root as AspectRatio } from "./components/ui/aspect-ratio";
+export { Badge } from "./components/ui/badge";
+export { Button, buttonVariants } from "./components/ui/button";
+export { Root as Checkbox } from "./components/ui/checkbox";
+export { Root as Input } from "./components/ui/input";
+export { Root as Kbd } from "./components/ui/kbd";
+export { Root as Label } from "./components/ui/label";
+export { Root as Progress } from "./components/ui/progress";
+export { Root as Separator } from "./components/ui/separator";
+export { Root as Skeleton } from "./components/ui/skeleton";
+export { Root as Slider } from "./components/ui/slider";
+export { Toaster } from "./components/ui/sonner";
+export { Spinner } from "./components/ui/spinner";
+export { Root as Switch } from "./components/ui/switch";
+export { Root as Textarea } from "./components/ui/textarea";
+export { Root as Toggle } from "./components/ui/toggle";
+
+// Compound components — namespace exports
+// Usage: import { Avatar, Card } from "@hms/ui"  →  <Avatar.Root />, <Card.Header />
+export * as Accordion from "./components/ui/accordion";
+export * as Alert from "./components/ui/alert";
+export * as AlertDialog from "./components/ui/alert-dialog";
+export * as Avatar from "./components/ui/avatar";
+export * as Breadcrumb from "./components/ui/breadcrumb";
+export * as ButtonGroup from "./components/ui/button-group";
+export * as Calendar from "./components/ui/calendar";
+export * as Card from "./components/ui/card";
+export * as Carousel from "./components/ui/carousel";
+export * as Chart from "./components/ui/chart";
+export * as Collapsible from "./components/ui/collapsible";
+export * as Command from "./components/ui/command";
+export * as ContextMenu from "./components/ui/context-menu";
+export * as DataTable from "./components/ui/data-table";
+export * as Dialog from "./components/ui/dialog";
+export * as Drawer from "./components/ui/drawer";
+export * as DropdownMenu from "./components/ui/dropdown-menu";
+export * as Empty from "./components/ui/empty";
+export * as Field from "./components/ui/field";
+export * as Form from "./components/ui/form";
+export * as HoverCard from "./components/ui/hover-card";
+export * as InputGroup from "./components/ui/input-group";
+export * as InputOTP from "./components/ui/input-otp";
+export * as Item from "./components/ui/item";
+export * as Menubar from "./components/ui/menubar";
+export * as NativeSelect from "./components/ui/native-select";
+export * as NavigationMenu from "./components/ui/navigation-menu";
+export * as Pagination from "./components/ui/pagination";
+export * as Popover from "./components/ui/popover";
+export * as RadioGroup from "./components/ui/radio-group";
+export * as RangeCalendar from "./components/ui/range-calendar";
+export * as Resizable from "./components/ui/resizable";
+export * as ScrollArea from "./components/ui/scroll-area";
+export * as Select from "./components/ui/select";
+export * as Sheet from "./components/ui/sheet";
+export * as Sidebar from "./components/ui/sidebar";
+export * as Table from "./components/ui/table";
+export * as Tabs from "./components/ui/tabs";
+export * as ToggleGroup from "./components/ui/toggle-group";
+export * as Tooltip from "./components/ui/tooltip";

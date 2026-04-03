@@ -9,7 +9,7 @@
 	import SheetOverlay from "./sheet-overlay.svelte";
 	import { Button } from "../button/index.js";
 	import XIcon from '@lucide/svelte/icons/x';
-	import { cn, type WithoutChildrenOrChild } from "../../../utils.js";
+	import { cn, type WithoutChildrenOrChild } from "@hms/utils";
 	import type { ComponentProps } from "svelte";
 
 	let {
@@ -44,7 +44,7 @@
 		{#if showCloseButton}
 			<SheetPrimitive.Close data-slot="sheet-close">
 				{#snippet child({ props })}
-					<Button variant="ghost" class="absolute top-3 right-3" size="icon-sm" {...props}>
+					<Button variant="ghost" class="absolute top-4 right-4" size="icon-sm" {...props}>
 						<XIcon  />
 						<span class="sr-only">Close</span>
 					</Button>

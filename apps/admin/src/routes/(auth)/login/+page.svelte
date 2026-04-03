@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
   import { authClient } from '$lib/auth/client'
+  import { Button } from "@hms/ui/components/ui/button"
 
   let email = $state('superadmin@hms.internal')
   let password = $state('Demo@1234')
@@ -74,12 +75,11 @@
       <p class="text-sm text-destructive">{errorMessage}</p>
     {/if}
 
-    <button
-      class="inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
+    <Button
       type="submit"
       disabled={isSubmitting}
     >
       {isSubmitting ? 'Signing in...' : 'Sign In'}
-    </button>
+    </Button>
   </form>
 </div>

@@ -1,11 +1,26 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "moduleResolution": "bundler",
+    "target": "ES2022",
     "module": "ESNext",
-    "target": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "verbatimModuleSyntax": true
-  }
+    "baseUrl": ".",
+    "paths": {
+      "@hms/types": ["packages/types/src/index.ts"],
+      "@hms/ui": ["packages/ui/src/index.ts"],
+      "@hms/api": ["packages/api/src/index.ts"],
+      "@hms/db": ["packages/db/src/index.ts"],
+      "@hms/utils": ["packages/utils/src/index.ts"],
+    },
+  },
 }
