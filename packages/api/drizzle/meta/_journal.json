@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1775147241482,
+      "tag": "0000_reflective_flatman",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1775181624540,
+      "tag": "0001_curly_silver_surfer",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775182856796,
+      "tag": "0002_abnormal_the_spike",
+      "breakpoints": true
+    }
+  ]
+}

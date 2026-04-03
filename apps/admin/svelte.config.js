@@ -7,6 +7,7 @@ const config = {
   kit: {
     adapter: adapter(),
     alias: {
+      '$lib/components/ui': '../../packages/ui/src/components/ui',
       $lib: './src/lib',
     },
   },

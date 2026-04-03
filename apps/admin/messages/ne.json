@@ -1,0 +1,6 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "example_message": "नमस्ते {username}",
+  "admin_home_title": "HMS Admin",
+  "admin_home_subtitle": "आन्तरिक प्लेटफर्म प्रशासन"
+}

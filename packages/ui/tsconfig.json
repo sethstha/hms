@@ -1,7 +1,22 @@
 {
   "extends": "../../tsconfig.base.json",
+
   "compilerOptions": {
-    "plugins": [{ "name": "typescript-svelte-plugin" }]
+    "rootDir": "src",
+    "outDir": "dist",
+    "allowJs": true,
+    "checkJs": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "types": ["svelte"],
+    "plugins": [
+      {
+        "name": "typescript-svelte-plugin",
+        "assumeIsSvelteProject": true,
+        "disableSvelteProjectDetection": true,
+      },
+    ],
   },
-  "include": ["src"]
+
+  "include": ["src/**/*.ts", "src/**/*.svelte"],
 }

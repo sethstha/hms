@@ -9,7 +9,10 @@
     "dev:api": "pnpm --filter api dev",
     "build": "pnpm --filter './apps/*' build",
     "typecheck": "pnpm -r check",
-    "lint": "pnpm -r lint"
+    "lint": "pnpm -r lint",
+    "db:generate": "pnpm --filter @hms/api db:generate",
+    "db:migrate": "pnpm --filter @hms/api db:migrate",
+    "db:seed": "pnpm --filter @hms/api db:seed"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -21,6 +24,10 @@
       "eslint": "^10.0.1"
     }
   },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "devDependencies": {
     "@clack/prompts": "^1.2.0",
     "@eslint/js": "^10.0.1",

@@ -1,14 +1,18 @@
 <script lang="ts">
-  // HMS Hospital — Staff Dashboard
-  // TODO: Add key metrics (today's appointments, OPD queue, bed occupancy)
-  // TODO: Add quick action buttons (new appointment, new patient, OPD token)
-  // TODO: Add recent activity feed
+  import type { PageData } from './$types'
+
+  let { data }: { data: PageData } = $props()
 </script>
 
 <div class="space-y-6">
   <div>
-    <h1 class="text-2xl font-semibold">HMS Hospital — Dashboard</h1>
-    <p class="mt-1 text-sm text-muted-foreground">Welcome to the staff dashboard</p>
+    <h1 class="text-2xl font-semibold">Dashboard</h1>
+    <p class="mt-1 text-sm text-muted-foreground">
+      Welcome back, {data.user.name}
+    </p>
+    <span class="mt-2 inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+      {data.user.role}
+    </span>
   </div>
 
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

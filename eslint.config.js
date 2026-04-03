@@ -54,9 +54,17 @@ export default [
     }
   },
 
-  // Hono API — Node/Workers environment
+  // Shared API library — Node environment only (no Worker globals)
   {
     files: ['packages/api/**/*.ts'],
+    languageOptions: {
+      globals: { ...globals.node }
+    }
+  },
+
+  // Hono API Worker app — Node/Workers environment
+  {
+    files: ['apps/api/**/*.ts'],
     languageOptions: {
       globals: {
         ...globals.node,

@@ -1,14 +1,11 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts for information about these interfaces
+import type { AppSession } from '$lib/auth/client'
 
 declare global {
   namespace App {
     interface Locals {
-      // TODO: Type this properly when BetterAuth is configured
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      session: any | null
-      // TODO: Type this properly when DB/tenant model is defined
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      tenant: any | null
+      session: AppSession | null
+      tenant: null
     }
     // interface Error {}
     // interface PageData {}
