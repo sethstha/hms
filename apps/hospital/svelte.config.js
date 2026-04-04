@@ -1,10 +1,8 @@
 import { relative, sep } from "node:path";
 import adapter from "@sveltejs/adapter-static";
-import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-  preprocess: vitePreprocess(),
   compilerOptions: {
     runes: ({ filename }) => {
       const relativePath = relative(import.meta.dirname, filename);

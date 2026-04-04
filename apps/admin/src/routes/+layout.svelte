@@ -2,6 +2,7 @@
   import { page } from "$app/state";
   import { locales, localizeHref } from "$lib/paraglide/runtime";
   import "./layout.css";
+  import { Button } from "@hms/ui";
   import favicon from "$lib/assets/favicon.svg";
 
   let { children } = $props();
@@ -15,3 +16,4 @@
     <a href={localizeHref(page.url.pathname, { locale })}>{locale}</a>
   {/each}
 </div>
+<Button></Button>
