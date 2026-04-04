@@ -1,22 +1,13 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts for information about these interfaces
-import type { AppSession } from '$lib/auth/client'
-
-type TenantContext = {
-  id: string
-  organizationId: string | null
-}
-
+// See https://svelte.dev/docs/kit/types#app.d.ts
+// for information about these interfaces
 declare global {
-  namespace App {
-    interface Locals {
-      session: AppSession | null
-      tenant: TenantContext | null
-    }
-    // interface Error {}
-    // interface PageData {}
-    // interface PageState {}
-    // interface Platform {}
-  }
+	namespace App {
+		// interface Error {}
+		// interface Locals {}
+		// interface PageData {}
+		// interface PageState {}
+		// interface Platform {}
+	}
 }
 
-export {}
+export {};

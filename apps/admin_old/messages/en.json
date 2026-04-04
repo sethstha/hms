@@ -1,0 +1,6 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "example_message": "Hello world {username}",
+  "admin_home_title": "HMS Admin",
+  "admin_home_subtitle": "Internal Platform Administration"
+}

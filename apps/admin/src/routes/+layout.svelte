@@ -1,31 +1,17 @@
 <script lang="ts">
-  import '../app.css'
-  import { getLocale, locales, setLocale, type Locale } from '../paraglide/runtime.js'
+  import { page } from "$app/state";
+  import { locales, localizeHref } from "$lib/paraglide/runtime";
+  import "./layout.css";
+  import favicon from "$lib/assets/favicon.svg";
 
-  let { children } = $props()
-  const activeLocale = getLocale()
-
-  const switchLocale = (locale: Locale) => {
-    if (locale === activeLocale) return
-    setLocale(locale)
-  }
+  let { children } = $props();
 </script>
 
-<div class="fixed top-3 right-3 z-50 flex items-center gap-1 rounded-lg border border-border bg-background/90 p-1 shadow-sm backdrop-blur">
+<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+{@render children()}
+
+<div style="display:none">
   {#each locales as locale}
-    <button
-      type="button"
-      class="rounded-md px-2 py-1 text-xs font-semibold uppercase tracking-wide transition-colors"
-      class:bg-primary={locale === activeLocale}
-      class:text-primary-foreground={locale === activeLocale}
-      class:text-muted-foreground={locale !== activeLocale}
-      class:hover:text-foreground={locale !== activeLocale}
-      onclick={() => switchLocale(locale)}
-      aria-pressed={locale === activeLocale}
-    >
-      {locale}
-    </button>
+    <a href={localizeHref(page.url.pathname, { locale })}>{locale}</a>
   {/each}
 </div>
-
-{@render children()}

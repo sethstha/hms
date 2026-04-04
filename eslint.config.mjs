@@ -1,88 +1,93 @@
-import betterTailwind from "eslint-plugin-better-tailwindcss";
-import sveltePlugin from "eslint-plugin-svelte";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+// eslint.config.js (root)
+import ts from 'typescript-eslint'
+import svelte from 'eslint-plugin-svelte'
+import prettier from 'eslint-config-prettier'
+import globals from 'globals'
+import betterTailwind from 'eslint-plugin-better-tailwindcss'
 
-const SVELTE_FILES = [
-  "apps/admin/**/*.svelte",
-  "apps/hospital/**/*.svelte",
-  "packages/ui/**/*.svelte",
-];
+export default [
+  // TypeScript rules — all TS files across monorepo
+  ...ts.configs.recommended,
 
-function tailwindConfig(files, entryPoint) {
-  return {
-    files,
-    plugins: { "better-tailwindcss": betterTailwind },
-    settings: { "better-tailwindcss": { entryPoint } },
-    rules: { ...betterTailwind.configs["recommended"].rules },
-  };
-}
+  // Svelte rules — all Svelte files
+  ...svelte.configs['flat/recommended'],
 
-export default tseslint.config(
-  // ── Global ignores ──────────────────────────────────────────────────────────
+  // Prettier disables conflicting rules
+  prettier,
+  ...svelte.configs['flat/prettier'],
+
+  // Global ignores
   {
     ignores: [
-      "**/node_modules/**",
-      "coss-main/**",
-      "**/.svelte-kit/**",
-      "**/.wrangler/**",
-      "**/dist/**",
-      "**/build/**",
-      "**/$houdini/**",
-      "**/*.gen.ts",
-      "**/codegen.ts",
-    ],
+      '**/node_modules/**',
+      '**/.svelte-kit/**',
+      '**/build/**',
+      '**/dist/**',
+      '**/.wrangler/**',
+      '**/src/paraglide/**',
+    ]
   },
 
-  // ── TypeScript base ──────────────────────────────────────────────────────────
-  ...tseslint.configs.recommended,
-
-  // ── Tailwind linting ─────────────────────────────────────────────────────────
-  tailwindConfig(["apps/web/**/*.svelte", "apps/web/src/**/*.ts"], "apps/web/src/app.css"),
-  tailwindConfig(
-    ["apps/dashboard/**/*.svelte", "apps/dashboard/src/**/*.ts"],
-    "apps/dashboard/src/app.css",
-  ),
-  tailwindConfig(["packages/ui/**/*.svelte", "packages/**/*.ts"], "apps/web/src/app.css"),
-
-  // ── Svelte files ─────────────────────────────────────────────────────────────
+  // All TypeScript files
   {
-    files: SVELTE_FILES,
-    extends: sveltePlugin.configs["flat/recommended"],
+    files: ['**/*.ts'],
     languageOptions: {
-      parserOptions: { parser: tseslint.parser },
-      globals: { ...globals.browser },
-    },
-    rules: {
-      "svelte/no-unused-svelte-ignore": "error",
-    },
+      globals: { ...globals.node }
+    }
   },
 
-  // ── All frontend files ────────────────────────────────────────────────────────
+  // All Svelte files
   {
-    files: [
-      ...SVELTE_FILES,
-      "apps/web/src/**/*.ts",
-      "apps/dashboard/src/**/*.ts",
-      "packages/**/*.ts",
-    ],
+    files: ['**/*.svelte'],
     languageOptions: {
-      globals: { ...globals.browser },
-    },
-    rules: {
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
-      ],
-    },
+      parserOptions: {
+        parser: ts.parser
+      },
+      globals: {
+        ...globals.browser
+      }
+    }
   },
 
-  // ── API — Hono / Cloudflare Workers ──────────────────────────────────────────
+  // Shared API library — Node environment only
   {
-    files: ["apps/api/src/**/*.ts"],
-    rules: {
-      "@typescript-eslint/no-explicit-any": "error",
-      "no-console": "warn",
-    },
+    files: ['packages/api/**/*.ts'],
+    languageOptions: {
+      globals: { ...globals.node }
+    }
   },
-);
+
+  // Hono API Worker app — Node/Workers environment
+  {
+    files: ['apps/api/**/*.ts'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.serviceworker
+      }
+    }
+  },
+
+  // Better Tailwind — Svelte + TS files
+  {
+    files: ['**/*.svelte', '**/*.ts'],
+    plugins: {
+      'better-tailwindcss': betterTailwind,
+    },
+    rules: {
+      ...betterTailwind.configs['recommended'].rules,
+    }
+  },
+
+  // Custom rules
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': ['warn', {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_'
+      }],
+      '@typescript-eslint/no-explicit-any': 'error',
+      'svelte/no-unused-svelte-ignore': 'warn',
+    }
+  }
+]
