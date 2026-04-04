@@ -1,7 +1,10 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "lib": ["ESNext"]
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "verbatimModuleSyntax": true,
+    "rootDir": "./src",
   },
-  "include": ["src"]
+  "include": ["src"],
 }

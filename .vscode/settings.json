@@ -1,0 +1,7 @@
+{
+  // Use the workspace TypeScript install.
+  // pnpm with shamefully-hoist=false doesn't hoist to root, so we point at an app's install.
+  // All apps use the same TypeScript version, so this works for the whole monorepo.
+  "typescript.tsdk": "apps/hospital/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}

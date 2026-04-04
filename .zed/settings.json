@@ -1,0 +1,13 @@
+{
+  "lsp": {
+    "svelte-language-server": {
+      "initialization_options": {
+        "configuration": {
+          "typescript": {
+            "tsdk": "node_modules/typescript/lib"
+          }
+        }
+      }
+    }
+  }
+}

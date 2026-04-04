@@ -7,7 +7,10 @@ const config = {
   kit: {
     adapter: adapter(),
     alias: {
-      $lib: "./src/lib",
+      "@hms/ui": "../../packages/ui/src/index.ts",
+      "@hms/types": "../../packages/types/src/index.ts",
+      "@hms/utils": "../../packages/utils/src/index.ts",
+      "@hms/db": "../../packages/db/src/index.ts",
     },
   },
 };
