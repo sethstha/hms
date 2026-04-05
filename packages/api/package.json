@@ -6,7 +6,6 @@
     ".": "./src/index.ts",
     "./db": "./src/db/index.ts",
     "./db/schema": "./src/db/schema.ts",
-    "./auth": "./src/auth/better-auth.ts",
     "./types": "./src/types.ts"
   },
   "scripts": {
@@ -21,13 +20,11 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
-    "better-auth": "^1.5.5",
     "drizzle-orm": "^0.44.0"
   },
   "devDependencies": {
     "dotenv": "^16.0.0",
     "drizzle-kit": "^0.31.0",
-    "tsx": "^4.0.0",
-    "typescript": "^5.9.3"
+    "tsx": "^4.0.0"
   }
 }

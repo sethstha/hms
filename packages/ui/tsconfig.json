@@ -6,5 +6,5 @@
     "verbatimModuleSyntax": true,
     "rootDir": "./src",
   },
-  "include": ["src"],
+  "include": ["src", "../utils/hooks"],
 }

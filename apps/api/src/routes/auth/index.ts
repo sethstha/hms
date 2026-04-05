@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 
-import { createBetterAuth } from '@hms/api/auth'
+import { createBetterAuth } from '@hms/auth/server'
 import type { AppEnv } from '@hms/api/types'
 
 const router = new Hono<AppEnv>()

@@ -1,6 +1,6 @@
 import { createMiddleware } from 'hono/factory'
 
-import { createBetterAuth } from '@hms/api/auth'
+import { createBetterAuth } from '@hms/auth/server'
 import type { AppEnv, AuthenticatedUser } from '@hms/api/types'
 
 const toIsoString = (value: unknown): string => {
