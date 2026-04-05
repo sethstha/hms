@@ -10,7 +10,7 @@ export {
 } from "./hospital";
 export { createAdminAuthClient } from "./admin-client";
 export { createHospitalAuthClient } from "./hospital-client";
-export { fetchSession, readTenant } from "./session.svelte.js";
+export { createSession, fetchSession, readTenant } from "./session.svelte.js";
 export type { TenantContext, SessionState } from "./session.svelte.js";
 export {
   requireAdminSession,
