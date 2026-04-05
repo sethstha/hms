@@ -7,7 +7,7 @@ config({ path: path.resolve(__dirname, '../../../.env') })
 
 import { hashPassword } from 'better-auth/crypto'
 import { createDb } from './index'
-import { organizations, tenants, users, accounts } from './schema'
+import { organizations, tenants, users, accounts } from './schema/index'
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 

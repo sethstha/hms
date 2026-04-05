@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory";
 
-import type { AppEnv, AuthenticatedUser } from "@hms/api/types";
+import type { AppEnv, AuthenticatedUser } from "./types";
 import { createAdminAuth } from "./admin";
 import { createHospitalAuth } from "./hospital";
 

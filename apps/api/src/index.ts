@@ -1,4 +1,4 @@
-import type { AppEnv } from "@hms/api/types";
+import type { AppEnv } from "@hms/auth/types";
 import { createAdminAuth, createHospitalAuth } from "@hms/auth";
 import { createDb } from "@hms/db";
 import { OpenAPIHono } from "@hono/zod-openapi";

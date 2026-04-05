@@ -1,5 +1,3 @@
-export * from './schemas/patient'
-export * from './schemas/appointment'
-export * from './schemas/consultation'
-export * from './schemas/prescription'
-export * from './schemas/billing'
+// Domain types and schemas are now canonical in @hms/schemas.
+// Re-exporting here for backward compatibility.
+export * from "@hms/schemas";

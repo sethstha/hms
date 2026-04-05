@@ -5,10 +5,7 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "devDependencies": {
-    "zod": "^3.23.0"
-  },
   "dependencies": {
-    "zod": "^3.23.0"
+    "@hms/schemas": "workspace:*"
   }
 }

@@ -12,9 +12,9 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@hms/api": "workspace:*",
     "@hms/auth": "workspace:*",
     "@hms/db": "workspace:*",
+    "@hms/schemas": "workspace:*",
     "@hono/zod-openapi": "^1.2.4",
     "@scalar/hono-api-reference": "^0.10.6",
     "drizzle-orm": "^0.44.0",

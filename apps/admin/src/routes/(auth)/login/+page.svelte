@@ -3,7 +3,6 @@
   import { loginSchema } from "@hms/schemas";
   import { Alert, Button, Card, Input, Label } from "@hms/ui";
   import { createForm } from "@tanstack/svelte-form";
-  import { zodValidator } from "@tanstack/zod-form-adapter";
   import { goto } from "$app/navigation";
   import { authClient } from "$lib/auth/client";
 
@@ -14,7 +13,6 @@
       email: "superadmin@hms.internal",
       password: "Demo@1234",
     },
-    validatorAdapter: zodValidator(),
     validators: {
       onChange: loginSchema,
     },

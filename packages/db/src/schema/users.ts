@@ -3,80 +3,15 @@ import {
   boolean,
   check,
   index,
-  pgEnum,
   pgTable,
   text,
   timestamp,
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-
-export const genderEnum = pgEnum("gender", ["male", "female", "other"]);
-export const appointmentStatusEnum = pgEnum("appointment_status", [
-  "pending",
-  "confirmed",
-  "cancelled",
-  "completed",
-]);
-export const appointmentTypeEnum = pgEnum("appointment_type", ["opd", "telemedicine"]);
-export const userRoles = [
-  "superadmin",
-  "admin",
-  "doctor",
-  "nurse",
-  "receptionist",
-  "pharmacist",
-  "lab_technician",
-  "billing_staff",
-] as const;
-export const userRoleEnum = pgEnum("user_role", userRoles);
-
-export const organizations = pgTable(
-  "organizations",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    name: text("name").notNull(),
-    slug: text("slug").notNull(),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => ({
-    slugUniqueIdx: uniqueIndex("organizations_slug_unique").on(table.slug),
-    createdAtIdx: index("organizations_created_at_idx").on(table.createdAt),
-  }),
-);
-
-export const tenants = pgTable(
-  "tenants",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    organizationId: uuid("organization_id")
-      .notNull()
-      .references(() => organizations.id, { onDelete: "cascade" }),
-    name: text("name").notNull(),
-    slug: text("slug").notNull(),
-    isActive: boolean("is_active").notNull().default(true),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => ({
-    organizationSlugUniqueIdx: uniqueIndex("tenants_organization_slug_unique").on(
-      table.organizationId,
-      table.slug,
-    ),
-    organizationIdx: index("tenants_organization_id_idx").on(table.organizationId),
-    activeIdx: index("tenants_is_active_idx").on(table.isActive),
-    createdAtIdx: index("tenants_created_at_idx").on(table.createdAt),
-  }),
-);
+import { userRoleEnum } from "./enums";
+import { organizations } from "./organizations";
+import { tenants } from "./tenants";
 
 export const users = pgTable(
   "users",
@@ -252,77 +187,6 @@ export const verifications = pgTable(
   }),
 );
 
-export const patients = pgTable(
-  "patients",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    tenantId: uuid("tenant_id")
-      .notNull()
-      .references(() => tenants.id, { onDelete: "restrict" }),
-    uhid: text("uhid").notNull(),
-    name: text("name").notNull(),
-    dateOfBirth: timestamp("date_of_birth", {
-      withTimezone: true,
-      mode: "string",
-    }).notNull(),
-    gender: genderEnum("gender").notNull(),
-    bloodGroup: text("blood_group"),
-    phone: text("phone"),
-    email: text("email"),
-    address: text("address"),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => ({
-    tenantUhidUniqueIdx: uniqueIndex("patients_tenant_uhid_unique").on(table.tenantId, table.uhid),
-    tenantIdx: index("patients_tenant_id_idx").on(table.tenantId),
-    createdAtIdx: index("patients_created_at_idx").on(table.createdAt),
-  }),
-);
-
-export const appointments = pgTable(
-  "appointments",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    tenantId: uuid("tenant_id")
-      .notNull()
-      .references(() => tenants.id, { onDelete: "restrict" }),
-    patientId: uuid("patient_id")
-      .notNull()
-      .references(() => patients.id, { onDelete: "restrict" }),
-    doctorId: uuid("doctor_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "restrict" }),
-    scheduledAt: timestamp("scheduled_at", {
-      withTimezone: true,
-      mode: "string",
-    }).notNull(),
-    status: appointmentStatusEnum("status").notNull().default("pending"),
-    type: appointmentTypeEnum("type").notNull(),
-    notes: text("notes"),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => ({
-    tenantIdx: index("appointments_tenant_id_idx").on(table.tenantId),
-    patientIdx: index("appointments_patient_id_idx").on(table.patientId),
-    doctorIdx: index("appointments_doctor_id_idx").on(table.doctorId),
-    scheduledAtIdx: index("appointments_scheduled_at_idx").on(table.scheduledAt),
-  }),
-);
-
-export type Organization = typeof organizations.$inferSelect;
-export type NewOrganization = typeof organizations.$inferInsert;
-export type Tenant = typeof tenants.$inferSelect;
-export type NewTenant = typeof tenants.$inferInsert;
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type UserSession = typeof userSessions.$inferSelect;
@@ -331,7 +195,3 @@ export type Account = typeof accounts.$inferSelect;
 export type NewAccount = typeof accounts.$inferInsert;
 export type Verification = typeof verifications.$inferSelect;
 export type NewVerification = typeof verifications.$inferInsert;
-export type Patient = typeof patients.$inferSelect;
-export type NewPatient = typeof patients.$inferInsert;
-export type Appointment = typeof appointments.$inferSelect;
-export type NewAppointment = typeof appointments.$inferInsert;

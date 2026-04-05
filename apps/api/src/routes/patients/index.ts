@@ -1,4 +1,11 @@
-import type { AppEnv } from "@hms/api/types";
+import type { AppEnv } from "@hms/auth/types";
+import {
+  createPatientSchema,
+  errorSchema,
+  patientSchema,
+  successSchema,
+  updatePatientSchema,
+} from "@hms/schemas";
 import { patients } from "@hms/db/schema";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { eq } from "drizzle-orm";
@@ -7,34 +14,6 @@ import { tenantMiddleware } from "../../middleware/tenant";
 
 const router = new OpenAPIHono<AppEnv>();
 router.use("*", authMiddleware, tenantMiddleware);
-
-// ─── Shared schemas ────────────────────────────────────────────────────────────
-
-const patientSchema = z.object({
-  id: z.string(),
-  uhid: z.string(),
-  name: z.string(),
-  dateOfBirth: z.string(),
-  gender: z.enum(["male", "female", "other"]),
-  bloodGroup: z.string().nullable(),
-  phone: z.string().nullable(),
-  email: z.string().nullable(),
-  address: z.string().nullable(),
-  tenantId: z.string().nullable(),
-});
-
-const createPatientSchema = z.object({
-  uhid: z.string().min(1),
-  name: z.string().min(1),
-  dateOfBirth: z.string(),
-  gender: z.enum(["male", "female", "other"]),
-  bloodGroup: z.string().optional(),
-  phone: z.string().optional(),
-  email: z.string().email().optional(),
-  address: z.string().optional(),
-});
-
-const errorSchema = z.object({ error: z.string() });
 
 // ─── List ──────────────────────────────────────────────────────────────────────
 
@@ -158,7 +137,7 @@ router.openapi(
     request: {
       params: z.object({ id: z.string() }),
       body: {
-        content: { "application/json": { schema: createPatientSchema.partial() } },
+        content: { "application/json": { schema: updatePatientSchema } },
       },
     },
     responses: {
@@ -213,7 +192,7 @@ router.openapi(
     },
     responses: {
       200: {
-        content: { "application/json": { schema: z.object({ success: z.boolean() }) } },
+        content: { "application/json": { schema: successSchema } },
         description: "Patient deleted",
       },
       404: {

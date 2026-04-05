@@ -1,7 +1,7 @@
 import { createMiddleware } from 'hono/factory'
 
 import { createDb } from '@hms/db'
-import type { AppEnv } from '@hms/api/types'
+import type { AppEnv } from '@hms/auth/types'
 
 export const dbMiddleware = createMiddleware<AppEnv>(async (c, next) => {
   const databaseUrl = c.env.DATABASE_URL

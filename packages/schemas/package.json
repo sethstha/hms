@@ -4,9 +4,16 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./auth": "./src/auth/index.ts",
+    "./patients": "./src/patients.ts",
+    "./appointments": "./src/appointments.ts",
+    "./consultations": "./src/consultations.ts",
+    "./prescriptions": "./src/prescriptions.ts",
+    "./billing": "./src/billing.ts",
+    "./common": "./src/common.ts"
   },
-  "devDependencies": {
-    "zod": "^3.25.76"
+  "dependencies": {
+    "zod": "^4.0.0"
   }
 }
