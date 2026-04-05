@@ -5,3 +5,7 @@ compatibility_flags = ["nodejs_compat"]
 
 [dev]
 port = 8787
+
+[vars]
+BETTER_AUTH_URL = "https://hms-api.sethstha.workers.dev"
+BETTER_AUTH_TRUSTED_ORIGINS = "https://hms-hospital.sethstha.workers.dev, https://hms-admin.sethstha.workers.dev"
