@@ -18,6 +18,8 @@ export type AppBindings = {
   BETTER_AUTH_SECRET?: string
   BETTER_AUTH_URL?: string
   BETTER_AUTH_TRUSTED_ORIGINS?: string
+  DOCS_USERNAME?: string
+  DOCS_PASSWORD?: string
 }
 
 export type AppVariables = {

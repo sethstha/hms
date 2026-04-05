@@ -15,10 +15,11 @@
     "@hms/api": "workspace:*",
     "@hms/auth": "workspace:*",
     "@hms/db": "workspace:*",
-    "@hono/zod-validator": "^0.4.0",
+    "@hono/zod-openapi": "^1.2.4",
+    "@scalar/hono-api-reference": "^0.10.6",
     "drizzle-orm": "^0.44.0",
     "hono": "^4.6.0",
-    "zod": "^3.23.0"
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250620.0",

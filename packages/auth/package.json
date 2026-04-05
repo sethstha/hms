@@ -14,7 +14,12 @@
   "dependencies": {
     "@hms/api": "workspace:*",
     "@hms/db": "workspace:*",
-    "better-auth": "^1.5.5",
+    "better-auth": "^1.5.5"
+  },
+  "devDependencies": {
+    "hono": "^4.6.0"
+  },
+  "peerDependencies": {
     "hono": "^4.6.0"
   }
 }

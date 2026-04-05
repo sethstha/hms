@@ -1,9 +1,9 @@
-import { Hono } from 'hono'
+import { OpenAPIHono } from "@hono/zod-openapi";
 
 // TODO: Add Inventory routes
 // Routes will follow: GET /, GET /:id, POST /, PUT /:id
 // Covers: stock items, purchase orders, stock adjustments, expiry tracking
 
-const router = new Hono()
+const router = new OpenAPIHono();
 
-export default router
+export default router;

@@ -52,12 +52,16 @@ const betterAuthSecret =
 const betterAuthUrl = repoEnvEntries.BETTER_AUTH_URL ?? "http://localhost:8787";
 const betterAuthTrustedOrigins =
   repoEnvEntries.BETTER_AUTH_TRUSTED_ORIGINS ?? "http://localhost:5173,http://localhost:5174";
+const docsUsername = repoEnvEntries.DOCS_USERNAME ?? "admin";
+const docsPassword = repoEnvEntries.DOCS_PASSWORD ?? "docs-dev-password";
 
 const output = [
   `DATABASE_URL=${databaseUrl}`,
   `BETTER_AUTH_SECRET=${betterAuthSecret}`,
   `BETTER_AUTH_URL=${betterAuthUrl}`,
   `BETTER_AUTH_TRUSTED_ORIGINS=${betterAuthTrustedOrigins}`,
+  `DOCS_USERNAME=${docsUsername}`,
+  `DOCS_PASSWORD=${docsPassword}`,
   "",
 ].join("\n");
 
