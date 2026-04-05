@@ -4,14 +4,9 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
-    "./db": "./src/db/index.ts",
-    "./db/schema": "./src/db/schema.ts",
     "./types": "./src/types.ts"
   },
   "scripts": {
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:seed": "tsx src/db/seed.ts",
     "type-check": "tsc --noEmit",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
@@ -19,6 +14,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@hms/db": "workspace:*",
     "@neondatabase/serverless": "^0.10.4",
     "drizzle-orm": "^0.44.0"
   },

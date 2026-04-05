@@ -1,6 +1,6 @@
 import { createMiddleware } from 'hono/factory'
 
-import { createDb } from '@hms/api/db'
+import { createDb } from '@hms/db'
 import type { AppEnv } from '@hms/api/types'
 
 export const dbMiddleware = createMiddleware<AppEnv>(async (c, next) => {

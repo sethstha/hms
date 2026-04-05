@@ -5,7 +5,6 @@ import { sql } from 'drizzle-orm'
 
 import patients from './routes/patients'
 import appointments from './routes/appointments'
-import auth from './routes/auth'
 import opd from './routes/opd'
 import ipd from './routes/ipd'
 import pharmacy from './routes/pharmacy'
@@ -16,7 +15,8 @@ import inventory from './routes/inventory'
 import staff from './routes/staff'
 import reports from './routes/reports'
 import internal from './routes/internal'
-import { createDb } from '@hms/api/db'
+import { createDb } from '@hms/db'
+import { createAdminAuth, createHospitalAuth } from '@hms/auth'
 import { dbMiddleware } from './middleware/db'
 import type { AppEnv } from '@hms/api/types'
 
@@ -78,9 +78,30 @@ app.get('/health/db', async (c) => {
 app.use('/api/*', dbMiddleware)
 app.use('/internal/*', dbMiddleware)
 
+// ─── Auth handlers (outside v1 prefix — better-auth manages its own paths) ────
+
+const getAuthEnv = (c: { env: AppEnv['Bindings'] }) => ({
+  databaseUrl: c.env.DATABASE_URL ?? '',
+  secret: c.env.BETTER_AUTH_SECRET ?? 'better-auth-dev-secret-change-me',
+  baseURL: c.env.BETTER_AUTH_URL ?? '',
+  trustedOrigins: (c.env.BETTER_AUTH_TRUSTED_ORIGINS ?? '')
+    .split(',')
+    .map((o: string) => o.trim())
+    .filter(Boolean),
+})
+
+app.on(['GET', 'POST'], '/auth/admin/*', (c) => {
+  const auth = createAdminAuth(getAuthEnv(c))
+  return auth.handler(c.req.raw)
+})
+
+app.on(['GET', 'POST'], '/auth/hospital/*', (c) => {
+  const auth = createHospitalAuth(getAuthEnv(c))
+  return auth.handler(c.req.raw)
+})
+
 // API v1 routes
 const v1 = new Hono<AppEnv>()
-v1.route('/auth', auth)
 v1.route('/patients', patients)
 v1.route('/appointments', appointments)
 v1.route('/opd', opd)

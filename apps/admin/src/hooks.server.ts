@@ -3,7 +3,7 @@ import type { Handle } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
 import { getTextDirection } from "$lib/paraglide/runtime";
 import { paraglideMiddleware } from "$lib/paraglide/server";
-import { getSession } from "@hms/auth/session";
+import { fetchSession } from "@hms/auth/session";
 import type { AppSession } from "$lib/auth/client";
 
 const getApiBaseUrl = (): string => {
@@ -12,7 +12,7 @@ const getApiBaseUrl = (): string => {
 };
 
 const handleAuth: Handle = async ({ event, resolve }) => {
-	event.locals.session = await getSession<AppSession>(event.request, getApiBaseUrl());
+	event.locals.session = await fetchSession<AppSession>(event.request, getApiBaseUrl(), "/auth/admin");
 	event.locals.tenant = null;
 	return resolve(event);
 };

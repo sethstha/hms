@@ -1,6 +1,10 @@
-// TODO: Configure Neon + Drizzle connection
-// TODO: Add Postgres Row Level Security setup
-// TODO: Export db instance
-// TODO: Import schema from ./schema once tables are defined
+import { neon } from "@neondatabase/serverless";
+import { drizzle, NeonHttpDatabase } from "drizzle-orm/neon-http";
+import * as schema from "./schema";
 
-export {}
+export function createDb(databaseUrl: string) {
+  const sql = neon(databaseUrl);
+  return drizzle(sql, { schema });
+}
+
+export type Db = NeonHttpDatabase<typeof schema>;

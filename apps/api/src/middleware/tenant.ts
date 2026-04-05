@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm'
 import { createMiddleware } from 'hono/factory'
 
-import { tenants } from '@hms/api/db/schema'
+import { tenants } from '@hms/db/schema'
 import type { AppEnv } from '@hms/api/types'
 
 export const tenantMiddleware = createMiddleware<AppEnv>(async (c, next) => {

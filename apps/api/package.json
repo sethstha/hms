@@ -14,6 +14,7 @@
   "dependencies": {
     "@hms/api": "workspace:*",
     "@hms/auth": "workspace:*",
+    "@hms/db": "workspace:*",
     "@hono/zod-validator": "^0.4.0",
     "drizzle-orm": "^0.44.0",
     "hono": "^4.6.0",

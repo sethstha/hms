@@ -3,7 +3,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-config({ path: path.resolve(__dirname, '../../../../.env') })
+config({ path: path.resolve(__dirname, '../../../.env') })
 
 import { hashPassword } from 'better-auth/crypto'
 import { createDb } from './index'

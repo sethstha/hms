@@ -1,5 +1,5 @@
-import type { Db } from './db'
-import type { Tenant, User, UserSession } from './db/schema'
+import type { Db } from '@hms/db'
+import type { Tenant, User, UserSession } from '@hms/db/schema'
 
 export type AuthenticatedUser = Pick<
   User,

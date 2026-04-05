@@ -4,12 +4,17 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
-    "./server": "./src/server.ts",
-    "./client": "./src/client.ts",
-    "./session": "./src/session.ts"
+    "./admin": "./src/admin.ts",
+    "./hospital": "./src/hospital.ts",
+    "./admin-client": "./src/admin-client.ts",
+    "./hospital-client": "./src/hospital-client.ts",
+    "./session": "./src/session.svelte.ts",
+    "./middleware": "./src/middleware.ts"
   },
   "dependencies": {
     "@hms/api": "workspace:*",
-    "better-auth": "^1.5.5"
+    "@hms/db": "workspace:*",
+    "better-auth": "^1.5.5",
+    "hono": "^4.6.0"
   }
 }

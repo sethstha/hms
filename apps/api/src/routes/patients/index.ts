@@ -3,7 +3,7 @@ import { zValidator } from '@hono/zod-validator'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 
-import { patients } from '@hms/api/db/schema'
+import { patients } from '@hms/db/schema'
 import { authMiddleware } from '../../middleware/auth'
 import { tenantMiddleware } from '../../middleware/tenant'
 import type { AppEnv } from '@hms/api/types'

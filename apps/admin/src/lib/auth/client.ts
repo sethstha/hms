@@ -1,5 +1,5 @@
 import { env } from "$env/dynamic/public";
-import { createAdminAuthClient } from "@hms/auth/client";
+import { createAdminAuthClient } from "@hms/auth/admin-client";
 
 const apiBaseUrl = (env.PUBLIC_API_URL ?? "").trim() || undefined;
 

@@ -1,6 +1,6 @@
-export { createDb } from './db'
-export type { Db } from './db'
-export * from './db/schema'
+export { createDb } from '@hms/db'
+export type { Db } from '@hms/db'
+export * from '@hms/db/schema'
 export type {
   AppBindings,
   AppVariables,

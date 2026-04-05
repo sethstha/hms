@@ -1,5 +1,5 @@
 import { env } from "$env/dynamic/public";
-import { createHospitalAuthClient } from "@hms/auth/client";
+import { createHospitalAuthClient } from "@hms/auth/hospital-client";
 
 const apiBaseUrl = (env.PUBLIC_API_URL ?? "").trim() || undefined;
 
