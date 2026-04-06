@@ -15,11 +15,13 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@hms/api-client": "workspace:*",
     "@hms/auth": "workspace:*",
     "@hms/schemas": "workspace:^",
     "@hms/ui": "workspace:*",
     "@hms/utils": "workspace:*",
-    "@tanstack/svelte-form": "^1.28.6"
+    "@tanstack/svelte-form": "^1.28.6",
+    "@tanstack/svelte-query": "^5.90.2"
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.3",

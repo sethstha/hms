@@ -1,6 +1,7 @@
 {
   "name": "hms",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "node scripts/dev.js",
     "dev:hospital": "pnpm --filter hospital dev",

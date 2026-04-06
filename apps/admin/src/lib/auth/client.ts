@@ -1,8 +1,6 @@
-import { env } from "$env/dynamic/public";
 import { createAdminAuthClient } from "@hms/auth/admin-client";
+import { env } from "$env/dynamic/public";
 
-const apiBaseUrl = (env.PUBLIC_API_URL ?? "").trim() || undefined;
-
-export const authClient = createAdminAuthClient(apiBaseUrl);
+export const authClient = createAdminAuthClient(env.PUBLIC_API_URL);
 
 export type AppSession = typeof authClient.$Infer.Session;

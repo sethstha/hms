@@ -24,6 +24,8 @@
       "@hms/auth/types": ["packages/auth/src/types.ts"],
       "@hms/db": ["packages/db/src/index.ts"],
       "@hms/utils": ["packages/utils/src/index.ts"],
+      "@hms/api": ["apps/api/src/index.ts"],
+      "@hms/api-client": ["packages/api-client/src/index.ts"],
     },
   },
 }

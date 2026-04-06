@@ -99,13 +99,10 @@ app.on(["GET", "POST"], "/auth/hospital/*", (c) => {
 });
 
 // ─── OpenAPI docs ─────────────────────────────────────────────────────────────
-app.use("/docs", (c, next) => {
+app.use("/docs", async (c, next) => {
   const username = c.env.DOCS_USERNAME;
   const password = c.env.DOCS_PASSWORD;
 
-  // TODO: decide what happens when credentials are not configured
-  // Option A: block access entirely (safer for production)
-  // Option B: allow access (easier for local dev with no wrangler.toml secrets)
   if (!username || !password) {
     return c.text("Docs are not available.", 503);
   }
@@ -113,7 +110,7 @@ app.use("/docs", (c, next) => {
   return basicAuth({ username, password })(c, next);
 });
 
-app.use("/openapi.json", (c, next) => {
+app.use("/openapi.json", async (c, next) => {
   const username = c.env.DOCS_USERNAME;
   const password = c.env.DOCS_PASSWORD;
 
@@ -154,19 +151,19 @@ app.get(
 );
 
 // ─── API v1 routes ─────────────────────────────────────────────────────────────
-app.route("/api/v1/patients", patients);
-app.route("/api/v1/appointments", appointments);
-app.route("/api/v1/opd", opd);
-app.route("/api/v1/ipd", ipd);
-app.route("/api/v1/pharmacy", pharmacy);
-app.route("/api/v1/billing", billing);
-app.route("/api/v1/laboratory", laboratory);
-app.route("/api/v1/radiology", radiology);
-app.route("/api/v1/inventory", inventory);
-app.route("/api/v1/staff", staff);
-app.route("/api/v1/reports", reports);
+const routes = app
+  .route("/api/v1/patients", patients)
+  .route("/api/v1/appointments", appointments)
+  .route("/api/v1/opd", opd)
+  .route("/api/v1/ipd", ipd)
+  .route("/api/v1/pharmacy", pharmacy)
+  .route("/api/v1/billing", billing)
+  .route("/api/v1/laboratory", laboratory)
+  .route("/api/v1/radiology", radiology)
+  .route("/api/v1/inventory", inventory)
+  .route("/api/v1/staff", staff)
+  .route("/api/v1/reports", reports)
+  .route("/internal", internal);
 
-// Internal admin routes
-app.route("/internal", internal);
-
+export type AppType = typeof routes;
 export default app;

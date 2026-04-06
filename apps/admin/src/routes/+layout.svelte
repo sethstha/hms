@@ -8,6 +8,8 @@
   import { authClient } from "$lib/auth/client";
   import { createSession } from "@hms/auth/session";
   import type { LayoutData } from "./$types";
+  import { QueryClientProvider, HydrationBoundary } from "@tanstack/svelte-query";
+  import { createQueryClient } from "$lib/query/client";
 
   let { children, data }: { children: Snippet; data: LayoutData } = $props();
 
@@ -17,13 +19,20 @@
   $effect(() => {
     session.refresh();
   });
+
+  const queryClient = createQueryClient();
 </script>
 
 <svelte:head>
   <link rel="icon" href={favicon} />
   <title>Admin Dashboard</title>
 </svelte:head>
-{@render children()}
+
+<QueryClientProvider client={queryClient}>
+  <HydrationBoundary state={data.dehydratedState}>
+    {@render children()}
+  </HydrationBoundary>
+</QueryClientProvider>
 
 <div style="display:none">
   {#each locales as locale}

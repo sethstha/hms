@@ -1,7 +1,13 @@
 {
-  "name": "api",
+  "name": "@hms/api",
   "version": "0.0.1",
   "private": true,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
   "scripts": {
     "type-check": "tsc --noEmit",
     "lint": "eslint src",
