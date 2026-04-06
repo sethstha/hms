@@ -15,7 +15,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "release": "wrangler deploy"
   },
   "dependencies": {
     "@hms/auth": "workspace:*",

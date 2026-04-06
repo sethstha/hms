@@ -1,5 +1,5 @@
 {
-  "name": "@hms/admin",
+  "name": "@hms/orgz",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -12,16 +12,13 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
-    "release": "wrangler pages deploy"
+    "release": "wrangler deploy"
   },
   "dependencies": {
-    "@hms/api-client": "workspace:*",
     "@hms/auth": "workspace:*",
     "@hms/schemas": "workspace:^",
     "@hms/ui": "workspace:*",
-    "@hms/utils": "workspace:*",
-    "@tanstack/svelte-form": "^1.28.6",
-    "@tanstack/svelte-query": "^5.90.2"
+    "@hms/utils": "workspace:*"
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.3",
@@ -43,7 +40,6 @@
     "svelte-check": "^4.4.2",
     "tailwindcss": "^4.1.18",
     "typescript-eslint": "^8.57.0",
-    "vite": "^8.0.3",
-    "wrangler": "^4.80.0"
+    "vite": "^8.0.3"
   }
 }
