@@ -1,28 +1,23 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process";
-import { cancel, intro, isCancel, multiselect, outro } from "@clack/prompts";
+import { isCancel, multiselect } from "@clack/prompts";
 
 async function run() {
-  intro("🚀 Release");
-
   const options = [
-    { value: "release:orgz", label: "Organization" },
-    { value: "release:admin", label: "Admin Panel" },
-    { value: "release:api", label: "API Server" },
+    { value: "dev:orgz", label: "Organization" },
+    { value: "dev:admin", label: "Admin Panel" },
+    { value: "dev:api", label: "API Server" },
   ];
 
   const selections = await multiselect({
-    message: "Select apps to release:",
+    message: "Select servers to start:",
     required: true,
     options,
   });
 
-  if (isCancel(selections)) {
-    cancel("Cancelled.");
-    process.exit(0);
-  }
+  if (isCancel(selections)) process.exit(0);
 
-  const names = selections.map((s) => s.replace("release:", ""));
+  const names = selections.map((s) => s.replace("dev:", ""));
   const cmds = selections.map((s) => `pnpm run ${s}`);
 
   const concurrentlyCmd = [
@@ -32,7 +27,7 @@ async function run() {
     ...cmds.map((cmd) => `"${cmd}"`),
   ].join(" ");
 
-  outro(`Running: ${concurrentlyCmd}`);
+  console.log("\n🚀 Running:", concurrentlyCmd, "\n");
 
   spawn(concurrentlyCmd, {
     stdio: "inherit",
