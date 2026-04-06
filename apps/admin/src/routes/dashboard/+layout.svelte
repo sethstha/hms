@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { goto } from "$app/navigation";
   import {
     Sidebar,
     Badge,
@@ -17,11 +16,6 @@
 
   const session = getContext<SessionState<AppSession>>("session");
 
-  $effect(() => {
-    if (!session.loading && !session.data) {
-      goto("/login");
-    }
-  });
 
   async function signOut() {
     await authClient.signOut();
@@ -102,11 +96,6 @@
   ];
 </script>
 
-{#if session.loading}
-  <div class="flex min-h-screen items-center justify-center">
-    <span class="text-muted-foreground text-sm">Loading…</span>
-  </div>
-{:else if session.data}
 <Sidebar.Provider>
   <Sidebar.Root collapsible="icon">
     <!-- Header: Logo + App name -->
@@ -232,4 +221,3 @@
     </main>
   </Sidebar.Inset>
 </Sidebar.Provider>
-{/if}

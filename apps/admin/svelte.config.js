@@ -15,7 +15,6 @@ const config = {
   kit: {
     adapter: adapter(),
     alias: {
-      "@hms/types": "../../packages/types/src/index.ts",
       "@hms/ui/theme.css": "../../packages/ui/src/theme.css",
       "@hms/ui": "../../packages/ui/src/index.ts",
       "@hms/utils": "../../packages/utils/src/index.ts",

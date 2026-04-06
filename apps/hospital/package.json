@@ -16,7 +16,6 @@
 	"dependencies": {
 		"@hms/auth": "workspace:*",
 		"@hms/schemas": "workspace:^",
-		"@hms/types": "workspace:*",
 		"@hms/ui": "workspace:*",
 		"@hms/utils": "workspace:*"
 	},

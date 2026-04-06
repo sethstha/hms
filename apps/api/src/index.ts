@@ -1,12 +1,12 @@
-import type { AppEnv } from "@hms/auth/types";
 import { createAdminAuth, createHospitalAuth } from "@hms/auth";
+import type { AppEnv } from "@hms/auth/types";
 import { createDb } from "@hms/db";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { apiReference } from "@scalar/hono-api-reference";
 import { sql } from "drizzle-orm";
+import { basicAuth } from "hono/basic-auth";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { basicAuth } from "hono/basic-auth";
 import { dbMiddleware } from "./middleware/db";
 import appointments from "./routes/appointments";
 import billing from "./routes/billing";
@@ -135,16 +135,13 @@ app.get("/openapi.json", (c) => {
       },
       servers: [
         { url: "http://localhost:8787", description: "Development" },
-        { url: "https://api.hms.com", description: "Production" },
+        { url: "https://hms-api.sethstha.workers.dev", description: "Production" },
       ],
     });
     return c.json(doc);
   } catch (error) {
     console.error("[openapi] spec generation failed:", error);
-    return c.json(
-      { error: "OpenAPI spec generation failed", details: String(error) },
-      500,
-    );
+    return c.json({ error: "OpenAPI spec generation failed", details: String(error) }, 500);
   }
 });
 

@@ -6,14 +6,17 @@ export type SessionState<T> = {
 
 /**
  * Creates a reactive session state using Svelte 5 runes.
- * Calls getSession immediately on creation (auto-init) so the session
- * is available as soon as the enclosing component/layout mounts.
+ * Accepts optional `initialData` from SSR — when provided, `loading` starts
+ * as `false` and `data` is pre-populated, eliminating the loading flash.
+ * Callers must still trigger `refresh()` via `$effect` in the browser to
+ * re-sync after client-side auth actions.
  */
 export function createSession<T>(
   getSession: () => Promise<{ data: T | null; error: unknown }>,
+  initialData?: T | null,
 ): SessionState<T> {
-  let data = $state<T | null>(null);
-  let loading = $state(true);
+  let data = $state<T | null>(initialData ?? null);
+  let loading = $state(initialData === undefined);
 
   const refresh = async () => {
     loading = true;
@@ -21,9 +24,6 @@ export function createSession<T>(
     data = result.data;
     loading = false;
   };
-
-  // Auto-init: fire immediately, caller does not need to call refresh() manually.
-  refresh();
 
   return {
     get data() {

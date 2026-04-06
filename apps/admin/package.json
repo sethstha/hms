@@ -6,22 +6,20 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
+    "deploy": "pnpm build && wrangler pages deploy",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --check . && eslint .",
-    "format": "prettier --write .",
-    "publish": "vite build && wrangler pages deploy"
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@hms/auth": "workspace:*",
     "@hms/schemas": "workspace:^",
-    "@hms/types": "workspace:*",
     "@hms/ui": "workspace:*",
     "@hms/utils": "workspace:*",
-    "@tanstack/svelte-form": "^1.28.6",
-    "hospital": "^1.0.0"
+    "@tanstack/svelte-form": "^1.28.6"
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.3",

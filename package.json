@@ -8,6 +8,7 @@
     "dev:api": "pnpm --filter api dev",
     "db:seed": "pnpm --filter @hms/db db:seed",
     "build:admin": "pnpm --filter admin build",
+    "deploy:admin": "pnpm --filter admin run deploy",
     "build:hospital": "pnpm --filter hospital build",
     "build:api": "pnpm --filter api deploy",
     "db:generate": "pnpm --filter @hms/db db:generate",
