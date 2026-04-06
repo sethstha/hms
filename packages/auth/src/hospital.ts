@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin, createAccessControl, organization } from "better-auth/plugins";
+import { admin } from "better-auth/plugins";
 
 import { createDb } from "@hms/db";
 import { accounts, userSessions, users, verifications } from "@hms/db/schema";
@@ -11,52 +11,6 @@ type CreateHospitalAuthOptions = {
   secret: string;
   trustedOrigins?: string[];
 };
-
-// ─── Access control ────────────────────────────────────────────────────────────
-
-export const hospitalAc = createAccessControl({
-  patient: ["create", "read", "update", "delete"],
-  appointment: ["create", "read", "update", "delete"],
-  prescription: ["create", "read", "update"],
-  report: ["create", "read"],
-  billing: ["create", "read", "update"],
-});
-
-export const managerRole = hospitalAc.newRole({
-  patient: ["create", "read", "update", "delete"],
-  appointment: ["create", "read", "update", "delete"],
-  prescription: ["create", "read", "update"],
-  report: ["create", "read"],
-  billing: ["create", "read", "update"],
-});
-
-export const doctorRole = hospitalAc.newRole({
-  patient: ["read", "update"],
-  appointment: ["create", "read", "update"],
-  prescription: ["create", "read", "update"],
-  report: ["create", "read"],
-  billing: ["read"],
-});
-
-export const nurseRole = hospitalAc.newRole({
-  patient: ["read", "update"],
-  appointment: ["read", "update"],
-  prescription: ["read"],
-  report: ["read"],
-  billing: ["read"],
-});
-
-export const receptionistRole = hospitalAc.newRole({
-  patient: ["create", "read"],
-  appointment: ["create", "read", "update"],
-  billing: ["create", "read", "update"],
-});
-
-export const staffRole = hospitalAc.newRole({
-  patient: ["read"],
-  appointment: ["read"],
-  billing: ["read"],
-});
 
 // ─── Instance cache ─────────────────────────────────────────────────────────────
 
@@ -105,17 +59,7 @@ export const createHospitalAuth = ({
       disableSignUp: true,
     },
     plugins: [
-      organization({
-        ac: hospitalAc,
-        roles: {
-          manager: managerRole,
-          doctor: doctorRole,
-          nurse: nurseRole,
-          receptionist: receptionistRole,
-          staff: staffRole,
-        },
-      }),
-      // Ban functionality for hospital users
+      // admin plugin handles ban/deactivate functionality for hospital users
       admin(),
     ],
     session: {
@@ -123,8 +67,6 @@ export const createHospitalAuth = ({
     },
     user: {
       additionalFields: {
-        tenantId: { type: "string", required: false },
-        organizationId: { type: "string", required: false },
         isActive: { type: "boolean", required: false, defaultValue: true, input: false },
       },
     },

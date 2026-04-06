@@ -1,7 +1,5 @@
-import { sql } from "drizzle-orm";
 import {
   boolean,
-  check,
   index,
   pgTable,
   text,
@@ -10,8 +8,6 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { userRoleEnum } from "./enums";
-import { organizations } from "./organizations";
-import { tenants } from "./tenants";
 
 export const users = pgTable(
   "users",
@@ -21,17 +17,14 @@ export const users = pgTable(
     email: text("email").notNull(),
     emailVerified: boolean("email_verified").notNull().default(false),
     image: text("image"),
-    passwordHash: text("password_hash").notNull(),
+    // platform-level role (superadmin, admin, support)
+    // org-level roles (doctor, nurse, etc.) live in user_memberships.role
     role: userRoleEnum("role").notNull(),
     banned: boolean("banned").notNull().default(false),
     banReason: text("ban_reason"),
     banExpires: timestamp("ban_expires", {
       withTimezone: true,
       mode: "string",
-    }),
-    tenantId: uuid("tenant_id").references(() => tenants.id, { onDelete: "restrict" }),
-    organizationId: uuid("organization_id").references(() => organizations.id, {
-      onDelete: "restrict",
     }),
     isActive: boolean("is_active").notNull().default(true),
     lastLoginAt: timestamp("last_login_at", {
@@ -53,18 +46,8 @@ export const users = pgTable(
   },
   (table) => ({
     emailUniqueIdx: uniqueIndex("users_email_unique").on(table.email),
-    tenantIdx: index("users_tenant_id_idx").on(table.tenantId),
-    organizationIdx: index("users_organization_id_idx").on(table.organizationId),
     roleIdx: index("users_role_idx").on(table.role),
     activeIdx: index("users_is_active_idx").on(table.isActive),
-    tenantScopeCheck: check(
-      "users_tenant_scope_check",
-      sql`(
-        (role = 'superadmin' and tenant_id is null and organization_id is null)
-        or
-        (role <> 'superadmin' and tenant_id is not null and organization_id is not null)
-      )`,
-    ),
   }),
 );
 

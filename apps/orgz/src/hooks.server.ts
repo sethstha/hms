@@ -3,7 +3,7 @@ import type { Handle } from "@sveltejs/kit";
 import { PUBLIC_API_URL } from "$env/static/public";
 import { paraglideMiddleware } from "$lib/paraglide/server";
 import { getTextDirection } from "$lib/paraglide/runtime";
-import { fetchSession, readTenant } from "@hms/auth/session";
+import { fetchSession } from "@hms/auth/session";
 import type { AppSession } from "$lib/auth/client";
 
 const getApiUrl = () => PUBLIC_API_URL.trim() || "http://localhost:8787";
@@ -15,7 +15,6 @@ const handleAuth: Handle = async ({ event, resolve }) => {
     "/auth/hospital",
   );
   event.locals.session = session;
-  event.locals.tenant = session ? readTenant(session) : null;
   return resolve(event);
 };
 

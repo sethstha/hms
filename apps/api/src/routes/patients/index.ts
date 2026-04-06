@@ -10,10 +10,10 @@ import { patients } from "@hms/db/schema";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { eq } from "drizzle-orm";
 import { authMiddleware } from "../../middleware/auth";
-import { tenantMiddleware } from "../../middleware/tenant";
+import { orgMiddleware } from "../../middleware/org";
 
 const router = new OpenAPIHono<AppEnv>();
-router.use("*", authMiddleware, tenantMiddleware);
+router.use("*", authMiddleware, orgMiddleware);
 
 // ─── List ──────────────────────────────────────────────────────────────────────
 export default router
@@ -32,10 +32,10 @@ export default router
     }),
     async (c) => {
       const db = c.get("db");
-      const user = c.get("user")!;
+      const org = c.get("organization");
 
-      const results = user.tenantId
-        ? await db.select().from(patients).where(eq(patients.tenantId, user.tenantId))
+      const results = org
+        ? await db.select().from(patients).where(eq(patients.organizationId, org.id))
         : await db.select().from(patients);
 
       return c.json({ data: results }, 200 as const);
@@ -69,14 +69,14 @@ export default router
     }),
     async (c) => {
       const db = c.get("db");
-      const user = c.get("user")!;
+      const org = c.get("organization");
       const { id } = c.req.valid("param");
 
       const [patient] = await db.select().from(patients).where(eq(patients.id, id)).limit(1);
 
       if (!patient) return c.json({ error: "Patient not found." }, 404 as const);
 
-      if (user.role !== "superadmin" && patient.tenantId !== user.tenantId) {
+      if (org && patient.organizationId !== org.id) {
         return c.json({ error: "Forbidden." }, 403 as const);
       }
 
@@ -109,15 +109,14 @@ export default router
     }),
     async (c) => {
       const db = c.get("db");
-      const user = c.get("user")!;
+      const org = c.get("organization");
       const data = c.req.valid("json");
 
-      if (!user.tenantId)
-        return c.json({ error: "Your account has no tenant assigned." }, 403 as const);
+      if (!org) return c.json({ error: "Organization context is required." }, 403 as const);
 
       const [patient] = await db
         .insert(patients)
-        .values({ ...data, tenantId: user.tenantId })
+        .values({ ...data, organizationId: org.id })
         .returning();
 
       return c.json({ data: patient }, 201 as const);
@@ -154,19 +153,19 @@ export default router
     }),
     async (c) => {
       const db = c.get("db");
-      const user = c.get("user")!;
+      const org = c.get("organization");
       const { id } = c.req.valid("param");
       const data = c.req.valid("json");
 
       const [existing] = await db
-        .select({ tenantId: patients.tenantId })
+        .select({ organizationId: patients.organizationId })
         .from(patients)
         .where(eq(patients.id, id))
         .limit(1);
 
       if (!existing) return c.json({ error: "Patient not found." }, 404 as const);
 
-      if (user.role !== "superadmin" && existing.tenantId !== user.tenantId) {
+      if (org && existing.organizationId !== org.id) {
         return c.json({ error: "Forbidden." }, 403 as const);
       }
 
@@ -203,18 +202,18 @@ export default router
     }),
     async (c) => {
       const db = c.get("db");
-      const user = c.get("user")!;
+      const org = c.get("organization");
       const { id } = c.req.valid("param");
 
       const [existing] = await db
-        .select({ tenantId: patients.tenantId })
+        .select({ organizationId: patients.organizationId })
         .from(patients)
         .where(eq(patients.id, id))
         .limit(1);
 
       if (!existing) return c.json({ error: "Patient not found." }, 404 as const);
 
-      if (user.role !== "superadmin" && existing.tenantId !== user.tenantId) {
+      if (org && existing.organizationId !== org.id) {
         return c.json({ error: "Forbidden." }, 403 as const);
       }
 

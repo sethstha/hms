@@ -36,13 +36,6 @@ export function createSession<T>(
   };
 }
 
-// ─── Server-side session helpers ────────────────────────────────────────────────
-
-export type TenantContext = {
-  id: string;
-  organizationId: string | null;
-};
-
 /**
  * Fetches a session from the API server on behalf of a SvelteKit request.
  * Used in hooks.server.ts — forwards the request cookie to the API.
@@ -66,25 +59,4 @@ export const fetchSession = async <T>(
   if (!payload || typeof payload !== "object") return null;
 
   return payload as T;
-};
-
-/**
- * Extracts tenant context (tenantId + organizationId) from a raw session object.
- */
-export const readTenant = (session: unknown): TenantContext | null => {
-  const user = (session as Record<string, unknown> | null)?.user as
-    | Record<string, unknown>
-    | undefined;
-  if (!user) return null;
-
-  const tenantId =
-    typeof user.tenantId === "string" && user.tenantId.length > 0 ? user.tenantId : null;
-  if (!tenantId) return null;
-
-  const organizationId =
-    typeof user.organizationId === "string" && user.organizationId.length > 0
-      ? user.organizationId
-      : null;
-
-  return { id: tenantId, organizationId };
 };

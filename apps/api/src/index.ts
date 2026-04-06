@@ -15,6 +15,7 @@ import inventory from "./routes/inventory";
 import ipd from "./routes/ipd";
 import laboratory from "./routes/laboratory";
 import opd from "./routes/opd";
+import organizations from "./routes/organizations";
 import patients from "./routes/patients";
 import pharmacy from "./routes/pharmacy";
 import radiology from "./routes/radiology";
@@ -152,6 +153,7 @@ app.get(
 
 // ─── API v1 routes ─────────────────────────────────────────────────────────────
 const routes = app
+  .route("/api/v1/organizations", organizations)
   .route("/api/v1/patients", patients)
   .route("/api/v1/appointments", appointments)
   .route("/api/v1/opd", opd)

@@ -19,3 +19,16 @@ export const userRoles = [
   "billing_staff",
 ] as const;
 export const userRoleEnum = pgEnum("user_role", userRoles);
+
+export const orgFeatures = [
+  "pharmacy",
+  "opd",
+  "ipd",
+  "appointments",
+  "laboratory",
+  "radiology",
+  "inventory",
+  "billing",
+  "reports",
+] as const;
+export const orgFeatureEnum = pgEnum("org_feature", orgFeatures);

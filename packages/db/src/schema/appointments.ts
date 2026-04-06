@@ -1,16 +1,16 @@
 import { index, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { appointmentStatusEnum, appointmentTypeEnum } from "./enums";
+import { organizations } from "./organizations";
 import { patients } from "./patients";
-import { tenants } from "./tenants";
 import { users } from "./users";
 
 export const appointments = pgTable(
   "appointments",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    tenantId: uuid("tenant_id")
+    organizationId: uuid("organization_id")
       .notNull()
-      .references(() => tenants.id, { onDelete: "restrict" }),
+      .references(() => organizations.id, { onDelete: "restrict" }),
     patientId: uuid("patient_id")
       .notNull()
       .references(() => patients.id, { onDelete: "restrict" }),
@@ -32,7 +32,7 @@ export const appointments = pgTable(
       .notNull(),
   },
   (table) => ({
-    tenantIdx: index("appointments_tenant_id_idx").on(table.tenantId),
+    orgIdx: index("appointments_org_id_idx").on(table.organizationId),
     patientIdx: index("appointments_patient_id_idx").on(table.patientId),
     doctorIdx: index("appointments_doctor_id_idx").on(table.doctorId),
     scheduledAtIdx: index("appointments_scheduled_at_idx").on(table.scheduledAt),

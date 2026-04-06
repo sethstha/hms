@@ -10,7 +10,7 @@ export const medicationSchema = z.object({
 
 export const prescriptionSchema = z.object({
   id: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  organizationId: z.string().uuid(),
   consultationId: z.string().uuid(),
   patientId: z.string().uuid(),
   doctorId: z.string().uuid(),

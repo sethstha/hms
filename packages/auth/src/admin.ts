@@ -17,25 +17,21 @@ type CreateAdminAuthOptions = {
 export const adminAc = createAccessControl({
   user: ["create", "read", "update", "delete", "ban", "impersonate"],
   organization: ["create", "read", "update", "delete"],
-  tenant: ["create", "read", "update", "delete"],
 });
 
 export const superadminRole = adminAc.newRole({
   user: ["create", "read", "update", "delete", "ban", "impersonate"],
   organization: ["create", "read", "update", "delete"],
-  tenant: ["create", "read", "update", "delete"],
 });
 
 export const adminRole = adminAc.newRole({
   user: ["create", "read", "update", "ban"],
   organization: ["read", "update"],
-  tenant: ["create", "read", "update"],
 });
 
 export const supportRole = adminAc.newRole({
   user: ["read"],
   organization: ["read"],
-  tenant: ["read"],
 });
 
 // ─── Instance cache ─────────────────────────────────────────────────────────────
@@ -99,8 +95,6 @@ export const createAdminAuth = ({
     },
     user: {
       additionalFields: {
-        tenantId: { type: "string", required: false },
-        organizationId: { type: "string", required: false },
         isActive: { type: "boolean", required: false, defaultValue: true, input: false },
       },
     },

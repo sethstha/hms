@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const patientSchema = z.object({
   id: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  organizationId: z.string().uuid(),
   uhid: z.string(),
   name: z.string().min(1),
   dateOfBirth: z.string(),

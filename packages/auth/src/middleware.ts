@@ -127,8 +127,6 @@ function _setSessionVars(
     id: currentSession.user.id as string,
     email: currentSession.user.email as string,
     role: (typeof sessionUser.role === "string" ? sessionUser.role : "doctor") as AuthenticatedUser["role"],
-    tenantId: typeof sessionUser.tenantId === "string" ? sessionUser.tenantId : null,
-    organizationId: typeof sessionUser.organizationId === "string" ? sessionUser.organizationId : null,
     isActive: typeof sessionUser.isActive === "boolean" ? sessionUser.isActive : true,
   });
 }

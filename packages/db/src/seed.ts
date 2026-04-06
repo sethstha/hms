@@ -7,7 +7,7 @@ config({ path: path.resolve(__dirname, '../../../.env') })
 
 import { hashPassword } from 'better-auth/crypto'
 import { createDb } from './index'
-import { organizations, tenants, users, accounts } from './schema/index'
+import { accounts, organizationPermissions, organizations, userMemberships, users } from './schema/index'
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -24,89 +24,72 @@ const DEMO_ORG = {
   id: '00000000-0000-0000-0000-000000000001',
   name: 'City Care Hospital',
   slug: 'citycare',
+  isActive: true,
 }
 
-const DEMO_TENANT = {
-  id: '00000000-0000-0000-0000-000000000002',
-  organizationId: DEMO_ORG.id,
-  name: 'City Care Hospital',
-  slug: 'citycare',
-}
-
-// Each entry maps to the userRoleEnum values in schema.ts.
-// superadmin → no tenant/org (DB constraint: superadmin must have NULL tenant).
-// All other roles → linked to DEMO_TENANT.
+// superadmin → platform-level user (no org membership)
+// All other roles → members of DEMO_ORG with an org-level role
 const DEMO_USERS: {
   id: string
   email: string
   name: string
-  role: 'superadmin' | 'admin' | 'doctor' | 'nurse' | 'receptionist' | 'pharmacist' | 'lab_technician' | 'billing_staff'
-  tenantId: string | null
-  organizationId: string | null
+  platformRole: 'superadmin' | 'admin' | 'doctor' | 'nurse' | 'receptionist' | 'pharmacist' | 'lab_technician' | 'billing_staff'
+  orgRole?: 'admin' | 'doctor' | 'nurse' | 'receptionist' | 'pharmacist' | 'lab_technician' | 'billing_staff'
 }[] = [
   {
     id: '10000000-0000-0000-0000-000000000001',
     email: 'superadmin@hms.internal',
     name: 'Platform Superadmin',
-    role: 'superadmin',
-    tenantId: null,
-    organizationId: null,
+    platformRole: 'superadmin',
   },
   {
     id: '10000000-0000-0000-0000-000000000002',
     email: 'admin@citycare.hms',
     name: 'Hospital Admin',
-    role: 'admin',
-    tenantId: DEMO_TENANT.id,
-    organizationId: DEMO_ORG.id,
+    platformRole: 'admin',
+    orgRole: 'admin',
   },
   {
     id: '10000000-0000-0000-0000-000000000003',
     email: 'doctor@citycare.hms',
     name: 'Dr. Rajan Sharma',
-    role: 'doctor',
-    tenantId: DEMO_TENANT.id,
-    organizationId: DEMO_ORG.id,
+    platformRole: 'doctor',
+    orgRole: 'doctor',
   },
   {
     id: '10000000-0000-0000-0000-000000000004',
     email: 'nurse@citycare.hms',
     name: 'Sunita Thapa',
-    role: 'nurse',
-    tenantId: DEMO_TENANT.id,
-    organizationId: DEMO_ORG.id,
+    platformRole: 'nurse',
+    orgRole: 'nurse',
   },
   {
     id: '10000000-0000-0000-0000-000000000005',
     email: 'receptionist@citycare.hms',
     name: 'Priya Karki',
-    role: 'receptionist',
-    tenantId: DEMO_TENANT.id,
-    organizationId: DEMO_ORG.id,
+    platformRole: 'receptionist',
+    orgRole: 'receptionist',
   },
   {
     id: '10000000-0000-0000-0000-000000000006',
     email: 'pharmacist@citycare.hms',
     name: 'Bikash Rai',
-    role: 'pharmacist',
-    tenantId: DEMO_TENANT.id,
-    organizationId: DEMO_ORG.id,
+    platformRole: 'pharmacist',
+    orgRole: 'pharmacist',
   },
   {
     id: '10000000-0000-0000-0000-000000000007',
     email: 'lab@citycare.hms',
     name: 'Sanjay Gurung',
-    role: 'lab_technician',
-    tenantId: DEMO_TENANT.id,
-    organizationId: DEMO_ORG.id,
+    platformRole: 'lab_technician',
+    orgRole: 'lab_technician',
   },
   {
     id: '10000000-0000-0000-0000-000000000008',
     email: 'billing@citycare.hms',
     name: 'Anita Shrestha',
-    role: 'billing_staff',
-    tenantId: DEMO_TENANT.id,
-    organizationId: DEMO_ORG.id,
+    platformRole: 'billing_staff',
+    orgRole: 'billing_staff',
   },
 ]
 
@@ -115,25 +98,24 @@ const DEMO_USERS: {
 async function seed() {
   console.log('🌱 Starting seed...\n')
 
-  // Hash once — all demo users share the same password
-  console.log('🔐 Hashing demo password...')
   const passwordHash = await hashPassword(DEMO_PASSWORD)
 
   // 1. Organization
   console.log('🏥 Creating demo organization...')
-  await db
-    .insert(organizations)
-    .values(DEMO_ORG)
-    .onConflictDoNothing()
+  await db.insert(organizations).values(DEMO_ORG).onConflictDoNothing()
 
-  // 2. Tenant
-  console.log('🏥 Creating demo tenant...')
-  await db
-    .insert(tenants)
-    .values(DEMO_TENANT)
-    .onConflictDoNothing()
+  // 2. Grant all features to demo org
+  console.log('🔑 Granting all features to demo org...')
+  const superadminId = '10000000-0000-0000-0000-000000000001'
+  const allFeatures = ['pharmacy', 'opd', 'ipd', 'appointments', 'laboratory', 'radiology', 'inventory', 'billing', 'reports'] as const
+  for (const feature of allFeatures) {
+    await db
+      .insert(organizationPermissions)
+      .values({ organizationId: DEMO_ORG.id, feature, grantedBy: superadminId })
+      .onConflictDoNothing()
+  }
 
-  // 3. Users + accounts
+  // 3. Users + accounts + memberships
   console.log('\n👥 Creating demo users...')
   for (const demoUser of DEMO_USERS) {
     await db
@@ -143,12 +125,7 @@ async function seed() {
         email: demoUser.email,
         name: demoUser.name,
         emailVerified: true,
-        // BetterAuth uses accounts.password for sign-in verification.
-        // passwordHash is a custom HMS field — set to the same value.
-        passwordHash,
-        role: demoUser.role,
-        tenantId: demoUser.tenantId,
-        organizationId: demoUser.organizationId,
+        role: demoUser.platformRole,
         isActive: true,
       })
       .onConflictDoNothing()
@@ -165,7 +142,20 @@ async function seed() {
       })
       .onConflictDoNothing()
 
-    console.log(`  ✓ ${demoUser.email} (${demoUser.role})`)
+    // Create org membership for non-superadmin users
+    if (demoUser.orgRole) {
+      await db
+        .insert(userMemberships)
+        .values({
+          userId: demoUser.id,
+          organizationId: DEMO_ORG.id,
+          role: demoUser.orgRole,
+          isActive: true,
+        })
+        .onConflictDoNothing()
+    }
+
+    console.log(`  ✓ ${demoUser.email} (${demoUser.platformRole})`)
   }
 
   console.log('\n✅ Seed complete\n')
@@ -174,7 +164,7 @@ async function seed() {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
   console.log('\nAdmin App  (localhost:5174)')
   console.log('  superadmin@hms.internal    Platform Superadmin')
-  console.log('\nHospital App  (localhost:5173)')
+  console.log('\nHospital App  (localhost:5173)  [x-org-id: ' + DEMO_ORG.id + ']')
   console.log('  admin@citycare.hms         Hospital Admin')
   console.log('  doctor@citycare.hms        Doctor')
   console.log('  nurse@citycare.hms         Nurse')

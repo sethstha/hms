@@ -80,14 +80,6 @@ export const createBetterAuth = ({
     },
     user: {
       additionalFields: {
-        tenantId: {
-          type: "string",
-          required: false,
-        },
-        organizationId: {
-          type: "string",
-          required: false,
-        },
         isActive: {
           type: "boolean",
           required: false,

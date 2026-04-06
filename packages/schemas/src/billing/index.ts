@@ -12,7 +12,7 @@ export const billingItemSchema = z.object({
 
 export const billingSchema = z.object({
   id: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  organizationId: z.string().uuid(),
   patientId: z.string().uuid(),
   visitId: z.string().uuid().optional(),
   items: z.array(billingItemSchema),
