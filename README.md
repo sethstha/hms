@@ -211,6 +211,8 @@ Superadmins have no tenant scope. All other users must have both `tenantId` and 
 - `AppEnv` type (in `@hms/auth/types`) defines Cloudflare Worker bindings and Hono context variables: `db`, `user`, `session`, `tenant`
 
 ### Database: Drizzle + Neon Postgres
+<img width="1440" height="1102" alt="image" src="https://github.com/user-attachments/assets/d82de037-c6e8-4104-81e8-009a686a744b" />
+
 
 ```typescript
 // packages/db/src/index.ts
