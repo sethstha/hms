@@ -4,14 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/dev.js",
-    "dev:hospital": "pnpm --filter hospital dev",
-    "dev:admin": "pnpm --filter admin dev",
-    "dev:api": "pnpm --filter api dev",
     "db:seed": "pnpm --filter @hms/db db:seed",
-    "build:admin": "pnpm --filter admin build",
-    "deploy:admin": "pnpm --filter admin run deploy",
-    "build:hospital": "pnpm --filter hospital build",
-    "build:api": "pnpm --filter api deploy",
     "db:generate": "pnpm --filter @hms/db db:generate",
     "db:migrate": "pnpm --filter @hms/db db:migrate",
     "check": "pnpm -r --parallel check",
@@ -20,7 +13,7 @@
     "lint:packages": "pnpm -r --parallel lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "type-check": "pnpm check"
+    "sync:vars": "node scripts/sync-dev-vars.js"
   },
   "devDependencies": {
     "@clack/prompts": "^1.2.0",

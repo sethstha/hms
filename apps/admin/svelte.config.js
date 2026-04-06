@@ -19,6 +19,9 @@ const config = {
       "@hms/ui": "../../packages/ui/src/index.ts",
       "@hms/utils": "../../packages/utils/src/index.ts",
     },
+    env: {
+      dir: "../../",
+    },
   },
 };
 

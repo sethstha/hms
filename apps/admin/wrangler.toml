@@ -2,6 +2,3 @@ name = "hms-admin"
 compatibility_date = "2024-11-01"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".svelte-kit/cloudflare"
-
-[vars]
-PUBLIC_API_URL = "https://hms-api.sethstha.workers.dev"
