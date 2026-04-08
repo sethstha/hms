@@ -1,4 +1,4 @@
-import { createAdminAuth, createHospitalAuth } from "@hms/auth";
+import { createAdminAuth, createOrgAuth } from "@hms/auth";
 import type { AppEnv } from "@hms/auth/types";
 import { createDb } from "@hms/db";
 import { OpenAPIHono } from "@hono/zod-openapi";
@@ -16,6 +16,7 @@ import ipd from "./routes/ipd";
 import laboratory from "./routes/laboratory";
 import opd from "./routes/opd";
 import organizations from "./routes/organizations";
+import permissions from "./routes/permissions";
 import patients from "./routes/patients";
 import pharmacy from "./routes/pharmacy";
 import radiology from "./routes/radiology";
@@ -94,8 +95,8 @@ app.on(["GET", "POST"], "/auth/admin/*", (c) => {
   return auth.handler(c.req.raw);
 });
 
-app.on(["GET", "POST"], "/auth/hospital/*", (c) => {
-  const auth = createHospitalAuth(getAuthEnv(c));
+app.on(["GET", "POST"], "/auth/organization/*", (c) => {
+  const auth = createOrgAuth(getAuthEnv(c));
   return auth.handler(c.req.raw);
 });
 
@@ -154,6 +155,7 @@ app.get(
 // ─── API v1 routes ─────────────────────────────────────────────────────────────
 const routes = app
   .route("/api/v1/organizations", organizations)
+  .route("/api/v1/permissions", permissions)
   .route("/api/v1/patients", patients)
   .route("/api/v1/appointments", appointments)
   .route("/api/v1/opd", opd)

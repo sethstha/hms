@@ -5,9 +5,9 @@
   "exports": {
     ".": "./src/index.ts",
     "./admin": "./src/admin.ts",
-    "./hospital": "./src/hospital.ts",
+    "./organization": "./src/organization.ts",
     "./admin-client": "./src/admin-client.ts",
-    "./hospital-client": "./src/hospital-client.ts",
+    "./organization-client": "./src/organization-client.ts",
     "./session": "./src/session.svelte.ts",
     "./middleware": "./src/middleware.ts",
     "./types": "./src/types.ts"

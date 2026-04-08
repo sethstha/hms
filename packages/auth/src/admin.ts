@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin, createAccessControl } from "better-auth/plugins";
+import { AUTH_BASE_PATHS } from "./paths.js";
 
 import { createDb } from "@hms/db";
 import { accounts, userSessions, users, verifications } from "@hms/db/schema";
@@ -50,7 +51,7 @@ export const createAdminAuth = ({
   baseURL,
   secret,
   trustedOrigins = [],
-}: CreateAdminAuthOptions) => {
+}: CreateAdminAuthOptions): ReturnType<typeof betterAuth> => {
   const resolvedBaseURL = normalizeBaseURL(baseURL);
   const LOCAL_DEV_ORIGINS = ["http://localhost:5173", "http://localhost:5174"];
   const resolvedOrigins = normalizeOrigins([resolvedBaseURL, ...LOCAL_DEV_ORIGINS, ...trustedOrigins]);
@@ -62,7 +63,7 @@ export const createAdminAuth = ({
   const db = createDb(databaseUrl);
   const auth = betterAuth({
     baseURL: resolvedBaseURL,
-    basePath: "/auth/admin",
+    basePath: AUTH_BASE_PATHS.admin,
     secret,
     trustedOrigins: resolvedOrigins,
     advanced: { database: { generateId: () => crypto.randomUUID() } },
@@ -100,6 +101,7 @@ export const createAdminAuth = ({
     },
   });
 
-  cache.set(cacheKey, auth);
-  return auth;
+  const result = auth as ReturnType<typeof betterAuth>;
+  cache.set(cacheKey, result);
+  return result;
 };

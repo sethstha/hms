@@ -8,6 +8,6 @@
   },
   "dependencies": {
     "@hms/api": "workspace:*",
-    "hono": "catalog"
+    "hono": "^4.6.0"
   }
 }

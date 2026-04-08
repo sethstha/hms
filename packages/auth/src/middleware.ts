@@ -1,8 +1,7 @@
 import { createMiddleware } from "hono/factory";
-
-import type { AppEnv, AuthenticatedUser } from "./types";
 import { createAdminAuth } from "./admin";
-import { createHospitalAuth } from "./hospital";
+import { createOrgAuth } from "./organization";
+import type { AppEnv, AuthenticatedUser } from "./types";
 
 // ─── Shared helpers ─────────────────────────────────────────────────────────────
 
@@ -46,20 +45,20 @@ export const requireAdminSession = createMiddleware<AppEnv>(async (c, next) => {
   await next();
 });
 
-// ─── Hospital session middleware ─────────────────────────────────────────────────
+// ─── Org session middleware ──────────────────────────────────────────────────────
 
 /**
- * Validates a session via the hospital better-auth instance (/auth/hospital).
+ * Validates a session via the org better-auth instance (/auth/organization).
  * Sets c.var.user and c.var.session on success.
  */
-export const requireHospitalSession = createMiddleware<AppEnv>(async (c, next) => {
+export const requireOrgSession = createMiddleware<AppEnv>(async (c, next) => {
   const { databaseUrl, secret, baseURL, trustedOrigins } = resolveEnv(c);
 
   if (!databaseUrl) {
     return c.json({ error: "Auth not configured. Missing DATABASE_URL." }, 500);
   }
 
-  const auth = createHospitalAuth({ databaseUrl, baseURL, secret, trustedOrigins });
+  const auth = createOrgAuth({ databaseUrl, baseURL, secret, trustedOrigins });
   const currentSession = await auth.api.getSession({ headers: c.req.raw.headers });
 
   if (!currentSession) {
@@ -126,7 +125,9 @@ function _setSessionVars(
   c.set("user", {
     id: currentSession.user.id as string,
     email: currentSession.user.email as string,
-    role: (typeof sessionUser.role === "string" ? sessionUser.role : "doctor") as AuthenticatedUser["role"],
+    role: (typeof sessionUser.role === "string"
+      ? sessionUser.role
+      : "doctor") as AuthenticatedUser["role"],
     isActive: typeof sessionUser.isActive === "boolean" ? sessionUser.isActive : true,
   });
 }

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { orgFeatures } from "@hms/db/schema";
 
 // Slugs become subdomains: {slug}.yoursaas.com
 // Rules: 3-63 chars, lowercase alphanumeric + hyphens, no leading/trailing hyphen
@@ -28,8 +27,6 @@ export const RESERVED_SLUGS = [
   "support",
   "help",
 ] as const;
-
-export const orgFeatureSchema = z.enum(orgFeatures);
 
 export const createOrganizationSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
@@ -64,10 +61,43 @@ export const domainCheckSchema = z.object({
     .regex(/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/, "Invalid domain format"),
 });
 
-export const grantFeatureSchema = z.object({
-  feature: orgFeatureSchema,
+// ─── Organization Permission schemas ──────────────────────────────────────────
+
+// Nested permission info returned alongside an org permission assignment
+const nestedPermissionSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  slug: z.string(),
+});
+
+// Full response shape for an org permission assignment
+export const orgPermissionSchema = z.object({
+  id: z.string(),
+  permissionId: z.string(),
+  permission: nestedPermissionSchema,
+  canCreate: z.boolean(),
+  canRead: z.boolean(),
+  canUpdate: z.boolean(),
+  canDelete: z.boolean(),
+  grantedAt: z.string(),
+  grantedBy: z.string().nullable(),
+});
+
+// Body for granting or updating CRUD settings for a permission assignment
+export const upsertPermissionSchema = z.object({
+  canCreate: z.boolean().default(true),
+  canRead: z.boolean().default(true),
+  canUpdate: z.boolean().default(true),
+  canDelete: z.boolean().default(true),
+});
+
+// Body for granting a new permission to an org
+export const grantPermissionSchema = z.object({
+  permissionId: z.string().uuid("Must be a valid permission ID"),
 });
 
 export type CreateOrganizationInput = z.infer<typeof createOrganizationSchema>;
 export type UpdateOrganizationInput = z.infer<typeof updateOrganizationSchema>;
-export type OrgFeature = z.infer<typeof orgFeatureSchema>;
+export type OrgPermission = z.infer<typeof orgPermissionSchema>;
+export type UpsertPermissionInput = z.infer<typeof upsertPermissionSchema>;
+export type GrantPermissionInput = z.infer<typeof grantPermissionSchema>;

@@ -3,20 +3,22 @@ import {
   createOrganizationSchema,
   domainCheckSchema,
   errorSchema,
-  grantFeatureSchema,
+  grantPermissionSchema,
+  orgPermissionSchema,
   RESERVED_SLUGS,
   slugCheckSchema,
   successSchema,
   updateOrganizationSchema,
+  upsertPermissionSchema,
 } from "@hms/schemas";
 import {
   organizationPermissions,
   organizations,
+  permissions,
 } from "@hms/db/schema";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { and, eq } from "drizzle-orm";
-import { authMiddleware } from "../../middleware/auth";
-import { requireRole } from "@hms/auth/middleware";
+import { requireAdminSession, requireRole } from "@hms/auth/middleware";
 
 const router = new OpenAPIHono<AppEnv>();
 
@@ -111,7 +113,7 @@ router.openapi(
 );
 
 // ─── All routes below require superadmin ──────────────────────────────────────
-router.use("*", authMiddleware, requireRole("superadmin"));
+router.use("*", requireAdminSession, requireRole("superadmin"));
 
 // ─── List organizations ────────────────────────────────────────────────────────
 router.openapi(
@@ -229,110 +231,13 @@ router.openapi(
   },
 );
 
-// ─── Grant feature ─────────────────────────────────────────────────────────────
-router.openapi(
-  createRoute({
-    method: "post",
-    path: "/{id}/permissions",
-    tags: ["Organizations"],
-    summary: "Grant a feature to an organization",
-    request: {
-      params: z.object({ id: z.string() }),
-      body: { content: { "application/json": { schema: grantFeatureSchema } } },
-    },
-    responses: {
-      201: {
-        content: { "application/json": { schema: successSchema } },
-        description: "Feature granted",
-      },
-      404: {
-        content: { "application/json": { schema: errorSchema } },
-        description: "Organization not found",
-      },
-    },
-  }),
-  async (c) => {
-    const db = c.get("db");
-    const user = c.get("user")!;
-    const { id } = c.req.valid("param");
-    const { feature } = c.req.valid("json");
-
-    const [org] = await db
-      .select({ id: organizations.id })
-      .from(organizations)
-      .where(eq(organizations.id, id))
-      .limit(1);
-
-    if (!org) return c.json({ error: "Organization not found." }, 404 as const);
-
-    // upsert — re-granting an existing feature is idempotent
-    await db
-      .insert(organizationPermissions)
-      .values({ organizationId: id, feature, grantedBy: user.id })
-      .onConflictDoNothing();
-
-    return c.json({ success: true }, 201 as const);
-  },
-);
-
-// ─── Revoke feature ────────────────────────────────────────────────────────────
-router.openapi(
-  createRoute({
-    method: "delete",
-    path: "/{id}/permissions/{feature}",
-    tags: ["Organizations"],
-    summary: "Revoke a feature from an organization",
-    request: {
-      params: z.object({ id: z.string(), feature: z.string() }),
-    },
-    responses: {
-      200: {
-        content: { "application/json": { schema: successSchema } },
-        description: "Feature revoked",
-      },
-      404: {
-        content: { "application/json": { schema: errorSchema } },
-        description: "Permission not found",
-      },
-    },
-  }),
-  async (c) => {
-    const db = c.get("db");
-    const { id, feature } = c.req.valid("param");
-
-    const [existing] = await db
-      .select({ id: organizationPermissions.id })
-      .from(organizationPermissions)
-      .where(
-        and(
-          eq(organizationPermissions.organizationId, id),
-          eq(organizationPermissions.feature, feature as Parameters<typeof eq>[1]),
-        ),
-      )
-      .limit(1);
-
-    if (!existing) return c.json({ error: "Permission not found." }, 404 as const);
-
-    await db
-      .delete(organizationPermissions)
-      .where(
-        and(
-          eq(organizationPermissions.organizationId, id),
-          eq(organizationPermissions.feature, feature as Parameters<typeof eq>[1]),
-        ),
-      );
-
-    return c.json({ success: true }, 200 as const);
-  },
-);
-
 // ─── List permissions for an org ───────────────────────────────────────────────
 router.openapi(
   createRoute({
     method: "get",
     path: "/{id}/permissions",
     tags: ["Organizations"],
-    summary: "List features granted to an organization",
+    summary: "List permissions granted to an organization",
     request: {
       params: z.object({ id: z.string() }),
     },
@@ -340,10 +245,10 @@ router.openapi(
       200: {
         content: {
           "application/json": {
-            schema: z.object({ data: z.array(z.object({ feature: z.string(), grantedAt: z.string() })) }),
+            schema: z.object({ data: z.array(orgPermissionSchema) }),
           },
         },
-        description: "List of granted features",
+        description: "List of granted permissions with CRUD settings",
       },
     },
   }),
@@ -352,11 +257,201 @@ router.openapi(
     const { id } = c.req.valid("param");
 
     const results = await db
-      .select({ feature: organizationPermissions.feature, grantedAt: organizationPermissions.grantedAt })
+      .select({
+        id: organizationPermissions.id,
+        permissionId: organizationPermissions.permissionId,
+        permission: {
+          id: permissions.id,
+          name: permissions.name,
+          slug: permissions.slug,
+        },
+        canCreate: organizationPermissions.canCreate,
+        canRead: organizationPermissions.canRead,
+        canUpdate: organizationPermissions.canUpdate,
+        canDelete: organizationPermissions.canDelete,
+        grantedAt: organizationPermissions.grantedAt,
+        grantedBy: organizationPermissions.grantedBy,
+      })
       .from(organizationPermissions)
+      .innerJoin(permissions, eq(permissions.id, organizationPermissions.permissionId))
       .where(eq(organizationPermissions.organizationId, id));
 
     return c.json({ data: results }, 200 as const);
+  },
+);
+
+// ─── Grant permission to org ───────────────────────────────────────────────────
+router.openapi(
+  createRoute({
+    method: "post",
+    path: "/{id}/permissions",
+    tags: ["Organizations"],
+    summary: "Grant a permission to an organization",
+    request: {
+      params: z.object({ id: z.string() }),
+      body: { content: { "application/json": { schema: grantPermissionSchema } } },
+    },
+    responses: {
+      201: {
+        content: { "application/json": { schema: successSchema } },
+        description: "Permission granted",
+      },
+      404: {
+        content: { "application/json": { schema: errorSchema } },
+        description: "Organization or permission not found",
+      },
+    },
+  }),
+  async (c) => {
+    const db = c.get("db");
+    const user = c.get("user")!;
+    const { id } = c.req.valid("param");
+    const { permissionId } = c.req.valid("json");
+
+    const [org] = await db
+      .select({ id: organizations.id })
+      .from(organizations)
+      .where(eq(organizations.id, id))
+      .limit(1);
+    if (!org) return c.json({ error: "Organization not found." }, 404 as const);
+
+    const [permission] = await db
+      .select({ id: permissions.id })
+      .from(permissions)
+      .where(and(eq(permissions.id, permissionId), eq(permissions.isActive, true)))
+      .limit(1);
+    if (!permission) return c.json({ error: "Permission not found or inactive." }, 404 as const);
+
+    // Idempotent — re-granting an existing permission is a no-op
+    await db
+      .insert(organizationPermissions)
+      .values({ organizationId: id, permissionId, grantedBy: user.id })
+      .onConflictDoNothing();
+
+    return c.json({ success: true }, 201 as const);
+  },
+);
+
+// ─── Upsert CRUD settings for a permission ────────────────────────────────────
+router.openapi(
+  createRoute({
+    method: "put",
+    path: "/{id}/permissions/{permissionId}",
+    tags: ["Organizations"],
+    summary: "Grant or update CRUD settings for a permission",
+    request: {
+      params: z.object({ id: z.string(), permissionId: z.string() }),
+      body: { content: { "application/json": { schema: upsertPermissionSchema } } },
+    },
+    responses: {
+      200: {
+        content: { "application/json": { schema: z.object({ data: orgPermissionSchema }) } },
+        description: "Permission upserted",
+      },
+      404: {
+        content: { "application/json": { schema: errorSchema } },
+        description: "Organization or permission not found",
+      },
+    },
+  }),
+  async (c) => {
+    const db = c.get("db");
+    const user = c.get("user")!;
+    const { id, permissionId } = c.req.valid("param");
+    const { canCreate, canRead, canUpdate, canDelete } = c.req.valid("json");
+
+    const [org] = await db
+      .select({ id: organizations.id })
+      .from(organizations)
+      .where(eq(organizations.id, id))
+      .limit(1);
+    if (!org) return c.json({ error: "Organization not found." }, 404 as const);
+
+    const [permission] = await db
+      .select({ id: permissions.id })
+      .from(permissions)
+      .where(and(eq(permissions.id, permissionId), eq(permissions.isActive, true)))
+      .limit(1);
+    if (!permission) return c.json({ error: "Permission not found or inactive." }, 404 as const);
+
+    const [row] = await db
+      .insert(organizationPermissions)
+      .values({ organizationId: id, permissionId, grantedBy: user.id, canCreate, canRead, canUpdate, canDelete })
+      .onConflictDoUpdate({
+        target: [organizationPermissions.organizationId, organizationPermissions.permissionId],
+        set: { canCreate, canRead, canUpdate, canDelete, grantedBy: user.id },
+      })
+      .returning();
+
+    // Join permissions to return nested object
+    const [result] = await db
+      .select({
+        id: organizationPermissions.id,
+        permissionId: organizationPermissions.permissionId,
+        permission: { id: permissions.id, name: permissions.name, slug: permissions.slug },
+        canCreate: organizationPermissions.canCreate,
+        canRead: organizationPermissions.canRead,
+        canUpdate: organizationPermissions.canUpdate,
+        canDelete: organizationPermissions.canDelete,
+        grantedAt: organizationPermissions.grantedAt,
+        grantedBy: organizationPermissions.grantedBy,
+      })
+      .from(organizationPermissions)
+      .innerJoin(permissions, eq(permissions.id, organizationPermissions.permissionId))
+      .where(eq(organizationPermissions.id, row.id));
+
+    return c.json({ data: result }, 200 as const);
+  },
+);
+
+// ─── Revoke permission from org ────────────────────────────────────────────────
+router.openapi(
+  createRoute({
+    method: "delete",
+    path: "/{id}/permissions/{permissionId}",
+    tags: ["Organizations"],
+    summary: "Revoke a permission from an organization",
+    request: {
+      params: z.object({ id: z.string(), permissionId: z.string() }),
+    },
+    responses: {
+      200: {
+        content: { "application/json": { schema: successSchema } },
+        description: "Permission revoked",
+      },
+      404: {
+        content: { "application/json": { schema: errorSchema } },
+        description: "Permission assignment not found",
+      },
+    },
+  }),
+  async (c) => {
+    const db = c.get("db");
+    const { id, permissionId } = c.req.valid("param");
+
+    const [existing] = await db
+      .select({ id: organizationPermissions.id })
+      .from(organizationPermissions)
+      .where(
+        and(
+          eq(organizationPermissions.organizationId, id),
+          eq(organizationPermissions.permissionId, permissionId),
+        ),
+      )
+      .limit(1);
+
+    if (!existing) return c.json({ error: "Permission assignment not found." }, 404 as const);
+
+    await db
+      .delete(organizationPermissions)
+      .where(
+        and(
+          eq(organizationPermissions.organizationId, id),
+          eq(organizationPermissions.permissionId, permissionId),
+        ),
+      );
+
+    return c.json({ success: true }, 200 as const);
   },
 );
 

@@ -33,6 +33,7 @@
     "@tanstack/table-core": "^8.21.3",
     "embla-carousel-svelte": "^8.6.0",
     "formsnap": "^2.0.1",
+    "jsrepo": "^3.7.0",
     "layerchart": "2.0.0-next.48",
     "paneforge": "^1.0.2",
     "shadcn-svelte": "^1.2.7",

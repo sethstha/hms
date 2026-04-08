@@ -10,8 +10,8 @@
 
   const form = createForm(() => ({
     defaultValues: {
-      email: "superadmin@hms.internal",
-      password: "Demo@1234",
+      email: "",
+      password: "",
     },
     validators: {
       onChange: loginSchema,

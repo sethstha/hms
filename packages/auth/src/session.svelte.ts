@@ -8,7 +8,6 @@ export type SessionState<T> = {
  * Creates a reactive session state using Svelte 5 runes.
  * Accepts optional `initialData` from SSR — when provided, `loading` starts
  * as `false` and `data` is pre-populated, eliminating the loading flash.
- * Callers must still trigger `refresh()` via `$effect` in the browser to
  * re-sync after client-side auth actions.
  */
 export function createSession<T>(
@@ -36,6 +35,8 @@ export function createSession<T>(
   };
 }
 
+import { AUTH_BASE_PATHS, type AuthApp } from "./paths.js";
+
 /**
  * Fetches a session from the API server on behalf of a SvelteKit request.
  * Used in hooks.server.ts — forwards the request cookie to the API.
@@ -43,8 +44,9 @@ export function createSession<T>(
 export const fetchSession = async <T>(
   request: Request,
   apiUrl: string,
-  basePath: "/auth/admin" | "/auth/hospital",
+  app: AuthApp,
 ): Promise<T | null> => {
+  const basePath = AUTH_BASE_PATHS[app];
   const cookie = request.headers.get("cookie");
   if (!cookie) return null;
 

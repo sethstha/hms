@@ -1,5 +1,5 @@
-import { index, pgTable, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
-import { orgFeatureEnum } from "./enums";
+import { boolean, index, pgTable, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { permissions } from "./permissions";
 import { organizations } from "./organizations";
 import { users } from "./users";
 
@@ -10,8 +10,10 @@ export const organizationPermissions = pgTable(
     organizationId: uuid("organization_id")
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
-    feature: orgFeatureEnum("feature").notNull(),
-    // the superadmin who granted this feature; set null if that user is deleted
+    permissionId: uuid("permission_id")
+      .notNull()
+      .references(() => permissions.id, { onDelete: "cascade" }),
+    // the superadmin who granted this permission; set null if that user is deleted
     grantedBy: uuid("granted_by").references(() => users.id, { onDelete: "set null" }),
     grantedAt: timestamp("granted_at", {
       withTimezone: true,
@@ -19,14 +21,19 @@ export const organizationPermissions = pgTable(
     })
       .defaultNow()
       .notNull(),
+    canCreate: boolean("can_create").notNull().default(true),
+    canRead: boolean("can_read").notNull().default(true),
+    canUpdate: boolean("can_update").notNull().default(true),
+    canDelete: boolean("can_delete").notNull().default(true),
   },
   (table) => ({
-    // one row per feature per org — insert = grant, delete = revoke
-    orgFeatureUniqueIdx: uniqueIndex("org_permissions_org_feature_unique").on(
+    // one row per permission per org — insert = grant, delete = revoke
+    orgPermissionUniqueIdx: uniqueIndex("org_permissions_org_permission_unique").on(
       table.organizationId,
-      table.feature,
+      table.permissionId,
     ),
     orgIdx: index("org_permissions_org_id_idx").on(table.organizationId),
+    permissionIdx: index("org_permissions_permission_id_idx").on(table.permissionId),
     grantedByIdx: index("org_permissions_granted_by_idx").on(table.grantedBy),
   }),
 );

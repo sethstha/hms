@@ -1,9 +1,8 @@
 import { and, eq } from "drizzle-orm";
 import { createMiddleware } from "hono/factory";
 
-import { organizationPermissions, organizations, userMemberships } from "@hms/db/schema";
+import { organizationPermissions, organizations, permissions, userMemberships } from "@hms/db/schema";
 import type { AppEnv } from "@hms/auth/types";
-import type { OrgFeature } from "@hms/schemas";
 
 export const orgMiddleware = createMiddleware<AppEnv>(async (c, next) => {
   const user = c.get("user");
@@ -90,12 +89,12 @@ export const orgMiddleware = createMiddleware<AppEnv>(async (c, next) => {
 // ─── Feature gate ─────────────────────────────────────────────────────────────
 
 /**
- * Verifies that the current organization has been granted a specific feature.
+ * Verifies that the current organization has been granted a specific permission (by slug).
  * Must be placed after orgMiddleware.
  *
  * Usage: router.use("*", authMiddleware, orgMiddleware, requireFeature("pharmacy"))
  */
-export const requireFeature = (feature: OrgFeature) =>
+export const requireFeature = (slug: string) =>
   createMiddleware<AppEnv>(async (c, next) => {
     const org = c.get("organization");
 
@@ -111,20 +110,22 @@ export const requireFeature = (feature: OrgFeature) =>
     }
 
     const db = c.get("db");
-    const [permission] = await db
+    const [grant] = await db
       .select({ id: organizationPermissions.id })
       .from(organizationPermissions)
+      .innerJoin(permissions, eq(permissions.id, organizationPermissions.permissionId))
       .where(
         and(
           eq(organizationPermissions.organizationId, org.id),
-          eq(organizationPermissions.feature, feature),
+          eq(permissions.slug, slug),
+          eq(permissions.isActive, true),
         ),
       )
       .limit(1);
 
-    if (!permission) {
+    if (!grant) {
       return c.json(
-        { error: `Forbidden. This organization does not have the '${feature}' feature enabled.` },
+        { error: `Forbidden. This organization does not have the '${slug}' feature enabled.` },
         403,
       );
     }
