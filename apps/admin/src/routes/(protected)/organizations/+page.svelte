@@ -166,14 +166,14 @@
                           <Button
                             size="sm"
                             variant="outline"
-                            onclick={() => goto(`/organizations/${row.original.id}/permissions`)}
+                            onclick={() => goto(`/organizations/${row.original.slug}/permissions`)}
                           >
                             Permissions
                           </Button>
                           <Button
                             size="sm"
                             variant="outline"
-                            onclick={() => goto(`/organizations/${row.original.id}/edit`)}
+                            onclick={() => goto(`/organizations/${row.original.slug}/edit`)}
                           >
                             Edit
                           </Button>

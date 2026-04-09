@@ -3,13 +3,13 @@
   import { Badge, Button, Checkbox, Table } from "@hms/ui";
   import { createQuery, HydrationBoundary, useQueryClient } from "@tanstack/svelte-query";
   import { goto } from "$app/navigation";
-  import { organizationsApi } from "$lib/api";
+  import { api } from "$lib/api/index";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
 
   const queryClient = useQueryClient();
-  const { slug: orgSlug } = data;
+  const { id: orgId } = data;
 
   type Organization = {
     id: string;
@@ -24,7 +24,7 @@
   const orgsQuery = createQuery({
     queryKey: ["organizations"],
     queryFn: async () => {
-      const res = await organizationsApi.();
+      const res = await api.organizations.$get();
       if (!res.ok) throw new Error("Failed to fetch organizations");
       return res.json();
     },
@@ -42,9 +42,9 @@
 
   // Org-specific grants
   const orgPermissionsQuery = createQuery({
-    queryKey: ["org-permissions", orgSlug],
+    queryKey: ["org-permissions", orgId],
     queryFn: async () => {
-      const res = await organizationsApi[":slug"].permissions.$get({ param: { slug: orgSlug } });
+      const res = await api.organizations[":id"].permissions.$get({ param: { id: orgId } });
       if (!res.ok) throw new Error("Failed to fetch org permissions");
       return res.json();
     },
@@ -52,7 +52,7 @@
 
   const org = $derived(
     (($orgsQuery.data as { data: Organization[] } | undefined)?.data ?? []).find(
-      (o) => o.slug === orgSlug,
+      (o) => o.id === orgId,
     ),
   );
 
@@ -67,53 +67,69 @@
     ),
   );
 
+  // ─── Draft state — local edits before explicit save ──────────────────────────
+  type PermFields = {
+    canCreate: boolean;
+    canRead: boolean;
+    canUpdate: boolean;
+    canDelete: boolean;
+  };
+
+  let draftState = $state<Record<string, PermFields>>({});
+
+  // Sync draft from server whenever grantsMap changes (initial load + after mutations)
+  $effect(() => {
+    const next: Record<string, PermFields> = {};
+    for (const [id, grant] of grantsMap) {
+      next[id] = {
+        canCreate: grant.canCreate,
+        canRead: grant.canRead,
+        canUpdate: grant.canUpdate,
+        canDelete: grant.canDelete,
+      };
+    }
+    draftState = next;
+  });
+
+  // Which rows have unsaved changes vs. server state
+  const dirtySet = $derived(
+    new Set(
+      catalog
+        .filter((p) => {
+          const draft = draftState[p.id];
+          const original = grantsMap.get(p.id);
+          if (!draft || !original) return false;
+          return (
+            draft.canCreate !== original.canCreate ||
+            draft.canRead !== original.canRead ||
+            draft.canUpdate !== original.canUpdate ||
+            draft.canDelete !== original.canDelete
+          );
+        })
+        .map((p) => p.id),
+    ),
+  );
+
   // ─── Mutation state ───────────────────────────────────────────────────────────
   let pendingId = $state<string | null>(null);
-  let isSaving = $state(false);
   let mutationError = $state("");
 
-  type CrudFlags = Pick<OrgPermission, "canCreate" | "canRead" | "canUpdate" | "canDelete">;
-
-  // Local edits accumulate here until the user clicks Save
-  let localOverrides = $state(new Map<string, CrudFlags>());
-
-  const isDirty = $derived(localOverrides.size > 0);
-
-  function effectiveGrant(permissionId: string): OrgPermission | undefined {
-    const server = grantsMap.get(permissionId);
-    if (!server) return undefined;
-    const override = localOverrides.get(permissionId);
-    return override ? { ...server, ...override } : server;
-  }
-
-  function handleLocalToggle(permissionId: string, field: keyof CrudFlags, value: boolean) {
-    const server = grantsMap.get(permissionId)!;
-    const current = localOverrides.get(permissionId) ?? {
-      canCreate: server.canCreate,
-      canRead: server.canRead,
-      canUpdate: server.canUpdate,
-      canDelete: server.canDelete,
-    };
-    localOverrides = new Map(localOverrides).set(permissionId, { ...current, [field]: value });
-  }
-
-  async function handleSave() {
-    isSaving = true;
+  async function handleUpdate(permissionId: string) {
+    const draft = draftState[permissionId];
+    if (!draft) return;
+    pendingId = permissionId;
     mutationError = "";
     try {
-      for (const [permissionId, flags] of localOverrides) {
-        const res = await organizationsApi[":slug"].permissions[":permissionId"].$put({
-          param: { slug: orgSlug, permissionId },
-          json: flags,
-        });
-        if (!res.ok) throw new Error(`Failed to update permission ${permissionId}`);
-      }
-      localOverrides = new Map();
-      await queryClient.invalidateQueries({ queryKey: ["org-permissions", orgSlug] });
+      const res = await api.organizations[":id"].permissions[":permissionId"].$put({
+        param: { id: orgId, permissionId },
+        json: draft,
+      });
+      if (!res.ok) throw new Error("Failed to update permission");
+      await queryClient.invalidateQueries({ queryKey: ["org-permissions", orgId] });
     } catch (e) {
       mutationError = e instanceof Error ? e.message : "Something went wrong";
     } finally {
-      isSaving = false;
+      pendingId = null;
     }
   }
 
@@ -121,12 +137,12 @@
     pendingId = permissionId;
     mutationError = "";
     try {
-      const res = await organizationsApi[":slug"].permissions.$post({
-        param: { slug: orgSlug },
+      const res = await api.organizations[":id"].permissions.$post({
+        param: { id: orgId },
         json: { permissionId },
       });
       if (!res.ok) throw new Error("Failed to grant permission");
-      await queryClient.invalidateQueries({ queryKey: ["org-permissions", orgSlug] });
+      await queryClient.invalidateQueries({ queryKey: ["org-permissions", orgId] });
     } catch (e) {
       mutationError = e instanceof Error ? e.message : "Something went wrong";
     } finally {
@@ -138,11 +154,11 @@
     pendingId = permissionId;
     mutationError = "";
     try {
-      const res = await organizationsApi[":slug"].permissions[":permissionId"].$delete({
-        param: { slug: orgSlug, permissionId },
+      const res = await api.organizations[":id"].permissions[":permissionId"].$delete({
+        param: { id: orgId, permissionId },
       });
       if (!res.ok) throw new Error("Failed to revoke permission");
-      await queryClient.invalidateQueries({ queryKey: ["org-permissions", orgSlug] });
+      await queryClient.invalidateQueries({ queryKey: ["org-permissions", orgId] });
     } catch (e) {
       mutationError = e instanceof Error ? e.message : "Something went wrong";
     } finally {
@@ -172,20 +188,13 @@
       </Button>
     </div>
 
-    <div class="flex items-start justify-between">
-      <div>
-        <h1 class="text-foreground text-2xl font-semibold tracking-tight">
-          {org ? `Permissions: ${org.name}` : "Permissions"}
-        </h1>
-        <p class="text-muted-foreground mt-1 text-sm">
-          Control which features and operations this organization can access.
-        </p>
-      </div>
-      {#if isDirty}
-        <Button onclick={handleSave} disabled={isSaving}>
-          {isSaving ? "Saving…" : "Save changes"}
-        </Button>
-      {/if}
+    <div>
+      <h1 class="text-foreground text-2xl font-semibold tracking-tight">
+        {org ? `Permissions: ${org.name}` : "Permissions"}
+      </h1>
+      <p class="text-muted-foreground mt-1 text-sm">
+        Control which features and operations this organization can access.
+      </p>
     </div>
 
     {#if mutationError}
@@ -228,46 +237,52 @@
           </Table.Header>
           <Table.Body>
             {#each catalog as permission}
-              {@const granted = effectiveGrant(permission.id)}
+              {@const granted = grantsMap.get(permission.id)}
               {@const isPending = pendingId === permission.id}
-              {@const hasLocalChange = localOverrides.has(permission.id)}
               <Table.Row class={isPending ? "opacity-60" : ""}>
                 <Table.Cell>
-                  <div class="flex items-center gap-2">
-                    <span class="font-medium">{permission.name}</span>
-                    {#if hasLocalChange}
-                      <span class="h-1.5 w-1.5 rounded-full bg-amber-400" title="Unsaved changes"
-                      ></span>
-                    {/if}
-                  </div>
+                  <div class="font-medium">{permission.name}</div>
                   {#if permission.description}
                     <div class="text-muted-foreground text-xs">{permission.description}</div>
                   {/if}
                 </Table.Cell>
 
                 {#each ["canCreate", "canRead", "canUpdate", "canDelete"] as field}
+                  {@const f = field as keyof PermFields}
                   <Table.Cell class="text-center">
                     <div class="flex justify-center">
                       <Checkbox
-                        checked={granted
-                          ? (granted[field as keyof OrgPermission] as boolean)
-                          : false}
-                        disabled={!granted || isPending || isSaving}
-                        onCheckedChange={(v) =>
-                          handleLocalToggle(permission.id, field as keyof CrudFlags, v === true)}
+                        checked={draftState[permission.id]?.[f] ?? false}
+                        disabled={!granted || isPending}
+                        onCheckedChange={(v) => {
+                          if (draftState[permission.id]) {
+                            draftState[permission.id][f] = v === true;
+                          }
+                        }}
                       />
                     </div>
                   </Table.Cell>
                 {/each}
 
                 <Table.Cell class="text-right">
+                  {@const isDirty = dirtySet.has(permission.id)}
                   <div class="flex justify-end gap-2">
                     {#if granted}
-                      <Badge
-                        class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                      {#if !isDirty}
+                        <Badge
+                          class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                        >
+                          Granted
+                        </Badge>
+                      {/if}
+                      <Button
+                        size="sm"
+                        variant="default"
+                        disabled={isPending || !isDirty}
+                        onclick={() => handleUpdate(permission.id)}
                       >
-                        Granted
-                      </Badge>
+                        {isPending ? "Saving…" : "Update"}
+                      </Button>
                       <Button
                         size="sm"
                         variant="destructive"

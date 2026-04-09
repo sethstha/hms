@@ -1,6 +1,6 @@
 import { dehydrate } from "@tanstack/svelte-query";
-import { createQueryClient } from "$lib/query/client";
 import { api } from "$lib/api/index";
+import { createQueryClient } from "$lib/query/client";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ params, request }) => {
@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ params, request }) => {
   // Prefetch the list — the edit page derives the target org from it.
   // There is no single-org GET endpoint, so we reuse the list query
   // (already cached from the list page in most flows).
-  await queryClient.prefetchQuery({
+  const orgsData = await queryClient.fetchQuery({
     queryKey: ["organizations"],
     queryFn: async () => {
       const res = await api.organizations.$get({}, { headers: { cookie } });
@@ -19,5 +19,9 @@ export const load: PageServerLoad = async ({ params, request }) => {
     },
   });
 
-  return { slug: params.slug, dehydratedState: dehydrate(queryClient) };
+  const org = (orgsData as { data: { id: string; slug: string }[] }).data.find(
+    (o) => o.slug === params.slug,
+  );
+
+  return { id: org?.id ?? "", dehydratedState: dehydrate(queryClient) };
 };

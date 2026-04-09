@@ -33,7 +33,7 @@
 
   const org = $derived(
     (($orgsQuery.data as { data: Organization[] } | undefined)?.data ?? []).find(
-      (o) => o.slug === data.slug,
+      (o) => o.id === data.id,
     ) ?? null,
   );
 
@@ -44,8 +44,8 @@
     loading = true;
     error = "";
     try {
-      const res = await api.organizations[":slug"].$patch({
-        param: { slug: data.slug },
+      const res = await api.organizations[":id"].$patch({
+        param: { id: data.id },
         json: patch,
       });
       if (!res.ok) throw new Error("Failed to update organization");

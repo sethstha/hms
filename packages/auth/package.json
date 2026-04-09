@@ -14,10 +14,10 @@
   },
   "dependencies": {
     "@hms/db": "workspace:*",
-    "better-auth": "^1.5.5"
+    "better-auth": "catalog:"
   },
   "devDependencies": {
-    "hono": "^4.6.0"
+    "hono": "catalog:"
   },
   "peerDependencies": {
     "hono": "^4.6.0"

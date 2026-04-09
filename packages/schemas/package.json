@@ -15,6 +15,6 @@
     "./common": "./src/common.ts"
   },
   "dependencies": {
-    "zod": "^4.0.0"
+    "zod": "catalog:"
   }
 }

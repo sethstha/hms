@@ -7,6 +7,21 @@ export const load: PageServerLoad = async ({ params, request }) => {
   const queryClient = createQueryClient();
   const cookie = request.headers.get("cookie") ?? "";
 
+  // Resolve slug → id before prefetching org-specific data.
+  const orgsData = await queryClient.fetchQuery({
+    queryKey: ["organizations"],
+    queryFn: async () => {
+      const res = await api.organizations.$get({}, { headers: { cookie } });
+      if (!res.ok) throw new Error("Failed to fetch organizations");
+      return res.json();
+    },
+  });
+
+  const org = (orgsData as { data: { id: string; slug: string }[] }).data.find(
+    (o) => o.slug === params.slug,
+  );
+  const orgId = org?.id ?? "";
+
   await Promise.all([
     // Global catalog — provides the full list of available permissions
     queryClient.prefetchQuery({
@@ -19,26 +34,17 @@ export const load: PageServerLoad = async ({ params, request }) => {
     }),
     // Org-specific grants — which permissions this org currently has
     queryClient.prefetchQuery({
-      queryKey: ["org-permissions", params.slug],
+      queryKey: ["org-permissions", orgId],
       queryFn: async () => {
-        const res = await api.organizations[":slug"].permissions.$get(
-          { param: { slug: params.slug } },
+        const res = await api.organizations[":id"].permissions.$get(
+          { param: { id: orgId } },
           { headers: { cookie } },
         );
         if (!res.ok) throw new Error("Failed to fetch org permissions");
         return res.json();
       },
     }),
-    // Org details — for the page header
-    queryClient.prefetchQuery({
-      queryKey: ["organizations"],
-      queryFn: async () => {
-        const res = await api.organizations.$get({}, { headers: { cookie } });
-        if (!res.ok) throw new Error("Failed to fetch organizations");
-        return res.json();
-      },
-    }),
   ]);
 
-  return { slug: params.slug, dehydratedState: dehydrate(queryClient) };
+  return { id: orgId, dehydratedState: dehydrate(queryClient) };
 };
