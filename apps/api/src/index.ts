@@ -16,8 +16,8 @@ import ipd from "./routes/ipd";
 import laboratory from "./routes/laboratory";
 import opd from "./routes/opd";
 import organizations from "./routes/organizations";
-import permissions from "./routes/permissions";
 import patients from "./routes/patients";
+import permissions from "./routes/permissions";
 import pharmacy from "./routes/pharmacy";
 import radiology from "./routes/radiology";
 import reports from "./routes/reports";
@@ -152,22 +152,22 @@ app.get(
   }),
 );
 
-// ─── API v1 routes ─────────────────────────────────────────────────────────────
-const routes = app
-  .route("/api/v1/organizations", organizations)
-  .route("/api/v1/permissions", permissions)
-  .route("/api/v1/patients", patients)
-  .route("/api/v1/appointments", appointments)
-  .route("/api/v1/opd", opd)
-  .route("/api/v1/ipd", ipd)
-  .route("/api/v1/pharmacy", pharmacy)
-  .route("/api/v1/billing", billing)
-  .route("/api/v1/laboratory", laboratory)
-  .route("/api/v1/radiology", radiology)
-  .route("/api/v1/inventory", inventory)
-  .route("/api/v1/staff", staff)
-  .route("/api/v1/reports", reports)
-  .route("/internal", internal);
+const v1 = new OpenAPIHono<AppEnv>()
+  .route("/organizations", organizations)
+  .route("/permissions", permissions)
+  .route("/patients", patients)
+  .route("/appointments", appointments)
+  .route("/opd", opd)
+  .route("/ipd", ipd)
+  .route("/pharmacy", pharmacy)
+  .route("/billing", billing)
+  .route("/laboratory", laboratory)
+  .route("/radiology", radiology)
+  .route("/inventory", inventory)
+  .route("/staff", staff)
+  .route("/reports", reports);
+
+const routes = app.route("/api/v1", v1).route("/internal", internal).route("/internal", internal);
 
 export type AppType = typeof routes;
-export default app;
+export default routes;

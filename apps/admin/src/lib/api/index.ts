@@ -3,15 +3,7 @@ import { env } from "$env/dynamic/public";
 
 export const api = createApiClient(env.PUBLIC_API_URL, {
   init: { credentials: "include" },
-});
+}).api.v1;
 
-export class ApiError extends Error {
-  constructor(
-    public readonly status: number,
-    message: string,
-    public readonly path: string,
-  ) {
-    super(`[${status}] ${path}: ${message}`);
-    this.name = "ApiError";
-  }
-}
+export const appointmentsApi = api.appointments;
+export const organizationsApi = api.organizations;

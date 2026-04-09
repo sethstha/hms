@@ -1,4 +1,5 @@
 import type { AppEnv } from "@hms/auth/types";
+import { appointments } from "@hms/db/schema";
 import {
   appointmentSchema,
   createAppointmentSchema,
@@ -6,7 +7,6 @@ import {
   successSchema,
   updateAppointmentSchema,
 } from "@hms/schemas";
-import { appointments } from "@hms/db/schema";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { eq } from "drizzle-orm";
 import { authMiddleware } from "../../middleware/auth";

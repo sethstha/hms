@@ -1,0 +1,23 @@
+<script lang="ts">
+  import { cn } from "@hms/lib/utils.js";
+  import { AlertDialog as AlertDialogPrimitive } from "bits-ui";
+  import { buttonVariants, type ButtonSize, type ButtonVariant } from "../button/index.js";
+
+  let {
+    ref = $bindable(null),
+    class: className,
+    variant = "outline",
+    size = "default",
+    ...restProps
+  }: AlertDialogPrimitive.CancelProps & {
+    variant?: ButtonVariant;
+    size?: ButtonSize;
+  } = $props();
+</script>
+
+<AlertDialogPrimitive.Cancel
+  bind:ref
+  data-slot="alert-dialog-cancel"
+  class={cn(buttonVariants({ variant, size }), "cn-alert-dialog-cancel", className)}
+  {...restProps}
+/>

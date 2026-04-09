@@ -1,6 +1,6 @@
 import { dehydrate } from "@tanstack/svelte-query";
-import { createQueryClient } from "$lib/query/client";
 import { api } from "$lib/api/index";
+import { createQueryClient } from "$lib/query/client";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ params, request }) => {
