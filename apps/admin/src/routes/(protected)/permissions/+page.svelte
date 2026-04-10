@@ -4,6 +4,7 @@
   import { DataTable, Table, Badge, Button, AlertDialog } from "@hms/ui";
   import { goto } from "$app/navigation";
   import { api } from "$lib/api/index";
+  import { adminRoutes } from "@hms/utils";
   import type { Permission } from "@hms/schemas";
   import type { PageData } from "./$types";
   import type { ColumnDef, SortingState } from "@hms/ui";
@@ -89,7 +90,7 @@
           Define which modules are available across the platform. Organizations are assigned from this catalog.
         </p>
       </div>
-      <Button onclick={() => goto("/permissions/new")}>
+      <Button onclick={() => goto(adminRoutes.permissions.new)}>
         <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
         </svg>

@@ -8,4 +8,19 @@ port = 8787
 
 [vars]
 BETTER_AUTH_URL = "https://hms-api.sethstha.workers.dev"
-BETTER_AUTH_TRUSTED_ORIGINS = "https://hms-hospital.sethstha.workers.dev, https://hms-admin.sethstha.workers.dev"
+BETTER_AUTH_TRUSTED_ORIGINS = "https://hms-admin-sethstha.pages.dev"
+
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = false
+persist = true
+head_sampling_rate = 1

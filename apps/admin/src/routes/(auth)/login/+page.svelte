@@ -2,6 +2,7 @@
 <script lang="ts">
   import { loginSchema } from "@hms/schemas";
   import { Alert, Button, Card, Input, Label } from "@hms/ui";
+  import { adminRoutes } from "@hms/utils";
   import { createForm } from "@tanstack/svelte-form";
   import { goto } from "$app/navigation";
   import { authClient } from "$lib/auth/client";
@@ -17,20 +18,18 @@
       onChange: loginSchema,
     },
     onSubmit: async ({ value }) => {
-      // call your Hono API here
-      console.log(value);
-      const { data, error } = await authClient.signIn.email({
+      await authClient.signIn.email({
         email: value.email,
         password: value.password,
-        callbackURL: "/dashboard",
+        fetchOptions: {
+          onSuccess: () => {
+            goto(adminRoutes.dashboard);
+          },
+          onError: (ctx) => {
+            errorMessage = ctx.error.message ?? "Invalid email or password.";
+          },
+        },
       });
-
-      if (!data || error) {
-        errorMessage = error?.message ?? "Invalid email or password.";
-        return;
-      }
-
-      await goto("/demo");
     },
   }));
 </script>
@@ -101,7 +100,7 @@
         {/if}
         <form.Subscribe selector={(state) => state.isSubmitting}>
           {#snippet children(isSubmitting)}
-            <Button type="submit" class="w-full" disabled={isSubmitting}>
+            <Button type="submit" class="w-full" disabled={isSubmitting} loading={isSubmitting}>
               {isSubmitting ? "Signing in..." : "Sign in"}
             </Button>
           {/snippet}

@@ -3,6 +3,7 @@
   import { Button, Card, Input, Label } from "@hms/ui";
   import { goto } from "$app/navigation";
   import { api } from "$lib/api/index";
+  import { adminRoutes } from "@hms/utils";
 
   const queryClient = useQueryClient();
 
@@ -88,7 +89,7 @@
       }
       if (!res.ok) throw new Error("Failed to create permission");
       await queryClient.invalidateQueries({ queryKey: ["permissions"] });
-      goto("/permissions");
+      goto(adminRoutes.permissions.root);
     } catch (e) {
       error = e instanceof Error ? e.message : "Something went wrong";
     } finally {

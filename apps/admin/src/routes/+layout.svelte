@@ -1,20 +1,26 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import { page } from "$app/state";
   import { locales, localizeHref } from "$lib/paraglide/runtime";
-  import { setContext, type Snippet } from "svelte";
+  import { onMount, setContext, type Snippet } from "svelte";
   import "./layout.css";
   import { createSession } from "@hms/auth/session";
-  import { Button } from "@hms/ui";
-  import { HydrationBoundary, QueryClientProvider } from "@tanstack/svelte-query";
+  import { adminRoutes } from "@hms/utils";
+  import { QueryClientProvider } from "@tanstack/svelte-query";
   import favicon from "$lib/assets/favicon.svg";
   import { authClient } from "$lib/auth/client";
   import { createQueryClient } from "$lib/query/client";
-  import type { LayoutData } from "./$types";
 
-  let { children, data }: { children: Snippet; data: LayoutData } = $props();
+  let { children }: { children: Snippet } = $props();
 
-  const session = createSession(() => authClient.getSession(), data.session);
+  const session = createSession(() => authClient.getSession());
   setContext("session", session);
+
+  onMount(async () => {
+    if (page.url.pathname !== "/") return;
+    const { data } = await authClient.getSession();
+    goto(data?.session ? adminRoutes.dashboard : adminRoutes.login);
+  });
 
   const queryClient = createQueryClient();
 </script>
@@ -25,9 +31,7 @@
 </svelte:head>
 
 <QueryClientProvider client={queryClient}>
-  <HydrationBoundary state={data.dehydratedState}>
-    {@render children()}
-  </HydrationBoundary>
+  {@render children()}
 </QueryClientProvider>
 
 <div style="display:none">
@@ -35,4 +39,3 @@
     <a href={localizeHref(page.url.pathname, { locale })}>{locale}</a>
   {/each}
 </div>
-<Button></Button>

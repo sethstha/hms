@@ -2,7 +2,7 @@
 // Usage: import { Button, Input } from "@hms/ui"  →  <Button />, <Input />
 export { Root as AspectRatio } from "./components/ui/aspect-ratio";
 export { Badge } from "./components/ui/badge";
-export { Button, buttonVariants } from "./components/ui/button";
+export { buttonVariants } from "./components/ui/button";
 export { Root as Checkbox } from "./components/ui/checkbox";
 export { Root as Input } from "./components/ui/input";
 export { Root as Kbd } from "./components/ui/kbd";
@@ -16,6 +16,11 @@ export { Spinner } from "./components/ui/spinner";
 export { Root as Switch } from "./components/ui/switch";
 export { Root as Textarea } from "./components/ui/textarea";
 export { Root as Toggle } from "./components/ui/toggle";
+export { CopyButton } from "./components/ui/copy-button";
+export { LanguageSwitcher } from "./components/ui/language-switcher";
+export { Meter } from "./components/ui/meter";
+export { NLPDateInput } from "./components/ui/nlp-date-input";
+export { TagsInput } from "./components/ui/tags-input";
 
 // Compound components — namespace exports
 // Usage: import { Avatar, Card } from "@hms/ui"  →  <Avatar.Root />, <Card.Header />
@@ -37,6 +42,7 @@ export * as Dialog from "./components/ui/dialog";
 export * as Drawer from "./components/ui/drawer";
 export * as DropdownMenu from "./components/ui/dropdown-menu";
 export * as Empty from "./components/ui/empty";
+export { default as Button } from "./components/button.svelte";
 export { default as Field } from "./components/ui/field/field.svelte";
 export { default as FieldSet } from "./components/ui/field/field-set.svelte";
 export { default as FieldLegend } from "./components/ui/field/field-legend.svelte";
@@ -68,3 +74,10 @@ export * as Table from "./components/ui/table";
 export * as Tabs from "./components/ui/tabs";
 export * as ToggleGroup from "./components/ui/toggle-group";
 export * as Tooltip from "./components/ui/tooltip";
+export * as ConfirmDeleteDialog from "./components/ui/confirm-delete-dialog";
+export * as FileDropZone from "./components/ui/file-drop-zone";
+export * as NumberField from "./components/ui/number-field";
+export * as Password from "./components/ui/password";
+export * as PhoneInput from "./components/ui/phone-input";
+export * as Stepper from "./components/ui/stepper";
+export * as UnderlineTabs from "./components/ui/underline-tabs";

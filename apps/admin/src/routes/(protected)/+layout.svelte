@@ -2,8 +2,22 @@
   import { Sidebar, Badge, Separator } from "@hms/ui";
   import AppSidebar from "$lib/components/AppSidebar.svelte";
   import { page } from "$app/state";
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
+  import { authClient } from "$lib/auth/client";
+  import { adminRoutes } from "@hms/utils";
 
   let { children } = $props();
+  let checked = $state(false);
+
+  onMount(async () => {
+    const { data } = await authClient.getSession();
+    if (!data?.session) {
+      goto(adminRoutes.login);
+    } else {
+      checked = true;
+    }
+  });
 
   const breadcrumb = $derived.by(() => {
     const parts = page.url.pathname.replace(/^\//, "").split("/");
@@ -12,6 +26,7 @@
   });
 </script>
 
+{#if checked}
 <Sidebar.Provider>
   <AppSidebar />
 
@@ -39,3 +54,4 @@
     </main>
   </Sidebar.Inset>
 </Sidebar.Provider>
+{/if}

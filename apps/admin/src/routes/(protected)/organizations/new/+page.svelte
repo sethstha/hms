@@ -3,6 +3,7 @@
   import { Card } from "@hms/ui";
   import { goto } from "$app/navigation";
   import { api } from "$lib/api/index";
+  import { adminRoutes } from "@hms/utils";
   import OrganizationForm from "$lib/components/OrganizationForm.svelte";
   import type { CreateOrganizationInput } from "@hms/schemas/organizations";
 
@@ -23,7 +24,7 @@
       }
       if (!res.ok) throw new Error("Failed to create organization");
       await queryClient.invalidateQueries({ queryKey: ["organizations"] });
-      goto("/organizations");
+      goto(adminRoutes.organizations.root);
     } catch (e) {
       error = e instanceof Error ? e.message : "Something went wrong";
     } finally {

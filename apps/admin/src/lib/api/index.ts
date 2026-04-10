@@ -1,7 +1,7 @@
 import { createApiClient } from "@hms/api-client";
-import { env } from "$env/dynamic/public";
+import { PUBLIC_API_URL } from "$env/static/public";
 
-export const api = createApiClient(env.PUBLIC_API_URL, {
+export const api = createApiClient(PUBLIC_API_URL, {
   init: { credentials: "include" },
 }).api.v1;
 

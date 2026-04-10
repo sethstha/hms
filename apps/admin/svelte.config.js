@@ -1,5 +1,5 @@
 import { relative, sep } from "node:path";
-import adapter from "@sveltejs/adapter-cloudflare";
+import adapter from "@sveltejs/adapter-static";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -13,7 +13,7 @@ const config = {
     },
   },
   kit: {
-    adapter: adapter(),
+    adapter: adapter({ fallback: "404.html" }),
     alias: {
       "@hms/ui/theme.css": "../../packages/ui/src/theme.css",
       "@hms/ui": "../../packages/ui/src/index.ts",

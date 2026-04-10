@@ -4,6 +4,7 @@
   import { Button, Card, Input, Label, Switch } from "@hms/ui";
   import { goto } from "$app/navigation";
   import { api } from "$lib/api/index";
+  import { adminRoutes } from "@hms/utils";
   import type { Permission } from "@hms/schemas";
   import type { PageData } from "./$types";
 
@@ -55,7 +56,7 @@
     }
 
     if (Object.keys(patch).length === 0) {
-      goto("/permissions");
+      goto(adminRoutes.permissions.root);
       return;
     }
 
@@ -66,7 +67,7 @@
       });
       if (!res.ok) throw new Error("Failed to update permission");
       await queryClient.invalidateQueries({ queryKey: ["permissions"] });
-      goto("/permissions");
+      goto(adminRoutes.permissions.root);
     } catch (e) {
       error = e instanceof Error ? e.message : "Something went wrong";
     } finally {

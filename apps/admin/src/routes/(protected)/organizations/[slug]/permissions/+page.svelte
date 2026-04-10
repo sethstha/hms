@@ -4,6 +4,7 @@
   import { createQuery, HydrationBoundary, useQueryClient } from "@tanstack/svelte-query";
   import { goto } from "$app/navigation";
   import { api } from "$lib/api/index";
+  import { adminRoutes } from "@hms/utils";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -174,7 +175,7 @@
   <div class="space-y-5">
     <!-- Header -->
     <div class="flex items-center gap-3">
-      <Button variant="ghost" size="sm" onclick={() => goto("/organizations")}>
+      <Button variant="ghost" size="sm" onclick={() => goto(adminRoutes.organizations.root)}>
         <svg
           class="mr-1 h-4 w-4"
           fill="none"
@@ -220,7 +221,7 @@
         class="border-muted text-muted-foreground rounded-md border px-4 py-6 text-center text-sm"
       >
         No permissions in the catalog yet.
-        <a href="/permissions/new" class="ml-1 underline underline-offset-4">Add one.</a>
+        <a href={adminRoutes.permissions.new} class="ml-1 underline underline-offset-4">Add one.</a>
       </div>
     {:else}
       <div class="bg-card rounded-lg border">

@@ -2,6 +2,6 @@
   let { children } = $props();
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-muted/40">
+<div class="bg-muted/40 flex min-h-screen items-center justify-center">
   {@render children()}
 </div>

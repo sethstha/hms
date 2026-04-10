@@ -7,3 +7,4 @@ export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, "childre
 export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null };
 export * from "./hooks/is-mobile.svelte";
+export * from "./routes";

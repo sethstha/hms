@@ -4,6 +4,7 @@
   import { DataTable, Table, Badge, Button, AlertDialog } from "@hms/ui";
   import { goto } from "$app/navigation";
   import { api } from "$lib/api/index";
+  import { adminRoutes } from "@hms/utils";
   import type { PageData } from "./$types";
   import type { ColumnDef, SortingState } from "@hms/ui";
 
@@ -103,7 +104,7 @@
         <h1 class="text-2xl font-semibold tracking-tight text-foreground">Organizations</h1>
         <p class="mt-1 text-sm text-muted-foreground">All registered hospital groups on the platform.</p>
       </div>
-      <Button onclick={() => goto("/organizations/new")}>
+      <Button onclick={() => goto(adminRoutes.organizations.new)}>
         <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
         </svg>
