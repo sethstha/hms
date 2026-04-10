@@ -55,3 +55,11 @@ catalog:
   # UI singletons (Svelte runtime libs — must share Svelte instance with consuming app)
   mode-watcher: ^1.1.0
   svelte-sonner: ^1.1.0
+  svelte-toolbelt: "^0.10.6"
+  svelte-tel-input: "^4.0.2"
+  yeezy-dates: "^1.1.0"
+  runed: "^0.37.1"
+  country-flag-icons: "^1.6.15"
+  "@zxcvbn-ts/core": "^3.0.4"
+  "@zxcvbn-ts/language-common": "^3.0.4"
+  "@zxcvbn-ts/language-en": "^3.0.2"

@@ -42,7 +42,15 @@
     "svelte": "catalog:",
     "svelte-check": "catalog:",
     "svelte-sonner": "catalog:",
-    "typescript-svelte-plugin": "^0.3.51"
+    "typescript-svelte-plugin": "^0.3.51",
+    "svelte-toolbelt": "catalog:",
+    "svelte-tel-input": "catalog:",
+    "yeezy-dates": "catalog:",
+    "runed": "catalog:",
+    "country-flag-icons": "catalog:",
+    "@zxcvbn-ts/core": "catalog:",
+    "@zxcvbn-ts/language-common": "catalog:",
+    "@zxcvbn-ts/language-en": "catalog:"
   },
   "peerDependencies": {
     "@lucide/svelte": "^0.577.0",

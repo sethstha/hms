@@ -30,9 +30,21 @@ catalogs:
     '@types/node':
       specifier: ^24
       version: 24.12.2
+    '@zxcvbn-ts/core':
+      specifier: ^3.0.4
+      version: 3.0.4
+    '@zxcvbn-ts/language-common':
+      specifier: ^3.0.4
+      version: 3.0.4
+    '@zxcvbn-ts/language-en':
+      specifier: ^3.0.2
+      version: 3.0.2
     better-auth:
       specifier: ^1.5.6
       version: 1.5.6
+    country-flag-icons:
+      specifier: ^1.6.15
+      version: 1.6.15
     drizzle-orm:
       specifier: ^0.44.0
       version: 0.44.7
@@ -63,6 +75,9 @@ catalogs:
     prettier-plugin-tailwindcss:
       specifier: ^0.7.2
       version: 0.7.2
+    runed:
+      specifier: ^0.37.1
+      version: 0.37.1
     svelte:
       specifier: 5.54.0
       version: 5.54.0
@@ -72,6 +87,12 @@ catalogs:
     svelte-sonner:
       specifier: ^1.1.0
       version: 1.1.0
+    svelte-tel-input:
+      specifier: ^4.0.2
+      version: 4.0.2
+    svelte-toolbelt:
+      specifier: ^0.10.6
+      version: 0.10.6
     tailwindcss:
       specifier: ^4.2.2
       version: 4.2.2
@@ -87,6 +108,9 @@ catalogs:
     wrangler:
       specifier: ^4.80.0
       version: 4.80.0
+    yeezy-dates:
+      specifier: ^1.1.0
+      version: 1.1.0
     zod:
       specifier: ^4.0.0
       version: 4.3.6
@@ -473,9 +497,24 @@ importers:
       '@tailwindcss/vite':
         specifier: 'catalog:'
         version: 4.2.2(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))
+      '@zxcvbn-ts/core':
+        specifier: 'catalog:'
+        version: 3.0.4
+      '@zxcvbn-ts/language-common':
+        specifier: 'catalog:'
+        version: 3.0.4
+      '@zxcvbn-ts/language-en':
+        specifier: 'catalog:'
+        version: 3.0.2
+      country-flag-icons:
+        specifier: 'catalog:'
+        version: 1.6.15
       mode-watcher:
         specifier: 'catalog:'
         version: 1.1.0(svelte@5.54.0)
+      runed:
+        specifier: 'catalog:'
+        version: 0.37.1(@sveltejs/kit@2.56.1(@opentelemetry/api@1.9.1)(@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.54.0)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))(svelte@5.54.0)(typescript@6.0.2)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))(svelte@5.54.0)(zod@4.3.6)
       shadcn-svelte:
         specifier: ^1.2.7
         version: 1.2.7(svelte@5.54.0)
@@ -488,9 +527,18 @@ importers:
       svelte-sonner:
         specifier: 'catalog:'
         version: 1.1.0(svelte@5.54.0)
+      svelte-tel-input:
+        specifier: 'catalog:'
+        version: 4.0.2(svelte@5.54.0)
+      svelte-toolbelt:
+        specifier: 'catalog:'
+        version: 0.10.6(@sveltejs/kit@2.56.1(@opentelemetry/api@1.9.1)(@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.54.0)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))(svelte@5.54.0)(typescript@6.0.2)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))(svelte@5.54.0)
       typescript-svelte-plugin:
         specifier: ^0.3.51
         version: 0.3.51(svelte@5.54.0)(typescript@6.0.2)
+      yeezy-dates:
+        specifier: 'catalog:'
+        version: 1.1.0
 
   packages/utils:
     dependencies:
@@ -500,6 +548,9 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
+      runed:
+        specifier: 'catalog:'
+        version: 0.37.1(@sveltejs/kit@2.56.1(@opentelemetry/api@1.9.1)(@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.54.0)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))(svelte@5.54.0)(typescript@6.0.2)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))(svelte@5.54.0)(zod@4.3.6)
       tailwind-merge:
         specifier: ^2.5.0
         version: 2.6.1
@@ -2586,6 +2637,15 @@ packages:
   '@vitest/utils@2.1.9':
     resolution: {integrity: sha512-v0psaMSkNJ3A2NMrUEHFRzJtDPFn+/VWZ5WxImB21T9fjucJRmS7xCS3ppEnARb9y11OAzaD+P2Ps+b+BGX5iQ==}
 
+  '@zxcvbn-ts/core@3.0.4':
+    resolution: {integrity: sha512-aQeiT0F09FuJaAqNrxynlAwZ2mW/1MdXakKWNmGM1Qp/VaY6CnB/GfnMS2T8gB2231Esp1/maCWd8vTG4OuShw==}
+
+  '@zxcvbn-ts/language-common@3.0.4':
+    resolution: {integrity: sha512-viSNNnRYtc7ULXzxrQIVUNwHAPSXRtoIwy/Tq4XQQdIknBzw4vz36lQLF6mvhMlTIlpjoN/Z1GFu/fwiAlUSsw==}
+
+  '@zxcvbn-ts/language-en@3.0.2':
+    resolution: {integrity: sha512-Zp+zL+I6Un2Bj0tRXNs6VUBq3Djt+hwTwUz4dkt2qgsQz47U0/XthZ4ULrT/RxjwJRl5LwiaKOOZeOtmixHnjg==}
+
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
@@ -2743,6 +2803,10 @@ packages:
     resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
 
+  chrono-node@2.9.0:
+    resolution: {integrity: sha512-glI4YY2Jy6JII5l3d5FN6rcrIbKSQqKPhWsIRYPK2IK8Mm4Q1ZZFdYIaDqglUNf7gNwG+kWIzTn0omzzE0VkvQ==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
   class-validator@0.14.4:
     resolution: {integrity: sha512-AwNusCCam51q703dW82x95tOqQp6oC9HNUl724KxJJOfnKscI8dOloXFgyez7LbTTKWuRBA37FScqVbJEoq8Yw==}
 
@@ -2793,6 +2857,9 @@ packages:
   cookie@1.1.1:
     resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
     engines: {node: '>=18'}
+
+  country-flag-icons@1.6.15:
+    resolution: {integrity: sha512-92HoA8l6DluEidku8tKBftjuFRj4Rv3zDW1lXxCuNnqAxhUSkvso9gM/Afj4F5BnK+wneHIe3ydI+s+4NA29/Q==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -3261,6 +3328,10 @@ packages:
   fast-wrap-ansi@0.1.6:
     resolution: {integrity: sha512-HlUwET7a5gqjURj70D5jl7aC3Zmy4weA1SHUfM0JFI0Ptq987NH2TwbBFLoERhfwk+E+eaq4EK3jXoT+R3yp3w==}
 
+  fastest-levenshtein@1.0.16:
+    resolution: {integrity: sha512-eRnCtTTtGZFpQCwhJiUOuxPQWRXVKYDn0b2PeHfXL6/Zi53SLAzAHfVhVWK2AryC/WH05kGfxhFIPvTF0SXQzg==}
+    engines: {node: '>= 4.9.1'}
+
   fdir@6.5.0:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
     engines: {node: '>=12.0.0'}
@@ -3436,6 +3507,9 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
+
+  libphonenumber-js@1.12.40:
+    resolution: {integrity: sha512-HKGs7GowShNls3Zh+7DTr6wYpPk5jC78l508yQQY3e8ZgJChM3A9JZghmMJZuK+5bogSfuTafpjksGSR3aMIEg==}
 
   libphonenumber-js@1.12.41:
     resolution: {integrity: sha512-lsmMmGXBxXIK/VMLEj0kL6MtUs1kBGj1nTCzi6zgQoG1DEwqwt2DQyHxcLykceIxAnfE3hya7NuIh6PpC6S3fA==}
@@ -4018,6 +4092,12 @@ packages:
     peerDependencies:
       svelte: ^5.0.0
 
+  svelte-tel-input@4.0.2:
+    resolution: {integrity: sha512-9a86M3lKIgrRxdE+Rd6O9pdP4kxpA7qbqOdtGkeMBlv//fJs/kanQZKKgBM8DlnRsrqAkm1D35PmTNbAb8ZmgQ==}
+    engines: {node: '>= 22', npm: '>= 10', pnpm: '>= 10', yarn: '>= 1'}
+    peerDependencies:
+      svelte: ^5.0.0
+
   svelte-toolbelt@0.10.6:
     resolution: {integrity: sha512-YWuX+RE+CnWYx09yseAe4ZVMM7e7GRFZM6OYWpBKOb++s+SQ8RBIMMe+Bs/CznBMc0QPLjr+vDBxTAkozXsFXQ==}
     engines: {node: '>=18', pnpm: '>=8.7.0'}
@@ -4432,6 +4512,9 @@ packages:
   yargs@17.7.2:
     resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
     engines: {node: '>=12'}
+
+  yeezy-dates@1.1.0:
+    resolution: {integrity: sha512-RgTv7pv2CnRaLXRMsmDLG2SHwLx3lZwm+C8msxisZ6+OVZOWaDI94vxMOes6SECoy8TGCmKGmZZHN0JbGMPO0g==}
 
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
@@ -5959,6 +6042,14 @@ snapshots:
       tinyrainbow: 1.2.0
     optional: true
 
+  '@zxcvbn-ts/core@3.0.4':
+    dependencies:
+      fastest-levenshtein: 1.0.16
+
+  '@zxcvbn-ts/language-common@3.0.4': {}
+
+  '@zxcvbn-ts/language-en@3.0.2': {}
+
   acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:
       acorn: 8.16.0
@@ -6087,6 +6178,8 @@ snapshots:
     dependencies:
       readdirp: 4.1.2
 
+  chrono-node@2.9.0: {}
+
   class-validator@0.14.4:
     dependencies:
       '@types/validator': 13.15.10
@@ -6133,6 +6226,8 @@ snapshots:
   cookie@0.6.0: {}
 
   cookie@1.1.1: {}
+
+  country-flag-icons@1.6.15: {}
 
   cross-spawn@7.0.6:
     dependencies:
@@ -6660,6 +6755,8 @@ snapshots:
     dependencies:
       fast-string-width: 1.1.0
 
+  fastest-levenshtein@1.0.16: {}
+
   fdir@6.5.0(picomatch@4.0.4):
     optionalDependencies:
       picomatch: 4.0.4
@@ -6824,6 +6921,8 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+
+  libphonenumber-js@1.12.40: {}
 
   libphonenumber-js@1.12.41:
     optional: true
@@ -7343,6 +7442,11 @@ snapshots:
       runed: 0.28.0(svelte@5.54.0)
       svelte: 5.54.0
 
+  svelte-tel-input@4.0.2(svelte@5.54.0):
+    dependencies:
+      libphonenumber-js: 1.12.40
+      svelte: 5.54.0
+
   svelte-toolbelt@0.10.6(@sveltejs/kit@2.56.1(@opentelemetry/api@1.9.1)(@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.54.0)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))(svelte@5.54.0)(typescript@6.0.2)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))(svelte@5.54.0):
     dependencies:
       clsx: 2.1.1
@@ -7745,6 +7849,10 @@ snapshots:
       string-width: 4.2.3
       y18n: 5.0.8
       yargs-parser: 21.1.1
+
+  yeezy-dates@1.1.0:
+    dependencies:
+      chrono-node: 2.9.0
 
   yocto-queue@0.1.0: {}
 
