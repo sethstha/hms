@@ -50,29 +50,49 @@ app.use(
 );
 
 // Health check
-app.get("/health", (c) => c.json({ status: "ok", version: "1.0.0" }));
-app.get("/health/db", async (c) => {
-  try {
-    const databaseUrl = c.env.DATABASE_URL;
+app.get("/health", async (c) => {
+  const start = Date.now();
 
-    if (!databaseUrl) {
-      return c.json({ status: "error", database: "missing_database_url" }, 500);
+  // DB check
+  let dbStatus: "connected" | "missing_url" | "unreachable" = "connected";
+  let dbMessage: string | undefined;
+  let dbLatencyMs: number | undefined;
+
+  const databaseUrl = c.env.DATABASE_URL;
+
+  if (!databaseUrl) {
+    dbStatus = "missing_url";
+  } else {
+    try {
+      const dbStart = Date.now();
+      const db = createDb(databaseUrl);
+      await db.execute(sql`select 1`);
+      dbLatencyMs = Date.now() - dbStart;
+    } catch (error) {
+      dbStatus = "unreachable";
+      dbMessage = error instanceof Error ? error.message : "Unknown error";
     }
-
-    const db = createDb(databaseUrl);
-    await db.execute(sql`select 1`);
-
-    return c.json({ status: "ok", database: "connected" });
-  } catch (error) {
-    return c.json(
-      {
-        status: "error",
-        database: "unreachable",
-        message: error instanceof Error ? error.message : "Unknown database error",
-      },
-      500,
-    );
   }
+
+  const healthy = dbStatus === "connected";
+
+  return c.json(
+    {
+      status: healthy ? "ok" : "degraded",
+      version: "1.0.0",
+      uptime: process.uptime?.() ?? null,
+      timestamp: new Date().toISOString(),
+      latencyMs: Date.now() - start,
+      services: {
+        database: {
+          status: dbStatus,
+          latencyMs: dbLatencyMs,
+          ...(dbMessage && { message: dbMessage }),
+        },
+      },
+    },
+    healthy ? 200 : 503,
+  );
 });
 
 // Database middleware

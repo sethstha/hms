@@ -84,7 +84,7 @@ hms/
 ### `packages/ui`
 | Tool | Notes |
 |------|-------|
-| bits-ui | ^2.16.5 — headless primitives for shadcn-svelte |
+| bits-ui | ^2.17.3 — headless primitives for shadcn-svelte |
 | shadcn-svelte | ^1.2.7 — component scaffolding |
 | tailwind-variants | ^3.2.2 |
 | layerchart | 2.0.0-next.48 — charts |
