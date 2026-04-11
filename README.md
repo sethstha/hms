@@ -1,3 +1,5 @@
+# HMS Monorepo
+
 ## 1. Project Overview
 
 HMS (Hospital Management System) is a multi-tenant SaaS platform for hospital chains. A single API backend serves many hospital organizations ("tenants"), each isolated from one another.
@@ -7,7 +9,7 @@ HMS (Hospital Management System) is a multi-tenant SaaS platform for hospital ch
 | App | Users | URL (dev) |
 |-----|-------|-----------|
 | `apps/admin` | Platform superadmins and admins — manage organizations, tenants, users across the whole system | `http://localhost:5174` |
-| `apps/hospital` | Hospital staff — doctors, nurses, receptionists, pharmacists, lab techs, billing staff | `http://localhost:5173` |
+| `apps/orgs` | Staff at hospitals, clinics, pharmacies, and polyclinics — doctors, nurses, receptionists, pharmacists, lab techs, billing staff | `http://localhost:5173` |
 
 ---
 
@@ -16,8 +18,8 @@ HMS (Hospital Management System) is a multi-tenant SaaS platform for hospital ch
 ```
 hms/
 ├── apps/
-│   ├── admin/          SvelteKit SPA — platform admin console
-│   ├── hospital/       SvelteKit SPA — hospital staff portal
+│   ├── admin/          SvelteKit SPA — platform admin console (adapter-static, ssr=false)
+│   ├── orgs/           SvelteKit SPA — org staff portal: hospitals, clinics, pharmacies, polyclinics (adapter-static, ssr=false)
 │   └── api/            Hono API on Cloudflare Workers
 ├── packages/
 │   ├── auth/           @hms/auth    — better-auth instances, clients, session helpers, middleware
@@ -38,12 +40,12 @@ hms/
 
 | Package | Exports | Consumed by |
 |---------|---------|-------------|
-| `@hms/auth` | `createAdminAuth`, `createHospitalAuth`, auth clients, `createSession`, `fetchSession`, `readTenant`, middleware guards | `apps/api`, `apps/admin`, `apps/hospital` |
+| `@hms/auth` | `createAdminAuth`, `createHospitalAuth`, auth clients, `adminRoutes`, `orgRoutes`, middleware guards | `apps/api`, `apps/admin`, `apps/orgs` |
 | `@hms/db` | `createDb`, `Db` type, all Drizzle schema tables | `@hms/auth`, `apps/api` |
-| `@hms/schemas` | Zod schemas and inferred types for all domain objects | `apps/api`, `apps/admin`, `apps/hospital`, `@hms/types` |
-| `@hms/ui` | shadcn-svelte components + `theme.css` | `apps/admin`, `apps/hospital` |
-| `@hms/utils` | `cn()`, date formatters, number formatters, `isMobile` | `@hms/ui`, `apps/admin`, `apps/hospital` |
-| `@hms/types` | Re-exports everything from `@hms/schemas` | `apps/admin`, `apps/hospital` |
+| `@hms/schemas` | Zod schemas and inferred types for all domain objects | `apps/api`, `apps/admin`, `apps/orgs`, `@hms/types` |
+| `@hms/ui` | shadcn-svelte components + `theme.css` | `apps/admin`, `apps/orgs` |
+| `@hms/utils` | `cn()`, date formatters, number formatters, `isMobile`, `adminRoutes`, `orgRoutes` | `@hms/ui`, `apps/admin`, `apps/orgs` |
+| `@hms/types` | Re-exports everything from `@hms/schemas` | `apps/admin`, `apps/orgs` |
 
 ---
 
@@ -60,15 +62,17 @@ hms/
 | Wrangler | ^4.20.0 | Cloudflare Workers dev + deploy |
 | TypeScript | root `^6.0.2` | |
 
-### `apps/admin` and `apps/hospital`
+### `apps/admin` and `apps/orgs`
 | Tool | Version | Notes |
 |------|---------|-------|
 | SvelteKit | ^2.56.1 | App framework |
 | Svelte | ^5.54.0 | Runes-only (enforced in svelte.config.js) |
-| `@sveltejs/adapter-static` | ^3.0.10 | Pure SPA output (`fallback: "200.html"`) |
+| `@sveltejs/adapter-static` | ^3.x | SPA mode — `ssr = false`, `prerender = true` in root `+layout.ts`; build output to `build/` |
 | Tailwind CSS v4 | ^4.1.18 | Via `@tailwindcss/vite` — no config file |
 | `@inlang/paraglide-js` | ^2.10.0 | i18n: English (`en`) + Nepali (`np`) |
-| `@tanstack/svelte-form` | ^1.28.6 | Form state (admin only) |
+| `@tanstack/svelte-form` | ^1.28.6 | Form state management and submission |
+| `@tanstack/svelte-query` | ^5.90.2 | Client-side data fetching and caching (all data from API, no SSR hydration) |
+| `@tanstack/svelte-table` | ^8.x | Table rendering for all listings from API |
 
 ### `packages/auth`
 | Tool | Notes |
@@ -84,7 +88,7 @@ hms/
 ### `packages/ui`
 | Tool | Notes |
 |------|-------|
-| bits-ui | ^2.17.3 — headless primitives for shadcn-svelte |
+| bits-ui | ^2.16.5 — headless primitives for shadcn-svelte |
 | shadcn-svelte | ^1.2.7 — component scaffolding |
 | tailwind-variants | ^3.2.2 |
 | layerchart | 2.0.0-next.48 — charts |
@@ -102,12 +106,12 @@ pnpm install
 ### Start dev servers (interactive)
 ```bash
 pnpm dev
-# Prompts you to select: Hospital, Admin Panel, API Server
+# Prompts you to select: Orgs, Admin Panel, API Server
 ```
 
 ### Start individual services
 ```bash
-pnpm dev:hospital   # http://localhost:5173
+pnpm dev:orgs       # http://localhost:5173
 pnpm dev:admin      # http://localhost:5174
 pnpm dev:api        # http://localhost:8787
 ```
@@ -135,7 +139,7 @@ pnpm format:check
 ### Build
 ```bash
 pnpm build:admin
-pnpm build:hospital
+pnpm build:orgs
 pnpm build:api      # runs wrangler deploy
 ```
 
@@ -167,17 +171,141 @@ Each instance has its own role system and plugin set. Both share the same Postgr
 
 **Instances are cached by config key** (`packages/auth/src/admin.ts` and `hospital.ts`) to avoid re-creating them on every Cloudflare Worker request.
 
-### Auth: client-side only session in SPA
+### Auth: fully client-side (SPA mode)
 
-Both SvelteKit apps are **pure client-side SPAs** — `adapter-static` with no SSR. There are no `hooks.server.ts` files. Session management works entirely in the browser:
+Both apps are SPAs (`ssr = false`). There are no server load functions, no `hooks.server.ts`, and no server-side session fetching. All auth is handled entirely in the browser:
 
-1. The root `+layout.svelte` calls `createSession(() => authClient.getSession())` on mount
-2. `createSession` (from `@hms/auth/session`) returns a reactive `SessionState<T>` object using Svelte 5 runes (`$state`)
-3. The session is stored in Svelte context: `setContext("session", session)`
-4. Child routes read it with `getContext<SessionState<AppSession>>("session")`
-5. Route guards are `$effect(() => { if (!session.loading) goto(...) })` — pure client-side redirects
+1. The root `+layout.svelte` calls `authClient.getSession()` inside `onMount` to fetch the session from the API using the browser's cookie jar.
+2. The result is stored in a `$state` variable and shared via Svelte context: `setContext("session", session)`. Child routes read it with `getContext`.
+3. Route protection is done in `+layout.svelte` via `onMount` — if there is no session, use `goto()` to redirect to login. Never use `+layout.server.ts` for guards.
+4. Route strings are **never hardcoded** — always import `adminRoutes` or `orgRoutes` from `@hms/utils`:
+   ```typescript
+   import { adminRoutes } from "@hms/utils";
+   goto(adminRoutes.login);   // ✓
+   goto("/login");            // ✗ — hardcoded string
+   ```
+5. Better Auth cookies are configured `SameSite=none; Secure` to work cross-origin between the Pages app and the Worker API.
 
-The `fetchSession` export in `@hms/auth/session` exists for future server-side use if SSR is ever added.
+**SPA mode rules — strictly enforced:**
+- **Never create `+page.server.ts` or `+layout.server.ts` files** — these require SSR and will break the static build
+- **Never create `hooks.server.ts`** — no server hook context exists
+- **Never use `load` functions with server context** (`event.locals`, `event.request`, `platform`)
+- **Never import from `$app/server`** or use any SvelteKit server-only API
+- All data fetching happens client-side via `onMount` or TanStack Query
+- All auth checks happen client-side via `authClient.getSession()`
+
+### Data fetching: TanStack Query, client-side only (mandatory pattern)
+
+Both `apps/admin` and `apps/orgs` use `@tanstack/svelte-query` v5 for **all data fetching from the API**. Because both apps are SPAs (`ssr = false`), there is no SSR prefetch/hydration step — queries run entirely in the browser. The setup lives in two files per app:
+
+- **`src/lib/query/client.ts`** — exports a `QueryClient` singleton (safe here because there is only one browser tab, not shared server state). Used to wrap the app in `QueryClientProvider`.
+- **`src/lib/api/client.ts`** — exports `apiFetch<T>(path, init?)` and `ApiError`. All `queryFn` callbacks call this. It reads `PUBLIC_API_URL` from `$env/dynamic/public` and sets `credentials: "include"` so the browser sends the session cookie automatically.
+
+**Client-side query pattern** (used in every data-fetching route):
+
+```svelte
+<!-- +page.svelte -->
+<script lang="ts">
+  import { createQuery } from "@tanstack/svelte-query";
+  import { apiFetch } from "$lib/api/client";
+
+  const orgsQuery = createQuery({
+    queryKey: ["organizations"],
+    queryFn: () => apiFetch("/api/v1/organizations"),
+  });
+</script>
+
+{#if $orgsQuery.isPending}
+  <p>Loading...</p>
+{:else if $orgsQuery.error}
+  <p>Error: {$orgsQuery.error.message}</p>
+{:else}
+  <!-- render $orgsQuery.data -->
+{/if}
+```
+
+**Key rules:**
+- No `+page.server.ts`, no `dehydrate()`, no `HydrationBoundary` — those are SSR patterns and must not be used
+- `createQuery` returns a Svelte store — access reactive values with the `$` prefix: `$orgsQuery.data`, `$orgsQuery.isPending`, `$orgsQuery.error`
+- Default `staleTime` is 30 seconds. Override per-query with `queryOptions({ staleTime: Infinity })` for static data or `staleTime: 0` for live data
+- The `credentials: "include"` on `apiFetch` is what forwards the Better Auth cookie cross-origin to the Worker
+
+### Data listings: TanStack Table (mandatory for all API lists)
+
+Every listing, table, or grid that displays data fetched from the API **must use `@tanstack/svelte-table`** for rendering. This includes:
+
+- User lists, patient lists, appointment lists, etc. in both apps
+- Any paginated or sortable data from the API
+
+**Pattern:**
+
+```svelte
+<!-- +page.svelte -->
+<script lang="ts">
+  import { createQuery } from "@tanstack/svelte-query";
+  import { createSvelteTable, getCoreRowModel } from "@tanstack/svelte-table";
+  import { apiFetch } from "$lib/api/client";
+  import type { ColumnDef } from "@tanstack/svelte-table";
+
+  const patientsQuery = createQuery({
+    queryKey: ["patients"],
+    queryFn: () => apiFetch("/api/v1/patients"),
+  });
+
+  const columns: ColumnDef<Patient>[] = [
+    { accessorKey: "id", header: "ID" },
+    { accessorKey: "name", header: "Name" },
+    { accessorKey: "email", header: "Email" },
+  ];
+
+  const table = createSvelteTable({
+    get data() {
+      return $patientsQuery.data ?? [];
+    },
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+</script>
+
+<table>
+  {#each $table.getHeaderGroups() as headerGroup}
+    <tr>
+      {#each headerGroup.headers as header}
+        <th>
+          {#if !header.isPlaceholder}
+            <svelte:component
+              this={FlexibleRender}
+              content={header.column.columnDef.header}
+              props={{ column: header.column, header }}
+            />
+          {/if}
+        </th>
+      {/each}
+    </tr>
+  {/each}
+  <tbody>
+    {#each $table.getRowModel().rows as row}
+      <tr>
+        {#each row.getVisibleCells() as cell}
+          <td>
+            <svelte:component
+              this={FlexibleRender}
+              content={cell.column.columnDef.cell}
+              props={{ getValue: cell.getValue, row: cell.row }}
+            />
+          </td>
+        {/each}
+      </tr>
+    {/each}
+  </tbody>
+</table>
+```
+
+**Key rules:**
+- No `HydrationBoundary` — this is a SPA; data loads client-side and the table reactively updates when the query resolves
+- Column definitions are defined client-side; data comes from `$query.data`
+- For sorting, filtering, or pagination, extend the API endpoint to support query parameters (`?sort=name&order=asc&page=1`) and pass those through in the `queryFn`
+- Use `getCoreRowModel()` for basic rendering; add `getSortedRowModel()`, `getFilteredRowModel()`, etc. as needed
 
 ### Multi-tenancy
 
@@ -211,8 +339,6 @@ Superadmins have no tenant scope. All other users must have both `tenantId` and 
 - `AppEnv` type (in `@hms/auth/types`) defines Cloudflare Worker bindings and Hono context variables: `db`, `user`, `session`, `tenant`
 
 ### Database: Drizzle + Neon Postgres
-<img width="1440" height="1102" alt="image" src="https://github.com/user-attachments/assets/d82de037-c6e8-4104-81e8-009a686a744b" />
-
 
 ```typescript
 // packages/db/src/index.ts
@@ -237,6 +363,18 @@ export function createDb(databaseUrl: string) {
   @source "../../../../packages/ui/src";  /* tells Tailwind to scan ui package classes */
   ```
 - The `@source` directive is critical — without it, Tailwind v4 won't generate utility classes used inside `packages/ui`
+
+### Deployment
+
+The three deployable units are independent — a full-stack change requires deploying both:
+
+| Unit | Platform | Deploy command | Notes |
+|------|----------|---------------|-------|
+| `apps/admin` | Cloudflare Pages | `pnpm build:admin` + Pages CI | Deploys to `hms-admin-sethstha.pages.dev` |
+| `apps/orgs` | Cloudflare Pages | `pnpm build:orgs` + Pages CI | Deploys to its own Pages project |
+| `apps/api` | Cloudflare Workers | `pnpm build:api` (`wrangler deploy`) | Deployed independently via Wrangler |
+
+Pages deployments and Worker deployments are **independent**. If you change API routes and frontend calls together, both must be deployed.
 
 ### Schemas: Zod in `@hms/schemas` only
 
@@ -284,6 +422,53 @@ All Zod schemas live in `packages/schemas/`. Apps and the API import from `@hms/
 - `better-tailwindcss` plugin enforces Tailwind class ordering
 - Svelte files are parsed with `typescript-eslint` parser
 
+### Forms: `@tanstack/svelte-form` (mandatory)
+
+All forms in both apps **must use `@tanstack/svelte-form`** for state management and submission. Never use manual `$state` for form fields or submit handlers.
+
+**Pattern:**
+
+```svelte
+<script lang="ts">
+  import { useForm } from "@tanstack/svelte-form";
+  import { zodValidator } from "@tanstack/zod-form-adapter";
+  import { createPatientSchema } from "@hms/schemas/patients";
+
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+    },
+    onSubmit: async ({ value }) => {
+      await apiFetch("/api/v1/patients", {
+        method: "POST",
+        body: JSON.stringify(value),
+      });
+    },
+    validatorAdapter: zodValidator(),
+    validators: {
+      onChange: createPatientSchema,
+    },
+  });
+
+  const handleSubmit = form.handleSubmit;
+</script>
+
+<form onsubmit={handleSubmit}>
+  <input
+    name="name"
+    value={$form.getFieldValue("name")}
+    onchange={(e) => form.setFieldValue("name", e.currentTarget.value)}
+  />
+  <button type="submit">Create</button>
+</form>
+```
+
+**Key rules:**
+- Use `@tanstack/zod-form-adapter` to validate with `@hms/schemas` schemas
+- All errors come from `form.state.fieldMeta` — never manage validation yourself
+- Form submission is async; handle loading states via `form.state.isSubmitting`
+
 ---
 
 ## 7. Environment Variables
@@ -301,7 +486,7 @@ All Zod schemas live in `packages/schemas/`. Apps and the API import from `@hms/
 
 Copy `apps/api/.dev.vars.example` to `apps/api/.dev.vars` and fill in `DATABASE_URL` and `BETTER_AUTH_SECRET`.
 
-### `apps/admin` and `apps/hospital` — stored in `.env`
+### `apps/admin` and `apps/orgs` — stored in `.env`
 
 | Variable | Required | Description |
 |----------|----------|-------------|
@@ -333,11 +518,17 @@ path: "/:id",    // ✗
 ### Don't add Zod to `@hms/auth` or `@hms/db`
 These packages have no Zod dependency. Validation belongs in `@hms/schemas`.
 
-### Don't put auth logic in SvelteKit server files
-There are no `hooks.server.ts`, `+layout.server.ts`, or `+page.server.ts` files in these apps (they were intentionally removed). All auth is client-side. Adding server-side load functions would break the static adapter.
+### Never add server-side SvelteKit files
+Both apps are SPAs (`ssr = false`, `adapter-static`). The following files must **never** exist in `apps/admin` or `apps/orgs`:
+- `+page.server.ts` / `+layout.server.ts` — require SSR; will break the static build
+- `hooks.server.ts` — no server hook context in SPA mode
+- Any `load` function that uses `event.locals`, `event.request`, or `platform`
+- Any import from `$app/server`
+
+If you need data on page load, fetch it client-side inside `onMount` or via a TanStack Query `createQuery`.
 
 ### Always use `@hms/ui/theme.css` (not `styles.css`) in app CSS
-The package exports `./theme.css` only. The import `@hms/ui/styles.css` seen in `apps/hospital/src/app.css` is incorrect — there is no `styles.css` export. The correct import is:
+The package exports `./theme.css` only. The import `@hms/ui/styles.css` seen in `apps/orgs/src/app.css` is incorrect — there is no `styles.css` export. The correct import is:
 ```css
 @import "@hms/ui/theme.css";
 ```
@@ -350,6 +541,26 @@ Tailwind v4 only scans files it can see. The `@source "../../../../packages/ui/s
 
 ### `createDb` is called per request — this is correct
 `createDb(databaseUrl)` creates a lightweight Neon HTTP client. Do not try to hoist it to module scope or cache it globally on the Worker; the Neon serverless driver makes each query an independent HTTP request and there is no connection to reuse.
+
+### QueryClient is a browser singleton in SPA mode
+Both apps run entirely in the browser. A module-level `QueryClient` singleton in `$lib/query/client.ts` is correct here — there is only one browser tab and no shared server state. Do not call `createQueryClient()` per component or per query; use the single shared instance registered in `QueryClientProvider`.
+
+### Never fetch data in components without TanStack Query
+All data fetching from the API must go through `@tanstack/svelte-query`. Do not use raw `fetch()` or manual `$state`/`$effect` to fetch data. This ensures proper caching, loading states, and deduplication across both apps.
+
+### Never manage form state manually
+Use `@tanstack/svelte-form` for all forms in both apps. Manual form state with `$state` or individual reactive variables is a code smell and leads to inconsistent error handling, validation, and submission logic.
+
+### Every list from the API must use TanStack Table
+Data listings (tables, grids, paginated results) that come from the API **must be rendered with `@tanstack/svelte-table`**. Do not use `{#each}` directly on API data or custom table components. TanStack Table provides consistent sorting, filtering, pagination, and row selection across both apps.
+
+### Never hardcode route strings
+Always import `adminRoutes` or `orgRoutes` from `@hms/utils` for navigation and route checks. Hardcoded strings like `"/dashboard"` or `"/login"` will drift from the actual route definitions:
+```typescript
+import { adminRoutes } from "@hms/utils";
+goto(adminRoutes.login);   // ✓
+goto("/login");            // ✗
+```
 
 ### Rate limiting is not yet implemented
 `apps/api/src/middleware/ratelimit.ts` is a passthrough stub. The TODO comments describe the intended implementation.

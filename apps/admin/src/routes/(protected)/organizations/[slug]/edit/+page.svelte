@@ -1,15 +1,13 @@
 <script lang="ts">
+  // SPA mode: use URL params directly, never rely on SSR-loaded ids
   import { createQuery, useQueryClient } from "@tanstack/svelte-query";
-  import { HydrationBoundary } from "@tanstack/svelte-query";
   import { Card } from "@hms/ui";
   import { goto } from "$app/navigation";
+  import { page } from "$app/state";
   import { api } from "$lib/api/index";
   import { adminRoutes } from "@hms/utils";
   import OrganizationForm from "$lib/components/OrganizationForm.svelte";
   import type { UpdateOrganizationInput } from "@hms/schemas/organizations";
-  import type { PageData } from "./$types";
-
-  let { data }: { data: PageData } = $props();
 
   type Organization = {
     id: string;
@@ -34,7 +32,7 @@
 
   const org = $derived(
     (($orgsQuery.data as { data: Organization[] } | undefined)?.data ?? []).find(
-      (o) => o.id === data.id,
+      (o) => o.slug === page.params.slug,
     ) ?? null,
   );
 
@@ -42,11 +40,12 @@
   let error = $state("");
 
   async function handleSubmit(patch: UpdateOrganizationInput) {
+    if (!org) return;
     loading = true;
     error = "";
     try {
       const res = await api.organizations[":id"].$patch({
-        param: { id: data.id },
+        param: { id: org.id },
         json: patch,
       });
       if (!res.ok) throw new Error("Failed to update organization");
@@ -60,8 +59,7 @@
   }
 </script>
 
-<HydrationBoundary state={data.dehydratedState}>
-  <div class="mx-auto max-w-xl space-y-6">
+<div class="mx-auto max-w-xl space-y-6">
     <div>
       <h1 class="text-2xl font-semibold tracking-tight text-foreground">Edit Organization</h1>
       {#if org}
@@ -94,4 +92,3 @@
       </Card.Root>
     {/if}
   </div>
-</HydrationBoundary>

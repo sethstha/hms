@@ -1,14 +1,12 @@
 <script lang="ts">
+  // SPA mode: use URL params directly, never rely on SSR-loaded ids
   import { createQuery, useQueryClient } from "@tanstack/svelte-query";
-  import { HydrationBoundary } from "@tanstack/svelte-query";
   import { Button, Card, Input, Label, Switch } from "@hms/ui";
   import { goto } from "$app/navigation";
+  import { page } from "$app/state";
   import { api } from "$lib/api/index";
   import { adminRoutes } from "@hms/utils";
   import type { Permission } from "@hms/schemas";
-  import type { PageData } from "./$types";
-
-  let { data }: { data: PageData } = $props();
 
   const queryClient = useQueryClient();
 
@@ -23,7 +21,7 @@
 
   const permission = $derived(
     (($permissionsQuery.data as { data: Permission[] } | undefined)?.data ?? []).find(
-      (p) => p.id === data.id,
+      (p) => p.id === page.params.id,
     ) ?? null,
   );
 
@@ -62,7 +60,7 @@
 
     try {
       const res = await api.permissions[":id"].$patch({
-        param: { id: data.id },
+        param: { id: page.params.id },
         json: patch,
       });
       if (!res.ok) throw new Error("Failed to update permission");
@@ -76,8 +74,7 @@
   }
 </script>
 
-<HydrationBoundary state={data.dehydratedState}>
-  <div class="mx-auto max-w-xl space-y-6">
+<div class="mx-auto max-w-xl space-y-6">
     <div>
       <h1 class="text-2xl font-semibold tracking-tight text-foreground">Edit Permission</h1>
       {#if permission}
@@ -157,4 +154,3 @@
       </Card.Root>
     {/if}
   </div>
-</HydrationBoundary>

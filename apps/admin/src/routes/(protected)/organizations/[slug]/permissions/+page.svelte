@@ -1,16 +1,14 @@
 <script lang="ts">
+  // SPA mode: use URL params directly, never rely on SSR-loaded ids
   import type { OrgPermission, Permission } from "@hms/schemas";
   import { Badge, Button, Checkbox, Table } from "@hms/ui";
-  import { createQuery, HydrationBoundary, useQueryClient } from "@tanstack/svelte-query";
+  import { createQuery, useQueryClient } from "@tanstack/svelte-query";
   import { goto } from "$app/navigation";
+  import { page } from "$app/state";
   import { api } from "$lib/api/index";
   import { adminRoutes } from "@hms/utils";
-  import type { PageData } from "./$types";
-
-  let { data }: { data: PageData } = $props();
 
   const queryClient = useQueryClient();
-  const { id: orgId } = data;
 
   type Organization = {
     id: string;
@@ -41,21 +39,25 @@
     },
   });
 
-  // Org-specific grants
+  const org = $derived(
+    (($orgsQuery.data as { data: Organization[] } | undefined)?.data ?? []).find(
+      (o) => o.slug === page.params.slug,
+    ),
+  );
+
+  // Derived UUID id — only available after orgsQuery resolves
+  const orgId = $derived(org?.id ?? "");
+
+  // Org-specific grants — gated on orgId being resolved
   const orgPermissionsQuery = createQuery({
-    queryKey: ["org-permissions", orgId],
+    queryKey: ["org-permissions", page.params.slug],
     queryFn: async () => {
       const res = await api.organizations[":id"].permissions.$get({ param: { id: orgId } });
       if (!res.ok) throw new Error("Failed to fetch org permissions");
       return res.json();
     },
+    enabled: !!orgId,
   });
-
-  const org = $derived(
-    (($orgsQuery.data as { data: Organization[] } | undefined)?.data ?? []).find(
-      (o) => o.id === orgId,
-    ),
-  );
 
   const catalog = $derived(($catalogQuery.data as { data: Permission[] } | undefined)?.data ?? []);
 
@@ -171,8 +173,7 @@
   const isError = $derived($catalogQuery.isError || $orgPermissionsQuery.isError);
 </script>
 
-<HydrationBoundary state={data.dehydratedState}>
-  <div class="space-y-5">
+<div class="space-y-5">
     <!-- Header -->
     <div class="flex items-center gap-3">
       <Button variant="ghost" size="sm" onclick={() => goto(adminRoutes.organizations.root)}>
@@ -314,4 +315,3 @@
       </p>
     {/if}
   </div>
-</HydrationBoundary>

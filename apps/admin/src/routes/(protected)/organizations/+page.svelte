@@ -1,14 +1,11 @@
 <script lang="ts">
+  // SPA mode: use URL params directly, never rely on SSR-loaded ids
   import { createQuery, useQueryClient } from "@tanstack/svelte-query";
-  import { HydrationBoundary } from "@tanstack/svelte-query";
   import { DataTable, Table, Badge, Button, AlertDialog } from "@hms/ui";
   import { goto } from "$app/navigation";
   import { api } from "$lib/api/index";
   import { adminRoutes } from "@hms/utils";
-  import type { PageData } from "./$types";
   import type { ColumnDef, SortingState } from "@hms/ui";
-
-  let { data }: { data: PageData } = $props();
 
   type Organization = {
     id: string;
@@ -96,8 +93,7 @@
   );
 </script>
 
-<HydrationBoundary state={data.dehydratedState}>
-  <div class="space-y-5">
+<div class="space-y-5">
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
@@ -206,7 +202,6 @@
       </p>
     {/if}
   </div>
-</HydrationBoundary>
 
 <AlertDialog.Root open={!!deactivateTarget} onOpenChange={(open) => { if (!open) deactivateTarget = null; }}>
   <AlertDialog.Content>
