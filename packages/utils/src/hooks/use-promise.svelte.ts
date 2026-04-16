@@ -13,34 +13,34 @@
  * ```
  */
 export class UsePromise<T> {
-	#isResolved = $state(false);
-	#resolvedValue = $state<T>();
-	#promise = $state<Promise<T>>();
+  #isResolved = $state(false);
+  #resolvedValue = $state<T>();
+  #promise = $state<Promise<T>>();
 
-	constructor(
-		promise: Promise<T>,
-		readonly fallback?: T
-	) {
-		this.#promise = promise;
+  constructor(
+    promise: Promise<T>,
+    readonly fallback?: T,
+  ) {
+    this.#promise = promise;
 
-		this.#promise.then((v) => {
-			this.#resolvedValue = v;
-			this.#isResolved = true;
-		});
-	}
+    this.#promise.then((v) => {
+      this.#resolvedValue = v;
+      this.#isResolved = true;
+    });
+  }
 
-	/** Returns the value of the resolved promise or the fallback value (if provided)*/
-	get current() {
-		return this.#isResolved ? this.#resolvedValue : this.fallback;
-	}
+  /** Returns the value of the resolved promise or the fallback value (if provided)*/
+  get current() {
+    return this.#isResolved ? this.#resolvedValue : this.fallback;
+  }
 
-	/** Returns true when the promise has been resolved */
-	get isResolved() {
-		return this.#isResolved;
-	}
+  /** Returns true when the promise has been resolved */
+  get isResolved() {
+    return this.#isResolved;
+  }
 
-	/** Returns the original promise */
-	get promise() {
-		return this.#promise;
-	}
+  /** Returns the original promise */
+  get promise() {
+    return this.#promise;
+  }
 }

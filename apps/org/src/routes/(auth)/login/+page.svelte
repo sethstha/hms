@@ -71,7 +71,7 @@
         <FieldGroup>
           <div class="flex flex-col items-center gap-2 text-center">
             <h1 class="text-2xl font-bold">Welcome back</h1>
-            <p class="text-muted-foreground text-balance">Login to your Acme Inc account</p>
+            <p class="text-balance text-muted-foreground">Login to your Acme Inc account</p>
           </div>
           <Field>
             <FieldLabel for="email-{id}">Email</FieldLabel>
@@ -126,7 +126,7 @@
           </FieldDescription>
         </FieldGroup>
       </form>
-      <div class="bg-muted relative hidden md:block">
+      <div class="relative hidden bg-muted md:block">
         <img
           src="/placeholder.svg"
           alt="placeholder"
@@ -141,20 +141,20 @@
   </FieldDescription>
 
   <!-- Demo Credentials -->
-  <div class="bg-card rounded-lg border border-dashed p-4">
-    <p class="text-muted-foreground mb-1 text-xs font-medium">Demo accounts</p>
-    <p class="text-muted-foreground mb-3 text-xs">
-      Password for all: <code class="text-foreground font-mono font-semibold">Demo@1234</code>
+  <div class="rounded-lg border border-dashed bg-card p-4">
+    <p class="mb-1 text-xs font-medium text-muted-foreground">Demo accounts</p>
+    <p class="mb-3 text-xs text-muted-foreground">
+      Password for all: <code class="font-mono font-semibold text-foreground">Demo@1234</code>
     </p>
     <div class="space-y-0.5">
       {#each demoAccounts as account}
         <button
           type="button"
           onclick={() => fillDemo(account.email)}
-          class="hover:bg-muted flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-xs transition-colors"
+          class="flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-xs transition-colors hover:bg-muted"
         >
           <span class="font-medium">{account.role}</span>
-          <span class="text-muted-foreground font-mono">{account.email}</span>
+          <span class="font-mono text-muted-foreground">{account.email}</span>
         </button>
       {/each}
     </div>

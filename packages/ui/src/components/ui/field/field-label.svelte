@@ -1,25 +1,25 @@
 <script lang="ts">
-	import { Label } from "../label/index.js";
-	import { cn } from "@hms/utils";
-	import type { ComponentProps } from "svelte";
+  import { cn } from "@hms/utils";
+  import type { ComponentProps } from "svelte";
+  import { Label } from "../label/index.js";
 
-	let {
-		ref = $bindable(null),
-		class: className,
-		children,
-		...restProps
-	}: ComponentProps<typeof Label> = $props();
+  let {
+    ref = $bindable(null),
+    class: className,
+    children,
+    ...restProps
+  }: ComponentProps<typeof Label> = $props();
 </script>
 
 <Label
-	bind:ref
-	data-slot="field-label"
-	class={cn(
-		"has-data-[state=checked]:bg-primary/5 has-data-[state=checked]:border-primary/30 dark:has-data-[state=checked]:border-primary/20 dark:has-data-[state=checked]:bg-primary/10 gap-2 group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-md has-[>[data-slot=field]]:border *:data-[slot=field]:p-3 group/field-label peer/field-label flex w-fit leading-snug",
-		"has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col",
-		className
-	)}
-	{...restProps}
+  bind:ref
+  data-slot="field-label"
+  class={cn(
+    "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-[state=checked]:border-primary/30 has-data-[state=checked]:bg-primary/5 has-[>[data-slot=field]]:rounded-md has-[>[data-slot=field]]:border *:data-[slot=field]:p-3 dark:has-data-[state=checked]:border-primary/20 dark:has-data-[state=checked]:bg-primary/10",
+    "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col",
+    className,
+  )}
+  {...restProps}
 >
-	{@render children?.()}
+  {@render children?.()}
 </Label>

@@ -2,6 +2,18 @@
   // Use the workspace TypeScript install.
   // pnpm with shamefully-hoist=false doesn't hoist to root, so we point at an app's install.
   // All apps use the same TypeScript version, so this works for the whole monorepo.
-  "typescript.tsdk": "apps/hospital/node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+
+  // Format with Prettier on save (sorts Tailwind classes via prettier-plugin-tailwindcss)
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // Run ESLint auto-fix on save (fixes class order, wrapping, require-each-key, etc.)
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // Ensure ESLint validates Svelte files
+  "eslint.validate": ["javascript", "typescript", "svelte"]
 }

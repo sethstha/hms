@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { useQueryClient } from "@tanstack/svelte-query";
   import { Button, Card, Input, Label } from "@hms/ui";
+  import { adminRoutes } from "@hms/utils";
+  import { useQueryClient } from "@tanstack/svelte-query";
   import { goto } from "$app/navigation";
   import { api } from "$lib/api/index";
-  import { adminRoutes } from "@hms/utils";
 
   const queryClient = useQueryClient();
 
@@ -102,7 +102,8 @@
   <div>
     <h1 class="text-2xl font-semibold tracking-tight text-foreground">New Permission</h1>
     <p class="mt-1 text-sm text-muted-foreground">
-      Add a module to the global permission catalog. Organizations can then be assigned this permission.
+      Add a module to the global permission catalog. Organizations can then be assigned this
+      permission.
     </p>
   </div>
 
@@ -110,7 +111,9 @@
     <Card.Content class="pt-6">
       <form onsubmit={handleSubmit} class="space-y-5">
         {#if error}
-          <div class="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <div
+            class="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+          >
             {error}
           </div>
         {/if}
@@ -131,7 +134,9 @@
         <div class="space-y-1.5">
           <Label for="perm-slug">
             Slug
-            <span class="ml-1 text-xs font-normal text-muted-foreground">(immutable after creation)</span>
+            <span class="ml-1 text-xs font-normal text-muted-foreground"
+              >(immutable after creation)</span
+            >
           </Label>
           <div class="relative">
             <Input
@@ -144,7 +149,11 @@
               placeholder="e.g. laboratory"
               required
               disabled={loading}
-              class={slugAvailable === false ? "border-destructive" : slugAvailable === true ? "border-green-500" : ""}
+              class={slugAvailable === false
+                ? "border-destructive"
+                : slugAvailable === true
+                  ? "border-green-500"
+                  : ""}
             />
           </div>
           {#if slug.length >= 2}

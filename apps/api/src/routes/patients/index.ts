@@ -1,4 +1,5 @@
 import type { AppEnv } from "@hms/auth/types";
+import { patients } from "@hms/db/schema";
 import {
   createPatientSchema,
   errorSchema,
@@ -6,7 +7,6 @@ import {
   successSchema,
   updatePatientSchema,
 } from "@hms/schemas";
-import { patients } from "@hms/db/schema";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { eq } from "drizzle-orm";
 import { authMiddleware } from "../../middleware/auth";

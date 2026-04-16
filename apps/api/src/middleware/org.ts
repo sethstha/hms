@@ -1,8 +1,12 @@
+import type { AppEnv } from "@hms/auth/types";
+import {
+  organizationPermissions,
+  organizations,
+  permissions,
+  userMemberships,
+} from "@hms/db/schema";
 import { and, eq } from "drizzle-orm";
 import { createMiddleware } from "hono/factory";
-
-import { organizationPermissions, organizations, permissions, userMemberships } from "@hms/db/schema";
-import type { AppEnv } from "@hms/auth/types";
 
 export const orgMiddleware = createMiddleware<AppEnv>(async (c, next) => {
   const user = c.get("user");

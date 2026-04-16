@@ -1,120 +1,127 @@
 // eslint.config.js (root)
-import ts from 'typescript-eslint'
-import svelte from 'eslint-plugin-svelte'
-import prettier from 'eslint-config-prettier'
-import globals from 'globals'
-import betterTailwind from 'eslint-plugin-better-tailwindcss'
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import prettier from "eslint-config-prettier";
+import betterTailwind from "eslint-plugin-better-tailwindcss";
+import svelte from "eslint-plugin-svelte";
+import globals from "globals";
+import ts from "typescript-eslint";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default [
   // TypeScript rules — all TS files across monorepo
   ...ts.configs.recommended,
 
   // Svelte rules — all Svelte files
-  ...svelte.configs['flat/recommended'],
+  ...svelte.configs["flat/recommended"],
 
   // Prettier disables conflicting rules
   prettier,
-  ...svelte.configs['flat/prettier'],
+  ...svelte.configs["flat/prettier"],
 
   // Global ignores
   {
     ignores: [
-      '**/node_modules/**',
-      '**/.svelte-kit/**',
-      '**/build/**',
-      '**/dist/**',
-      '**/.wrangler/**',
-      '**/src/paraglide/**',
-    ]
+      "**/node_modules/**",
+      "**/.svelte-kit/**",
+      "**/build/**",
+      "**/dist/**",
+      "**/.wrangler/**",
+      "**/src/paraglide/**",
+    ],
   },
 
   // All TypeScript files
   {
-    files: ['**/*.ts'],
+    files: ["**/*.ts"],
     languageOptions: {
-      globals: { ...globals.node }
-    }
+      globals: { ...globals.node },
+    },
   },
 
   // All Svelte files
   {
-    files: ['**/*.svelte'],
+    files: ["**/*.svelte"],
     languageOptions: {
       parserOptions: {
-        parser: ts.parser
+        parser: ts.parser,
       },
       globals: {
-        ...globals.browser
-      }
-    }
+        ...globals.browser,
+      },
+    },
   },
 
   // Shared API library — Node environment only
   {
-    files: ['packages/api/**/*.ts'],
+    files: ["packages/api/**/*.ts"],
     languageOptions: {
-      globals: { ...globals.node }
-    }
+      globals: { ...globals.node },
+    },
   },
 
   // Hono API Worker app — Node/Workers environment
   {
-    files: ['apps/api/**/*.ts'],
+    files: ["apps/api/**/*.ts"],
     languageOptions: {
       globals: {
         ...globals.node,
-        ...globals.serviceworker
-      }
-    }
+        ...globals.serviceworker,
+      },
+    },
   },
 
   // Better Tailwind — admin app
   {
-    files: ['apps/admin/**/*.svelte', 'apps/admin/**/*.ts'],
-    plugins: { 'better-tailwindcss': betterTailwind },
+    files: ["apps/admin/**/*.svelte", "apps/admin/**/*.ts"],
+    plugins: { "better-tailwindcss": betterTailwind },
     settings: {
-      'better-tailwindcss': {
-        entryPoint: 'apps/admin/src/routes/layout.css',
+      "better-tailwindcss": {
+        entryPoint: resolve(__dirname, "apps/admin/src/routes/layout.css"),
       },
     },
-    rules: { ...betterTailwind.configs['recommended'].rules },
+    rules: { ...betterTailwind.configs["recommended"].rules },
   },
 
   // Better Tailwind — orgs app
   {
-    files: ['apps/org/**/*.svelte', 'apps/org/**/*.ts'],
-    plugins: { 'better-tailwindcss': betterTailwind },
+    files: ["apps/org/**/*.svelte", "apps/org/**/*.ts"],
+    plugins: { "better-tailwindcss": betterTailwind },
     settings: {
-      'better-tailwindcss': {
-        entryPoint: 'apps/org/src/app.css',
+      "better-tailwindcss": {
+        entryPoint: resolve(__dirname, "apps/org/src/app.css"),
       },
     },
-    rules: { ...betterTailwind.configs['recommended'].rules },
+    rules: { ...betterTailwind.configs["recommended"].rules },
   },
 
   // Better Tailwind — shared packages (no app-specific entry, use admin as reference)
   {
-    files: ['packages/ui/**/*.svelte', 'packages/ui/**/*.ts'],
-    plugins: { 'better-tailwindcss': betterTailwind },
+    files: ["packages/ui/**/*.svelte", "packages/ui/**/*.ts"],
+    plugins: { "better-tailwindcss": betterTailwind },
     settings: {
-      'better-tailwindcss': {
-        entryPoint: 'apps/admin/src/routes/layout.css',
+      "better-tailwindcss": {
+        entryPoint: resolve(__dirname, "apps/admin/src/routes/layout.css"),
       },
     },
-    rules: { ...betterTailwind.configs['recommended'].rules },
+    rules: { ...betterTailwind.configs["recommended"].rules },
   },
 
   // Custom rules
   {
     rules: {
-      '@typescript-eslint/no-unused-vars': ['warn', {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_'
-      }],
-      '@typescript-eslint/no-explicit-any': 'error',
-      'svelte/no-unused-svelte-ignore': 'warn',
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
+      "@typescript-eslint/no-explicit-any": "error",
+      "svelte/no-unused-svelte-ignore": "warn",
       // goto() in onclick handlers has no resolve() context — only enforce for links/pushState
-      'svelte/no-navigation-without-resolve': ['error', { ignoreGoto: true }],
-    }
-  }
-]
+      "svelte/no-navigation-without-resolve": ["error", { ignoreGoto: true }],
+    },
+  },
+];

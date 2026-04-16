@@ -1,5 +1,5 @@
-import PhoneInput, { defaultOptions } from './phone-input.svelte';
+import PhoneInput, { defaultOptions } from "./phone-input.svelte";
 
 export { PhoneInput, defaultOptions };
 
-export type { PhoneInputProps } from './types';
+export type { PhoneInputProps } from "./types";

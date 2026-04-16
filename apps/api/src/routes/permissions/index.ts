@@ -1,4 +1,6 @@
+import { requireAdminSession, requireRole } from "@hms/auth/middleware";
 import type { AppEnv } from "@hms/auth/types";
+import { permissions } from "@hms/db/schema";
 import {
   createPermissionSchema,
   errorSchema,
@@ -7,10 +9,8 @@ import {
   successSchema,
   updatePermissionSchema,
 } from "@hms/schemas";
-import { permissions } from "@hms/db/schema";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { eq } from "drizzle-orm";
-import { requireAdminSession, requireRole } from "@hms/auth/middleware";
 
 const router = new OpenAPIHono<AppEnv>();
 router.use("*", requireAdminSession, requireRole("superadmin"));
@@ -67,10 +67,7 @@ export default router
     }),
     async (c) => {
       const db = c.get("db");
-      const results = await db
-        .select()
-        .from(permissions)
-        .where(eq(permissions.isActive, true));
+      const results = await db.select().from(permissions).where(eq(permissions.isActive, true));
       return c.json({ data: results }, 200 as const);
     },
   )

@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { CopyButton } from '../copy-button';
-	import type { PasswordCopyButtonProps } from './types.js';
-	import { cn } from '@hms/utils';
-	import { usePasswordCopy } from './password.svelte.js';
+  import { cn } from "@hms/utils";
+  import { CopyButton } from "../copy-button";
+  import { usePasswordCopy } from "./password.svelte.js";
+  import type { PasswordCopyButtonProps } from "./types.js";
 
-	let { ref = $bindable(null), class: className, ...rest }: PasswordCopyButtonProps = $props();
+  let { ref = $bindable(null), class: className, ...rest }: PasswordCopyButtonProps = $props();
 
-	const state = usePasswordCopy();
+  const state = usePasswordCopy();
 </script>
 
 <CopyButton
-	{...rest}
-	bind:ref
-	text={state.root.passwordState.value}
-	tabindex={-1}
-	class={cn(
-		'text-muted-foreground absolute top-1/2 right-0 size-9 min-w-0 -translate-y-1/2 hover:!bg-transparent',
-		className
-	)}
+  {...rest}
+  bind:ref
+  text={state.root.passwordState.value}
+  tabindex={-1}
+  class={cn(
+    "absolute top-1/2 right-0 size-9 min-w-0 -translate-y-1/2 text-muted-foreground hover:!bg-transparent",
+    className,
+  )}
 />

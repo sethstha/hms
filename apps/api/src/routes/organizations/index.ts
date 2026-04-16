@@ -1,4 +1,6 @@
+import { requireAdminSession, requireRole } from "@hms/auth/middleware";
 import type { AppEnv } from "@hms/auth/types";
+import { organizationPermissions, organizations, permissions } from "@hms/db/schema";
 import {
   batchUpsertPermissionsSchema,
   createOrganizationSchema,
@@ -12,14 +14,8 @@ import {
   updateOrganizationSchema,
   upsertPermissionSchema,
 } from "@hms/schemas";
-import {
-  organizationPermissions,
-  organizations,
-  permissions,
-} from "@hms/db/schema";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { and, eq } from "drizzle-orm";
-import { requireAdminSession, requireRole } from "@hms/auth/middleware";
 
 const router = new OpenAPIHono<AppEnv>();
 router.use("*", requireAdminSession, requireRole("superadmin"));
@@ -320,9 +316,7 @@ export default router
         .delete(organizationPermissions)
         .where(eq(organizationPermissions.organizationId, id));
 
-      const toGrant = body.filter(
-        (p) => p.canCreate || p.canRead || p.canUpdate || p.canDelete,
-      );
+      const toGrant = body.filter((p) => p.canCreate || p.canRead || p.canUpdate || p.canDelete);
       if (toGrant.length > 0) {
         await db.insert(organizationPermissions).values(
           toGrant.map((p) => ({
@@ -437,7 +431,15 @@ export default router
 
       const [row] = await db
         .insert(organizationPermissions)
-        .values({ organizationId: id, permissionId, grantedBy: user.id, canCreate, canRead, canUpdate, canDelete })
+        .values({
+          organizationId: id,
+          permissionId,
+          grantedBy: user.id,
+          canCreate,
+          canRead,
+          canUpdate,
+          canDelete,
+        })
         .onConflictDoUpdate({
           target: [organizationPermissions.organizationId, organizationPermissions.permissionId],
           set: { canCreate, canRead, canUpdate, canDelete, grantedBy: user.id },

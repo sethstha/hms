@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { setContext } from "svelte";
   import { page } from "$app/state";
   import { locales, localizeHref } from "$lib/paraglide/runtime";
+  import { setContext } from "svelte";
   import "../app.css";
+  import { createSession } from "@hms/auth/session";
   import { Button } from "@hms/ui";
   import favicon from "$lib/assets/favicon.svg";
   import { authClient } from "$lib/auth/client";
-  import { createSession } from "@hms/auth/session";
   import type { LayoutData } from "./$types";
 
   let { children, data }: { children: Snippet; data: LayoutData } = $props();

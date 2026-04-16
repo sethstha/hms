@@ -5,11 +5,11 @@
         "configuration": {
           "typescript": {
             "preferences": {
-              "importModuleSpecifierPreference": "shortest",
-            },
-          },
-        },
-      },
-    },
-  },
+              "importModuleSpecifierPreference": "shortest"
+            }
+          }
+        }
+      }
+    }
+  }
 }

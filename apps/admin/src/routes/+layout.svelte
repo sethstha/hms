@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { dev } from "$app/environment";
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
-  import { dev } from "$app/environment";
   import { locales, localizeHref } from "$lib/paraglide/runtime";
   import { onMount, setContext, type Snippet } from "svelte";
   import "./layout.css";

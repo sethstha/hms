@@ -1,3 +1,5 @@
+import { AUTH_BASE_PATHS, type AuthApp } from "./paths.js";
+
 export type SessionState<T> = {
   readonly data: T | null;
   readonly loading: boolean;
@@ -34,8 +36,6 @@ export function createSession<T>(
     refresh,
   };
 }
-
-import { AUTH_BASE_PATHS, type AuthApp } from "./paths.js";
 
 /**
  * Fetches a session from the API server on behalf of a SvelteKit request.

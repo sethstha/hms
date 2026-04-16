@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { useQueryClient } from "@tanstack/svelte-query";
+  import type { CreateOrganizationInput } from "@hms/schemas/organizations";
   import { Card } from "@hms/ui";
+  import { adminRoutes } from "@hms/utils";
+  import { useQueryClient } from "@tanstack/svelte-query";
   import { goto } from "$app/navigation";
   import { api } from "$lib/api/index";
-  import { adminRoutes } from "@hms/utils";
   import OrganizationForm from "$lib/components/OrganizationForm.svelte";
-  import type { CreateOrganizationInput } from "@hms/schemas/organizations";
 
   const queryClient = useQueryClient();
 

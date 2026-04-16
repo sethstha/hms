@@ -128,15 +128,15 @@ async function seed() {
   // 2. Ensure built-in permissions exist (idempotent — stable UUIDs match migration seed)
   console.log("🔐 Seeding global permissions...");
   const BUILT_IN_PERMISSIONS = [
-    { id: "20000000-0000-0000-0000-000000000001", name: "Pharmacy",     slug: "pharmacy" },
-    { id: "20000000-0000-0000-0000-000000000002", name: "OPD",          slug: "opd" },
-    { id: "20000000-0000-0000-0000-000000000003", name: "IPD",          slug: "ipd" },
+    { id: "20000000-0000-0000-0000-000000000001", name: "Pharmacy", slug: "pharmacy" },
+    { id: "20000000-0000-0000-0000-000000000002", name: "OPD", slug: "opd" },
+    { id: "20000000-0000-0000-0000-000000000003", name: "IPD", slug: "ipd" },
     { id: "20000000-0000-0000-0000-000000000004", name: "Appointments", slug: "appointments" },
-    { id: "20000000-0000-0000-0000-000000000005", name: "Laboratory",   slug: "laboratory" },
-    { id: "20000000-0000-0000-0000-000000000006", name: "Radiology",    slug: "radiology" },
-    { id: "20000000-0000-0000-0000-000000000007", name: "Inventory",    slug: "inventory" },
-    { id: "20000000-0000-0000-0000-000000000008", name: "Billing",      slug: "billing" },
-    { id: "20000000-0000-0000-0000-000000000009", name: "Reports",      slug: "reports" },
+    { id: "20000000-0000-0000-0000-000000000005", name: "Laboratory", slug: "laboratory" },
+    { id: "20000000-0000-0000-0000-000000000006", name: "Radiology", slug: "radiology" },
+    { id: "20000000-0000-0000-0000-000000000007", name: "Inventory", slug: "inventory" },
+    { id: "20000000-0000-0000-0000-000000000008", name: "Billing", slug: "billing" },
+    { id: "20000000-0000-0000-0000-000000000009", name: "Reports", slug: "reports" },
   ] as const;
   for (const perm of BUILT_IN_PERMISSIONS) {
     await db

@@ -1,19 +1,15 @@
-import { sequence } from "@sveltejs/kit/hooks";
-import type { Handle } from "@sveltejs/kit";
-import { PUBLIC_API_URL } from "$env/static/public";
-import { paraglideMiddleware } from "$lib/paraglide/server";
-import { getTextDirection } from "$lib/paraglide/runtime";
 import { fetchSession } from "@hms/auth/session";
+import type { Handle } from "@sveltejs/kit";
+import { sequence } from "@sveltejs/kit/hooks";
+import { PUBLIC_API_URL } from "$env/static/public";
 import type { AppSession } from "$lib/auth/client";
+import { getTextDirection } from "$lib/paraglide/runtime";
+import { paraglideMiddleware } from "$lib/paraglide/server";
 
 const getApiUrl = () => PUBLIC_API_URL.trim() || "http://localhost:8787";
 
 const handleAuth: Handle = async ({ event, resolve }) => {
-  const session = await fetchSession<AppSession>(
-    event.request,
-    getApiUrl(),
-    "/auth/hospital",
-  );
+  const session = await fetchSession<AppSession>(event.request, getApiUrl(), "/auth/hospital");
   event.locals.session = session;
   return resolve(event);
 };

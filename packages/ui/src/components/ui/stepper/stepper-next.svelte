@@ -1,32 +1,32 @@
 <script lang="ts">
-	import { box, mergeProps } from 'svelte-toolbelt';
-	import { useStepperStepButton } from './stepper.svelte.js';
-	import type { StepperNextButtonProps } from './types';
-	import { Button } from '../button';
+  import { box, mergeProps } from "svelte-toolbelt";
+  import { Button } from "../button";
+  import { useStepperStepButton } from "./stepper.svelte.js";
+  import type { StepperNextButtonProps } from "./types";
 
-	let {
-		disabled = false,
-		child,
-		children,
-		variant = 'default',
-		size = 'default',
-		...rest
-	}: StepperNextButtonProps = $props();
+  let {
+    disabled = false,
+    child,
+    children,
+    variant = "default",
+    size = "default",
+    ...rest
+  }: StepperNextButtonProps = $props();
 
-	const buttonState = useStepperStepButton({
-		type: box.with(() => 'next'),
-		disabled: box.with(() => disabled)
-	});
+  const buttonState = useStepperStepButton({
+    type: box.with(() => "next"),
+    disabled: box.with(() => disabled),
+  });
 
-	const mergedProps = $derived(
-		mergeProps(buttonState.props, rest, { variant, size, 'data-slot': 'stepper-next' })
-	);
+  const mergedProps = $derived(
+    mergeProps(buttonState.props, rest, { variant, size, "data-slot": "stepper-next" }),
+  );
 </script>
 
 {#if child}
-	{@render child({ props: mergedProps })}
+  {@render child({ props: mergedProps })}
 {:else}
-	<Button {...mergedProps}>
-		{@render children?.()}
-	</Button>
+  <Button {...mergedProps}>
+    {@render children?.()}
+  </Button>
 {/if}

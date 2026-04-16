@@ -1,13 +1,5 @@
 import { sql } from "drizzle-orm";
-import {
-  boolean,
-  check,
-  index,
-  pgTable,
-  timestamp,
-  uniqueIndex,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { boolean, check, index, pgTable, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { userRoleEnum } from "./enums";
 import { organizations } from "./organizations";
 import { users } from "./users";
@@ -48,10 +40,7 @@ export const userMemberships = pgTable(
     orgIdx: index("user_memberships_org_id_idx").on(table.organizationId),
     activeIdx: index("user_memberships_is_active_idx").on(table.isActive),
     // superadmins are platform-level — they must not be org members
-    noSuperadminCheck: check(
-      "user_memberships_no_superadmin",
-      sql`role <> 'superadmin'`,
-    ),
+    noSuperadminCheck: check("user_memberships_no_superadmin", sql`role <> 'superadmin'`),
   }),
 );
 

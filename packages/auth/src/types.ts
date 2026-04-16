@@ -1,10 +1,7 @@
 import type { Db } from "@hms/db";
 import type { Organization, User, UserMembership, UserSession } from "@hms/db/schema";
 
-export type AuthenticatedUser = Pick<
-  User,
-  "id" | "email" | "role" | "isActive"
->;
+export type AuthenticatedUser = Pick<User, "id" | "email" | "role" | "isActive">;
 
 export type AuthenticatedSession = Pick<
   UserSession,

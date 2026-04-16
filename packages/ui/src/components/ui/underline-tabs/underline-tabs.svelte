@@ -1,33 +1,33 @@
 <script lang="ts">
-	import { Tabs as TabsPrimitive } from 'bits-ui';
-	import { cn } from '@hms/utils';
-	import { useUnderlineTabs } from './underline-tabs.svelte.js';
-	import { box } from 'svelte-toolbelt';
+  import { cn } from "@hms/utils";
+  import { Tabs as TabsPrimitive } from "bits-ui";
+  import { box } from "svelte-toolbelt";
+  import { useUnderlineTabs } from "./underline-tabs.svelte.js";
 
-	const uid = $props.id();
+  const uid = $props.id();
 
-	let {
-		ref = $bindable(null),
-		value = $bindable(''),
-		id = uid,
-		class: className,
-		...restProps
-	}: Omit<TabsPrimitive.RootProps, 'orientation' | 'id'> & { id?: string } = $props();
+  let {
+    ref = $bindable(null),
+    value = $bindable(""),
+    id = uid,
+    class: className,
+    ...restProps
+  }: Omit<TabsPrimitive.RootProps, "orientation" | "id"> & { id?: string } = $props();
 
-	useUnderlineTabs({
-		value: box.with(
-			() => value,
-			(v) => (value = v)
-		),
-		id: box.with(() => id)
-	});
+  useUnderlineTabs({
+    value: box.with(
+      () => value,
+      (v) => (value = v),
+    ),
+    id: box.with(() => id),
+  });
 </script>
 
 <TabsPrimitive.Root
-	bind:ref
-	bind:value
-	orientation="horizontal"
-	data-slot="underline-tabs"
-	class={cn('flex flex-col gap-2', className)}
-	{...restProps}
+  bind:ref
+  bind:value
+  orientation="horizontal"
+  data-slot="underline-tabs"
+  class={cn("flex flex-col gap-2", className)}
+  {...restProps}
 />

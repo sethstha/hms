@@ -14,7 +14,7 @@
     bind:ref
     data-slot="navigation-menu-viewport"
     class={cn(
-      "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-90 data-[state=open]:zoom-in-90 ring-foreground/10 origin-top-center relative mt-1.5 h-[calc(var(--bits-navigation-menu-viewport-height)+1rem)] w-full overflow-hidden rounded-lg shadow ring-1 duration-100 md:w-[calc(var(--bits-navigation-menu-viewport-width)+1rem)]",
+      "origin-top-center relative mt-1.5 h-[calc(var(--bits-navigation-menu-viewport-height)+1rem)] w-full overflow-hidden rounded-lg bg-popover text-popover-foreground shadow ring-1 ring-foreground/10 duration-100 data-[state=closed]:animate-out data-[state=closed]:zoom-out-90 data-[state=open]:animate-in data-[state=open]:zoom-in-90 md:w-[calc(var(--bits-navigation-menu-viewport-width)+1rem)]",
       className,
     )}
     {...restProps}

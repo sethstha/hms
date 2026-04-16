@@ -92,8 +92,8 @@
   <!-- Header -->
   <div class="flex items-center justify-between">
     <div>
-      <h1 class="text-foreground text-2xl font-semibold tracking-tight">Organizations</h1>
-      <p class="text-muted-foreground mt-1 text-sm">
+      <h1 class="text-2xl font-semibold tracking-tight text-foreground">Organizations</h1>
+      <p class="mt-1 text-sm text-muted-foreground">
         All registered hospital groups on the platform.
       </p>
     </div>
@@ -114,7 +114,7 @@
   {#if $orgsQuery.isPending}
     <div
       class="
-        text-muted-foreground flex h-40 items-center justify-center text-sm
+        flex h-40 items-center justify-center text-sm text-muted-foreground
       "
     >
       Loading…
@@ -122,14 +122,14 @@
   {:else if $orgsQuery.isError}
     <div
       class="
-        border-destructive/30 bg-destructive/10 text-destructive rounded-md border px-4
-        py-3 text-sm
+        rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3
+        text-sm text-destructive
       "
     >
       Failed to load organizations. Please refresh.
     </div>
   {:else}
-    <div class="bg-card rounded-lg border">
+    <div class="rounded-lg border bg-card">
       <Table.Root>
         <Table.Header>
           {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
@@ -158,7 +158,7 @@
         <Table.Body>
           {#if table.getRowModel().rows.length === 0}
             <Table.Row>
-              <Table.Cell colspan={columns.length} class="text-muted-foreground h-24 text-center">
+              <Table.Cell colspan={columns.length} class="h-24 text-center text-muted-foreground">
                 No organizations found.
               </Table.Cell>
             </Table.Row>
@@ -222,7 +222,7 @@
         </Table.Body>
       </Table.Root>
     </div>
-    <p class="text-muted-foreground text-xs">
+    <p class="text-xs text-muted-foreground">
       {orgs.length} organization{orgs.length !== 1 ? "s" : ""} total
     </p>
   {/if}

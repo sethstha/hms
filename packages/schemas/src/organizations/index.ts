@@ -34,7 +34,10 @@ export const createOrganizationSchema = z.object({
   domain: z
     .string()
     .max(253)
-    .regex(/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/, "Invalid domain format")
+    .regex(
+      /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/,
+      "Invalid domain format",
+    )
     .optional(),
 });
 
@@ -44,7 +47,10 @@ export const updateOrganizationSchema = z.object({
   domain: z
     .string()
     .max(253)
-    .regex(/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/, "Invalid domain format")
+    .regex(
+      /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/,
+      "Invalid domain format",
+    )
     .nullable()
     .optional(),
   isActive: z.boolean().optional(),
@@ -58,7 +64,10 @@ export const domainCheckSchema = z.object({
   domain: z
     .string()
     .max(253)
-    .regex(/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/, "Invalid domain format"),
+    .regex(
+      /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/,
+      "Invalid domain format",
+    ),
 });
 
 // ─── Organization Permission schemas ──────────────────────────────────────────

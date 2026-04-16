@@ -9,6 +9,7 @@
     "prettier-plugin-tailwindcss",
     "@ianvs/prettier-plugin-sort-imports"
   ],
+  "tailwindStylesheet": "./apps/admin/src/routes/layout.css",
   "overrides": [
     {
       "files": "*.svelte",

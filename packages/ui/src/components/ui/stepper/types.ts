@@ -1,30 +1,30 @@
-import type { WithChild } from 'svelte-toolbelt';
-import type { ButtonSize, ButtonVariant } from '../button';
-import type { HTMLAttributes } from 'svelte/elements';
-import type { Snippet } from 'svelte';
+import type { Snippet } from "svelte";
+import type { WithChild } from "svelte-toolbelt";
+import type { HTMLAttributes } from "svelte/elements";
+import type { ButtonSize, ButtonVariant } from "../button";
 
 export type StepperRootProps = {
-	step?: number;
-	children?: Snippet;
+  step?: number;
+  children?: Snippet;
 };
 
 export type StepperNavPropsWithoutHTML = {
-	orientation?: 'horizontal' | 'vertical';
+  orientation?: "horizontal" | "vertical";
 };
 
 export type StepperNavProps = StepperNavPropsWithoutHTML & HTMLAttributes<HTMLDivElement>;
 
 export type StepperItemPropsWithoutHTML = {
-	id?: string;
+  id?: string;
 };
 
 export type StepperItemProps = StepperItemPropsWithoutHTML &
-	Omit<HTMLAttributes<HTMLDivElement>, 'id'>;
+  Omit<HTMLAttributes<HTMLDivElement>, "id">;
 
 export type StepperButtonPropsWithoutHTML = WithChild<{
-	disabled?: boolean;
-	variant?: ButtonVariant;
-	size?: ButtonSize;
+  disabled?: boolean;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
 }>;
 
 export type StepperNextButtonProps = StepperButtonPropsWithoutHTML;

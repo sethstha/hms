@@ -1,6 +1,6 @@
 import { boolean, index, pgTable, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
-import { permissions } from "./permissions";
 import { organizations } from "./organizations";
+import { permissions } from "./permissions";
 import { users } from "./users";
 
 export const organizationPermissions = pgTable(

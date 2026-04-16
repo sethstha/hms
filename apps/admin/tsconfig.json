@@ -3,6 +3,6 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "skipLibCheck": true,
-    "strict": true,
-  },
+    "strict": true
+  }
 }

@@ -1,9 +1,8 @@
+import { createDb } from "@hms/db";
+import { accounts, users, userSessions, verifications } from "@hms/db/schema";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin } from "better-auth/plugins";
-
-import { createDb } from "@hms/db";
-import { accounts, userSessions, users, verifications } from "@hms/db/schema";
 
 type CreateBetterAuthOptions = {
   databaseUrl: string;
@@ -39,7 +38,11 @@ export const createBetterAuth = ({
   trustedOrigins = [],
 }: CreateBetterAuthOptions) => {
   const resolvedBaseURL = normalizeBaseURL(baseURL);
-  const resolvedOrigins = normalizeOrigins([resolvedBaseURL, ...LOCAL_DEV_ORIGINS, ...trustedOrigins]);
+  const resolvedOrigins = normalizeOrigins([
+    resolvedBaseURL,
+    ...LOCAL_DEV_ORIGINS,
+    ...trustedOrigins,
+  ]);
   const configKey = `${databaseUrl}::${resolvedBaseURL}::${secret}::${resolvedOrigins.join(",")}`;
   const cached = authByConfig.get(configKey);
 

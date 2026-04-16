@@ -1,13 +1,13 @@
 <script lang="ts">
   // SPA mode: use URL params directly, never rely on SSR-loaded ids
-  import { createQuery, useQueryClient } from "@tanstack/svelte-query";
+  import type { UpdateOrganizationInput } from "@hms/schemas/organizations";
   import { Card } from "@hms/ui";
+  import { adminRoutes } from "@hms/utils";
+  import { createQuery, useQueryClient } from "@tanstack/svelte-query";
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
   import { api } from "$lib/api/index";
-  import { adminRoutes } from "@hms/utils";
   import OrganizationForm from "$lib/components/OrganizationForm.svelte";
-  import type { UpdateOrganizationInput } from "@hms/schemas/organizations";
 
   type Organization = {
     id: string;
@@ -60,35 +60,37 @@
 </script>
 
 <div class="mx-auto max-w-xl space-y-6">
-    <div>
-      <h1 class="text-2xl font-semibold tracking-tight text-foreground">Edit Organization</h1>
-      {#if org}
-        <p class="mt-1 text-sm text-muted-foreground">
-          Editing <span class="font-medium text-foreground">{org.name}</span>
-          <span class="ml-1 font-mono text-xs">({org.slug})</span>
-        </p>
-      {/if}
-    </div>
-
-    {#if $orgsQuery.isPending}
-      <div class="flex h-40 items-center justify-center text-sm text-muted-foreground">Loading…</div>
-    {:else if !org}
-      <div class="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-        Organization not found.
-      </div>
-    {:else}
-      <Card.Root>
-        <Card.Content class="pt-6">
-          <OrganizationForm
-            mode="edit"
-            name={org.name}
-            domain={org.domain ?? ""}
-            isActive={org.isActive}
-            {loading}
-            {error}
-            onSubmit={handleSubmit}
-          />
-        </Card.Content>
-      </Card.Root>
+  <div>
+    <h1 class="text-2xl font-semibold tracking-tight text-foreground">Edit Organization</h1>
+    {#if org}
+      <p class="mt-1 text-sm text-muted-foreground">
+        Editing <span class="font-medium text-foreground">{org.name}</span>
+        <span class="ml-1 font-mono text-xs">({org.slug})</span>
+      </p>
     {/if}
   </div>
+
+  {#if $orgsQuery.isPending}
+    <div class="flex h-40 items-center justify-center text-sm text-muted-foreground">Loading…</div>
+  {:else if !org}
+    <div
+      class="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+    >
+      Organization not found.
+    </div>
+  {:else}
+    <Card.Root>
+      <Card.Content class="pt-6">
+        <OrganizationForm
+          mode="edit"
+          name={org.name}
+          domain={org.domain ?? ""}
+          isActive={org.isActive}
+          {loading}
+          {error}
+          onSubmit={handleSubmit}
+        />
+      </Card.Content>
+    </Card.Root>
+  {/if}
+</div>

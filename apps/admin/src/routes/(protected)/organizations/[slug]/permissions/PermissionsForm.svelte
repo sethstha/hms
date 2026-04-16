@@ -73,13 +73,13 @@
 >
   {#if submitError}
     <div
-      class="border-destructive/30 bg-destructive/10 text-destructive rounded-md border px-4 py-3 text-sm"
+      class="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
     >
       {submitError}
     </div>
   {/if}
 
-  <div class="bg-card rounded-lg border">
+  <div class="rounded-lg border bg-card">
     <Table.Root>
       <Table.Header>
         <Table.Row class="hover:bg-transparent">
@@ -92,15 +92,15 @@
             <div class="flex items-center justify-end gap-1">
               <button
                 type="button"
-                class="text-muted-foreground hover:text-foreground cursor-pointer text-xs underline underline-offset-2"
+                class="cursor-pointer text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
                 onclick={selectAll}
               >
                 Select all
               </button>
-              <span class="text-muted-foreground text-xs">/</span>
+              <span class="text-xs text-muted-foreground">/</span>
               <button
                 type="button"
-                class="text-muted-foreground hover:text-foreground cursor-pointer text-xs underline underline-offset-2"
+                class="cursor-pointer text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
                 onclick={deselectAll}
               >
                 Deselect all
@@ -115,7 +115,7 @@
             <Table.Cell>
               <div class="font-medium">{permission.name}</div>
               {#if permission.description}
-                <div class="text-muted-foreground text-xs">{permission.description}</div>
+                <div class="text-xs text-muted-foreground">{permission.description}</div>
               {/if}
             </Table.Cell>
 
@@ -136,9 +136,7 @@
 
             <Table.Cell class="text-right">
               {#if grantsMap.has(permission.id)}
-                <Badge
-                  class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                >
+                <Badge class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
                   Granted
                 </Badge>
               {/if}
@@ -150,7 +148,7 @@
   </div>
 
   <div class="flex items-center justify-between">
-    <p class="text-muted-foreground text-xs">
+    <p class="text-xs text-muted-foreground">
       {grantsMap.size} of {catalog.length} permission{catalog.length !== 1 ? "s" : ""} granted
     </p>
     <form.Subscribe selector={(state) => state.isSubmitting}>

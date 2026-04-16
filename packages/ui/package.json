@@ -9,7 +9,10 @@
       "types": "./src/index.ts",
       "svelte": "./src/index.ts"
     },
-    "./theme.css": "./src/theme.css"
+    "./theme.css": {
+      "style": "./src/theme.css",
+      "default": "./src/theme.css"
+    }
   },
   "types": "./src/index.ts",
   "scripts": {

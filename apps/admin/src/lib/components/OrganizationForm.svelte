@@ -1,6 +1,9 @@
 <script lang="ts">
+  import type {
+    CreateOrganizationInput,
+    UpdateOrganizationInput,
+  } from "@hms/schemas/organizations";
   import { Button, Input, Label, Switch } from "@hms/ui";
-  import type { CreateOrganizationInput, UpdateOrganizationInput } from "@hms/schemas/organizations";
 
   type Props = {
     mode: "create" | "edit";
@@ -69,7 +72,9 @@
 
 <form onsubmit={handleSubmit} class="space-y-5">
   {#if error}
-    <div class="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+    <div
+      class="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+    >
       {error}
     </div>
   {/if}
@@ -89,7 +94,9 @@
     <div class="space-y-1.5">
       <Label for="org-slug">
         Slug
-        <span class="ml-1 text-xs font-normal text-muted-foreground">(subdomain — immutable after creation)</span>
+        <span class="ml-1 text-xs font-normal text-muted-foreground"
+          >(subdomain — immutable after creation)</span
+        >
       </Label>
       <Input
         id="org-slug"
@@ -134,12 +141,7 @@
     <Button type="submit" disabled={loading}>
       {loading ? "Saving…" : mode === "create" ? "Create Organization" : "Save Changes"}
     </Button>
-    <Button
-      type="button"
-      variant="outline"
-      disabled={loading}
-      onclick={() => history.back()}
-    >
+    <Button type="button" variant="outline" disabled={loading} onclick={() => history.back()}>
       Cancel
     </Button>
   </div>

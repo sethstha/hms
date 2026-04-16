@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Badge, Card, Avatar, Separator } from "@hms/ui";
+  import { Avatar, Badge, Card, Separator } from "@hms/ui";
 
   const stats = [
     {
@@ -41,26 +41,115 @@
   ];
 
   const recentOrganizations = [
-    { name: "Sunrise Health Group", slug: "sunrise-health", hospitals: 4, users: 312, status: "active" },
-    { name: "Metro Medical Network", slug: "metro-medical", hospitals: 6, users: 489, status: "active" },
-    { name: "Valley Care Systems", slug: "valley-care", hospitals: 3, users: 221, status: "active" },
-    { name: "Northern Clinics Ltd.", slug: "northern-clinics", hospitals: 2, users: 98, status: "inactive" },
-    { name: "Pacific Health Alliance", slug: "pacific-health", hospitals: 5, users: 401, status: "active" },
+    {
+      name: "Sunrise Health Group",
+      slug: "sunrise-health",
+      hospitals: 4,
+      users: 312,
+      status: "active",
+    },
+    {
+      name: "Metro Medical Network",
+      slug: "metro-medical",
+      hospitals: 6,
+      users: 489,
+      status: "active",
+    },
+    {
+      name: "Valley Care Systems",
+      slug: "valley-care",
+      hospitals: 3,
+      users: 221,
+      status: "active",
+    },
+    {
+      name: "Northern Clinics Ltd.",
+      slug: "northern-clinics",
+      hospitals: 2,
+      users: 98,
+      status: "inactive",
+    },
+    {
+      name: "Pacific Health Alliance",
+      slug: "pacific-health",
+      hospitals: 5,
+      users: 401,
+      status: "active",
+    },
   ];
 
   const recentHospitals = [
-    { name: "Sunrise General Hospital", org: "Sunrise Health Group", patients: 4820, beds: 300, status: "active" },
-    { name: "Metro City Medical Center", org: "Metro Medical Network", patients: 7203, beds: 500, status: "active" },
-    { name: "Valley Regional Hospital", org: "Valley Care Systems", patients: 2901, beds: 180, status: "active" },
-    { name: "Northern District Clinic", org: "Northern Clinics Ltd.", patients: 1054, beds: 60, status: "inactive" },
+    {
+      name: "Sunrise General Hospital",
+      org: "Sunrise Health Group",
+      patients: 4820,
+      beds: 300,
+      status: "active",
+    },
+    {
+      name: "Metro City Medical Center",
+      org: "Metro Medical Network",
+      patients: 7203,
+      beds: 500,
+      status: "active",
+    },
+    {
+      name: "Valley Regional Hospital",
+      org: "Valley Care Systems",
+      patients: 2901,
+      beds: 180,
+      status: "active",
+    },
+    {
+      name: "Northern District Clinic",
+      org: "Northern Clinics Ltd.",
+      patients: 1054,
+      beds: 60,
+      status: "inactive",
+    },
   ];
 
   const recentUsers = [
-    { name: "Dr. Priya Sharma", email: "p.sharma@sunrise.hms", role: "doctor", org: "Sunrise Health Group", lastLogin: "2 min ago", initials: "PS" },
-    { name: "James O'Brien", email: "j.obrien@metro.hms", role: "admin", org: "Metro Medical Network", lastLogin: "14 min ago", initials: "JO" },
-    { name: "Anita Rao", email: "a.rao@valley.hms", role: "receptionist", org: "Valley Care Systems", lastLogin: "1 hr ago", initials: "AR" },
-    { name: "Mark Liu", email: "m.liu@metro.hms", role: "pharmacist", org: "Metro Medical Network", lastLogin: "3 hr ago", initials: "ML" },
-    { name: "Sarah Kimani", email: "s.kimani@sunrise.hms", role: "nurse", org: "Sunrise Health Group", lastLogin: "Yesterday", initials: "SK" },
+    {
+      name: "Dr. Priya Sharma",
+      email: "p.sharma@sunrise.hms",
+      role: "doctor",
+      org: "Sunrise Health Group",
+      lastLogin: "2 min ago",
+      initials: "PS",
+    },
+    {
+      name: "James O'Brien",
+      email: "j.obrien@metro.hms",
+      role: "admin",
+      org: "Metro Medical Network",
+      lastLogin: "14 min ago",
+      initials: "JO",
+    },
+    {
+      name: "Anita Rao",
+      email: "a.rao@valley.hms",
+      role: "receptionist",
+      org: "Valley Care Systems",
+      lastLogin: "1 hr ago",
+      initials: "AR",
+    },
+    {
+      name: "Mark Liu",
+      email: "m.liu@metro.hms",
+      role: "pharmacist",
+      org: "Metro Medical Network",
+      lastLogin: "3 hr ago",
+      initials: "ML",
+    },
+    {
+      name: "Sarah Kimani",
+      email: "s.kimani@sunrise.hms",
+      role: "nurse",
+      org: "Sunrise Health Group",
+      lastLogin: "Yesterday",
+      initials: "SK",
+    },
   ];
 
   const roleColors: Record<string, string> = {
@@ -75,8 +164,12 @@
   };
 
   const avatarColors = [
-    "bg-violet-500", "bg-blue-500", "bg-emerald-500",
-    "bg-orange-500", "bg-pink-500", "bg-teal-500",
+    "bg-violet-500",
+    "bg-blue-500",
+    "bg-emerald-500",
+    "bg-orange-500",
+    "bg-pink-500",
+    "bg-teal-500",
   ];
 
   function avatarColor(i: number) {
@@ -105,7 +198,13 @@
               <p class="mt-1 text-xs text-muted-foreground">{stat.change}</p>
             </div>
             <div class="{stat.bg} rounded-lg p-2.5">
-              <svg class="h-5 w-5 {stat.color}" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <svg
+                class="h-5 w-5 {stat.color}"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                viewBox="0 0 24 24"
+              >
                 <path stroke-linecap="round" stroke-linejoin="round" d={stat.icon} />
               </svg>
             </div>
@@ -129,19 +228,27 @@
       <Card.Content class="p-0">
         <div class="divide-y">
           {#each recentOrganizations as org}
-            <div class="flex items-center justify-between px-5 py-3 hover:bg-muted/30 transition-colors">
-              <div class="flex items-center gap-3 min-w-0">
-                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-bold uppercase text-muted-foreground">
+            <div
+              class="flex items-center justify-between px-5 py-3 transition-colors hover:bg-muted/30"
+            >
+              <div class="flex min-w-0 items-center gap-3">
+                <div
+                  class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-bold text-muted-foreground uppercase"
+                >
                   {org.slug.slice(0, 2).toUpperCase()}
                 </div>
                 <div class="min-w-0">
                   <p class="truncate text-sm font-medium text-foreground">{org.name}</p>
-                  <p class="text-xs text-muted-foreground">{org.hospitals} hospitals · {org.users} users</p>
+                  <p class="text-xs text-muted-foreground">
+                    {org.hospitals} hospitals · {org.users} users
+                  </p>
                 </div>
               </div>
-              <Badge class={org.status === "active"
-                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"}>
+              <Badge
+                class={org.status === "active"
+                  ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                  : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"}
+              >
                 {org.status}
               </Badge>
             </div>
@@ -162,25 +269,45 @@
       <Card.Content class="p-0">
         <div class="divide-y">
           {#each recentHospitals as hospital}
-            <div class="flex items-center justify-between px-5 py-3 hover:bg-muted/30 transition-colors">
-              <div class="flex items-center gap-3 min-w-0">
-                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-blue-50 dark:bg-blue-950/30">
-                  <svg class="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            <div
+              class="flex items-center justify-between px-5 py-3 transition-colors hover:bg-muted/30"
+            >
+              <div class="flex min-w-0 items-center gap-3">
+                <div
+                  class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-blue-50 dark:bg-blue-950/30"
+                >
+                  <svg
+                    class="h-4 w-4 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
                   </svg>
                 </div>
                 <div class="min-w-0">
                   <p class="truncate text-sm font-medium text-foreground">{hospital.name}</p>
-                  <p class="truncate text-xs text-muted-foreground">{hospital.org} · {hospital.beds} beds</p>
+                  <p class="truncate text-xs text-muted-foreground">
+                    {hospital.org} · {hospital.beds} beds
+                  </p>
                 </div>
               </div>
               <div class="flex shrink-0 flex-col items-end gap-1">
-                <Badge class={hospital.status === "active"
-                  ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                  : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"}>
+                <Badge
+                  class={hospital.status === "active"
+                    ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                    : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"}
+                >
                   {hospital.status}
                 </Badge>
-                <span class="text-xs text-muted-foreground">{hospital.patients.toLocaleString()} patients</span>
+                <span class="text-xs text-muted-foreground"
+                  >{hospital.patients.toLocaleString()} patients</span
+                >
               </div>
             </div>
           {/each}
@@ -201,7 +328,7 @@
     <Card.Content class="p-0">
       <div class="divide-y">
         {#each recentUsers as user, i}
-          <div class="flex items-center gap-4 px-5 py-3 hover:bg-muted/30 transition-colors">
+          <div class="flex items-center gap-4 px-5 py-3 transition-colors hover:bg-muted/30">
             <Avatar.Root class="h-8 w-8 shrink-0">
               <Avatar.Fallback class="{avatarColor(i)} text-xs font-semibold text-white">
                 {user.initials}
@@ -232,23 +359,17 @@
     </Card.Header>
     <Card.Content>
       <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {#each [
-          { role: "Doctors", count: 89, pct: 35, color: "bg-blue-500" },
-          { role: "Nurses", count: 143, pct: 56, color: "bg-teal-500" },
-          { role: "Admins", count: 34, pct: 14, color: "bg-violet-500" },
-          { role: "Receptionists", count: 67, pct: 27, color: "bg-yellow-500" },
-          { role: "Pharmacists", count: 45, pct: 18, color: "bg-green-500" },
-          { role: "Lab Techs", count: 38, pct: 15, color: "bg-orange-500" },
-          { role: "Billing Staff", count: 29, pct: 12, color: "bg-pink-500" },
-          { role: "Others", count: 11, pct: 4, color: "bg-zinc-400" },
-        ] as item}
+        {#each [{ role: "Doctors", count: 89, pct: 35, color: "bg-blue-500" }, { role: "Nurses", count: 143, pct: 56, color: "bg-teal-500" }, { role: "Admins", count: 34, pct: 14, color: "bg-violet-500" }, { role: "Receptionists", count: 67, pct: 27, color: "bg-yellow-500" }, { role: "Pharmacists", count: 45, pct: 18, color: "bg-green-500" }, { role: "Lab Techs", count: 38, pct: 15, color: "bg-orange-500" }, { role: "Billing Staff", count: 29, pct: 12, color: "bg-pink-500" }, { role: "Others", count: 11, pct: 4, color: "bg-zinc-400" }] as item}
           <div class="rounded-lg border bg-card p-3">
             <div class="mb-2 flex items-center justify-between">
               <span class="text-xs font-medium text-muted-foreground">{item.role}</span>
               <span class="text-sm font-bold text-foreground">{item.count}</span>
             </div>
             <div class="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-              <div class="{item.color} h-full rounded-full transition-all" style="width: {item.pct}%"></div>
+              <div
+                class="{item.color} h-full rounded-full transition-all"
+                style="width: {item.pct}%"
+              ></div>
             </div>
           </div>
         {/each}

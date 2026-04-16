@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from "zod";
 
 export const consultationSchema = z.object({
   id: z.string().uuid(),
@@ -11,6 +11,6 @@ export const consultationSchema = z.object({
   notes: z.string().optional(),
   followUpDate: z.string().datetime().optional(),
   createdAt: z.string().datetime(),
-})
+});
 
-export type Consultation = z.infer<typeof consultationSchema>
+export type Consultation = z.infer<typeof consultationSchema>;

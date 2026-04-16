@@ -18,36 +18,36 @@
  * ```
  */
 export class UseBoolean {
-	#current = $state(false);
+  #current = $state(false);
 
-	constructor(defaultValue = false) {
-		this.#current = defaultValue;
+  constructor(defaultValue = false) {
+    this.#current = defaultValue;
 
-		this.toggle = this.toggle.bind(this);
-		this.setTrue = this.setTrue.bind(this);
-		this.setFalse = this.setFalse.bind(this);
-	}
+    this.toggle = this.toggle.bind(this);
+    this.setTrue = this.setTrue.bind(this);
+    this.setFalse = this.setFalse.bind(this);
+  }
 
-	/** Toggles the current state */
-	toggle() {
-		this.#current = !this.#current;
-	}
+  /** Toggles the current state */
+  toggle() {
+    this.#current = !this.#current;
+  }
 
-	/** Sets the current state to true */
-	setTrue() {
-		this.#current = true;
-	}
+  /** Sets the current state to true */
+  setTrue() {
+    this.#current = true;
+  }
 
-	/** Sets the current state to false */
-	setFalse() {
-		this.#current = false;
-	}
+  /** Sets the current state to false */
+  setFalse() {
+    this.#current = false;
+  }
 
-	get current() {
-		return this.#current;
-	}
+  get current() {
+    return this.#current;
+  }
 
-	set current(val) {
-		this.#current = val;
-	}
+  set current(val) {
+    this.#current = val;
+  }
 }

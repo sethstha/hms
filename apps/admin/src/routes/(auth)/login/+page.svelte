@@ -63,7 +63,7 @@
                 oninput={(e) => field.handleChange(e.currentTarget.value)}
               />
               {#if field.state.meta.errors.length}
-                <p class="text-destructive text-sm">
+                <p class="text-sm text-destructive">
                   {field.state.meta.errors[0]?.message}
                 </p>
               {/if}
@@ -85,7 +85,7 @@
                 oninput={(e) => field.handleChange(e.currentTarget.value)}
               />
               {#if field.state.meta.errors.length}
-                <p class="text-destructive text-sm">
+                <p class="text-sm text-destructive">
                   {field.state.meta.errors[0]?.message}
                 </p>
               {/if}

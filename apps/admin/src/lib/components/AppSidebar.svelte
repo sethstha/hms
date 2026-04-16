@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { getContext } from "svelte";
-  import { page } from "$app/state";
-  import { goto } from "$app/navigation";
-  import { Sidebar, Avatar, DropdownMenu } from "@hms/ui";
-  import { authClient } from "$lib/auth/client";
   import type { SessionState } from "@hms/auth/session";
-  import type { AppSession } from "$lib/auth/client";
+  import { Avatar, DropdownMenu, Sidebar } from "@hms/ui";
   import { adminRoutes } from "@hms/utils";
+  import { goto } from "$app/navigation";
+  import { page } from "$app/state";
+  import { authClient } from "$lib/auth/client";
+  import type { AppSession } from "$lib/auth/client";
+  import { getContext } from "svelte";
 
   const session = getContext<SessionState<AppSession>>("session");
 
@@ -176,12 +176,24 @@
   <Sidebar.Header class="border-b border-sidebar-border px-4 py-3">
     <div class="flex items-center gap-3 overflow-hidden">
       <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600">
-        <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        <svg
+          class="h-4 w-4 text-white"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+          />
         </svg>
       </div>
       <div class="truncate group-data-[collapsible=icon]:hidden">
-        <p class="truncate text-sm font-semibold leading-tight text-sidebar-foreground">HMS Admin</p>
+        <p class="truncate text-sm leading-tight font-semibold text-sidebar-foreground">
+          HMS Admin
+        </p>
         <p class="truncate text-xs text-sidebar-foreground/50">System Console</p>
       </div>
     </div>
@@ -191,7 +203,9 @@
   <Sidebar.Content class="overflow-x-hidden py-2">
     {#each navGroups as group}
       <Sidebar.Group>
-        <Sidebar.GroupLabel class="px-4 text-xs font-medium uppercase tracking-wider text-sidebar-foreground/40 group-data-[collapsible=icon]:hidden">
+        <Sidebar.GroupLabel
+          class="px-4 text-xs font-medium tracking-wider text-sidebar-foreground/40 uppercase group-data-[collapsible=icon]:hidden"
+        >
           {group.title}
         </Sidebar.GroupLabel>
         <Sidebar.GroupContent>
@@ -210,9 +224,12 @@
                       >
                         <path stroke-linecap="round" stroke-linejoin="round" d={item.icon} />
                       </svg>
-                      <span class="truncate group-data-[collapsible=icon]:hidden">{item.label}</span>
+                      <span class="truncate group-data-[collapsible=icon]:hidden">{item.label}</span
+                      >
                       {#if item.badge}
-                        <span class="ml-auto shrink-0 rounded-full bg-sidebar-foreground/10 px-1.5 py-0.5 text-xs font-medium tabular-nums text-sidebar-foreground/60 group-data-[collapsible=icon]:hidden">
+                        <span
+                          class="ml-auto shrink-0 rounded-full bg-sidebar-foreground/10 px-1.5 py-0.5 text-xs font-medium text-sidebar-foreground/60 tabular-nums group-data-[collapsible=icon]:hidden"
+                        >
                           {item.badge}
                         </span>
                       {/if}
@@ -232,16 +249,32 @@
   <Sidebar.Footer class="border-t border-sidebar-border p-3">
     <div class="flex items-center gap-3 overflow-hidden rounded-md px-1 py-1">
       <Avatar.Root class="h-7 w-7 shrink-0">
-        <Avatar.Fallback class="bg-blue-600 text-xs font-semibold text-white">{initials}</Avatar.Fallback>
+        <Avatar.Fallback class="bg-blue-600 text-xs font-semibold text-white"
+          >{initials}</Avatar.Fallback
+        >
       </Avatar.Root>
       <div class="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
-        <p class="truncate text-sm font-medium text-sidebar-foreground">{session.data?.user.name ?? "—"}</p>
+        <p class="truncate text-sm font-medium text-sidebar-foreground">
+          {session.data?.user.name ?? "—"}
+        </p>
         <p class="truncate text-xs text-sidebar-foreground/50">{session.data?.user.email ?? ""}</p>
       </div>
       <DropdownMenu.Root>
-        <DropdownMenu.Trigger class="shrink-0 rounded p-1 text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:hidden">
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01" />
+        <DropdownMenu.Trigger
+          class="shrink-0 rounded p-1 text-sidebar-foreground/40 group-data-[collapsible=icon]:hidden hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+        >
+          <svg
+            class="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M5 12h.01M12 12h.01M19 12h.01"
+            />
           </svg>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content side="top" align="end" class="w-44">

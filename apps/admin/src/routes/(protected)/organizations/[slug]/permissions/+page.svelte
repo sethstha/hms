@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { OrgPermission, Permission } from "@hms/schemas";
   import { Button, Skeleton, Table } from "@hms/ui";
+  import { adminRoutes } from "@hms/utils";
   import { createQuery } from "@tanstack/svelte-query";
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
   import { api } from "$lib/api/index";
-  import { adminRoutes } from "@hms/utils";
   import PermissionsForm from "./PermissionsForm.svelte";
 
   type Organization = {
@@ -54,9 +54,7 @@
     enabled: !!orgId,
   });
 
-  const catalog = $derived(
-    ($catalogQuery.data as { data: Permission[] } | undefined)?.data ?? [],
-  );
+  const catalog = $derived(($catalogQuery.data as { data: Permission[] } | undefined)?.data ?? []);
 
   const grantsMap = $derived(
     new Map<string, OrgPermission>(
@@ -95,17 +93,17 @@
   </div>
 
   <div>
-    <h1 class="text-foreground text-2xl font-semibold tracking-tight">
+    <h1 class="text-2xl font-semibold tracking-tight text-foreground">
       {org ? `Permissions: ${org.name}` : "Permissions"}
     </h1>
-    <p class="text-muted-foreground mt-1 text-sm">
+    <p class="mt-1 text-sm text-muted-foreground">
       Control which features and operations this organization can access.
     </p>
   </div>
 
   {#if isLoading}
     <!-- Skeleton table while queries resolve -->
-    <div class="bg-card rounded-lg border">
+    <div class="rounded-lg border bg-card">
       <Table.Root>
         <Table.Header>
           <Table.Row class="hover:bg-transparent">
@@ -134,22 +132,17 @@
         </Table.Body>
       </Table.Root>
     </div>
-
   {:else if isError}
     <div
-      class="border-destructive/30 bg-destructive/10 text-destructive rounded-md border px-4 py-3 text-sm"
+      class="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
     >
       Failed to load permissions. Please refresh.
     </div>
-
   {:else if catalog.length === 0}
-    <div
-      class="border-muted text-muted-foreground rounded-md border px-4 py-6 text-center text-sm"
-    >
+    <div class="rounded-md border border-muted px-4 py-6 text-center text-sm text-muted-foreground">
       No permissions in the catalog yet.
       <a href={adminRoutes.permissions.new} class="ml-1 underline underline-offset-4">Add one.</a>
     </div>
-
   {:else if isReady}
     <!-- Form only mounts after all data is available — createForm gets real defaultValues -->
     {#key orgId}
