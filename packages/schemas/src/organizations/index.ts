@@ -96,8 +96,20 @@ export const grantPermissionSchema = z.object({
   permissionId: z.string().uuid("Must be a valid permission ID"),
 });
 
+// Body for batch-updating all permission grants for an org in one request
+export const batchUpsertPermissionsSchema = z.array(
+  z.object({
+    permissionId: z.string().uuid(),
+    canCreate: z.boolean().default(false),
+    canRead: z.boolean().default(false),
+    canUpdate: z.boolean().default(false),
+    canDelete: z.boolean().default(false),
+  }),
+);
+
 export type CreateOrganizationInput = z.infer<typeof createOrganizationSchema>;
 export type UpdateOrganizationInput = z.infer<typeof updateOrganizationSchema>;
 export type OrgPermission = z.infer<typeof orgPermissionSchema>;
 export type UpsertPermissionInput = z.infer<typeof upsertPermissionSchema>;
 export type GrantPermissionInput = z.infer<typeof grantPermissionSchema>;
+export type BatchUpsertPermissionsInput = z.infer<typeof batchUpsertPermissionsSchema>;

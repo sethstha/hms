@@ -1,5 +1,6 @@
 import type { AppEnv } from "@hms/auth/types";
 import {
+  batchUpsertPermissionsSchema,
   createOrganizationSchema,
   domainCheckSchema,
   errorSchema,
@@ -276,6 +277,67 @@ export default router
         .where(eq(organizationPermissions.organizationId, id));
 
       return c.json({ data: results }, 200 as const);
+    },
+  )
+
+  // ─── Batch update all permission grants for an org ────────────────────────────
+  .openapi(
+    createRoute({
+      method: "put",
+      path: "/{id}/permissions",
+      tags: ["Organizations"],
+      summary: "Replace all permission grants for an organization",
+      request: {
+        params: z.object({ id: z.string() }),
+        body: { content: { "application/json": { schema: batchUpsertPermissionsSchema } } },
+      },
+      responses: {
+        200: {
+          content: { "application/json": { schema: successSchema } },
+          description: "Permissions updated",
+        },
+        404: {
+          content: { "application/json": { schema: errorSchema } },
+          description: "Organization not found",
+        },
+      },
+    }),
+    async (c) => {
+      const db = c.get("db");
+      const user = c.get("user")!;
+      const { id } = c.req.valid("param");
+      const body = c.req.valid("json");
+
+      const [org] = await db
+        .select({ id: organizations.id })
+        .from(organizations)
+        .where(eq(organizations.id, id))
+        .limit(1);
+      if (!org) return c.json({ error: "Organization not found." }, 404 as const);
+
+      // Full replace: remove all existing grants then insert the new set
+      await db
+        .delete(organizationPermissions)
+        .where(eq(organizationPermissions.organizationId, id));
+
+      const toGrant = body.filter(
+        (p) => p.canCreate || p.canRead || p.canUpdate || p.canDelete,
+      );
+      if (toGrant.length > 0) {
+        await db.insert(organizationPermissions).values(
+          toGrant.map((p) => ({
+            organizationId: id,
+            permissionId: p.permissionId,
+            grantedBy: user.id,
+            canCreate: p.canCreate,
+            canRead: p.canRead,
+            canUpdate: p.canUpdate,
+            canDelete: p.canDelete,
+          })),
+        );
+      }
+
+      return c.json({ success: true }, 200 as const);
     },
   )
 

@@ -68,15 +68,40 @@ export default [
     }
   },
 
-  // Better Tailwind — Svelte + TS files
+  // Better Tailwind — admin app
   {
-    files: ['**/*.svelte', '**/*.ts'],
-    plugins: {
-      'better-tailwindcss': betterTailwind,
+    files: ['apps/admin/**/*.svelte', 'apps/admin/**/*.ts'],
+    plugins: { 'better-tailwindcss': betterTailwind },
+    settings: {
+      'better-tailwindcss': {
+        entryPoint: 'apps/admin/src/routes/layout.css',
+      },
     },
-    rules: {
-      ...betterTailwind.configs['recommended'].rules,
-    }
+    rules: { ...betterTailwind.configs['recommended'].rules },
+  },
+
+  // Better Tailwind — orgs app
+  {
+    files: ['apps/org/**/*.svelte', 'apps/org/**/*.ts'],
+    plugins: { 'better-tailwindcss': betterTailwind },
+    settings: {
+      'better-tailwindcss': {
+        entryPoint: 'apps/org/src/app.css',
+      },
+    },
+    rules: { ...betterTailwind.configs['recommended'].rules },
+  },
+
+  // Better Tailwind — shared packages (no app-specific entry, use admin as reference)
+  {
+    files: ['packages/ui/**/*.svelte', 'packages/ui/**/*.ts'],
+    plugins: { 'better-tailwindcss': betterTailwind },
+    settings: {
+      'better-tailwindcss': {
+        entryPoint: 'apps/admin/src/routes/layout.css',
+      },
+    },
+    rules: { ...betterTailwind.configs['recommended'].rules },
   },
 
   // Custom rules
@@ -88,6 +113,8 @@ export default [
       }],
       '@typescript-eslint/no-explicit-any': 'error',
       'svelte/no-unused-svelte-ignore': 'warn',
+      // goto() in onclick handlers has no resolve() context — only enforce for links/pushState
+      'svelte/no-navigation-without-resolve': ['error', { ignoreGoto: true }],
     }
   }
 ]

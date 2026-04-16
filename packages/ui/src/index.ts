@@ -38,6 +38,14 @@ export * as Collapsible from "./components/ui/collapsible";
 export * as Command from "./components/ui/command";
 export * as ContextMenu from "./components/ui/context-menu";
 export * as DataTable from "./components/ui/data-table";
+export type {
+  ColumnDef,
+  SortingState,
+  ColumnFiltersState,
+  PaginationState,
+  Row,
+  Table as TableInstance,
+} from "./components/ui/data-table";
 export * as Dialog from "./components/ui/dialog";
 export * as Drawer from "./components/ui/drawer";
 export * as DropdownMenu from "./components/ui/dropdown-menu";

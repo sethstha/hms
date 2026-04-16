@@ -222,6 +222,9 @@ importers:
       '@tailwindcss/vite':
         specifier: 'catalog:'
         version: 4.2.2(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))
+      '@tanstack/svelte-query-devtools':
+        specifier: ^5.90.2
+        version: 5.90.2(@tanstack/svelte-query@5.90.2(svelte@5.54.0))(svelte@5.54.0)
       '@types/node':
         specifier: 'catalog:'
         version: 24.12.2
@@ -298,6 +301,91 @@ importers:
       '@cloudflare/workers-types':
         specifier: ^4.20250620.0
         version: 4.20260404.1
+      wrangler:
+        specifier: 'catalog:'
+        version: 4.80.0(@cloudflare/workers-types@4.20260404.1)
+
+  apps/org:
+    dependencies:
+      '@hms/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
+      '@hms/schemas':
+        specifier: workspace:^
+        version: link:../../packages/schemas
+      '@hms/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@hms/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      mode-watcher:
+        specifier: 'catalog:'
+        version: 1.1.0(svelte@5.54.0)
+      svelte-sonner:
+        specifier: 'catalog:'
+        version: 1.1.0(svelte@5.54.0)
+    devDependencies:
+      '@eslint/compat':
+        specifier: 'catalog:'
+        version: 2.0.4(eslint@10.2.0(jiti@2.6.1))
+      '@eslint/js':
+        specifier: 'catalog:'
+        version: 10.0.1(eslint@10.2.0(jiti@2.6.1))
+      '@inlang/paraglide-js':
+        specifier: 'catalog:'
+        version: 2.15.1
+      '@sveltejs/adapter-cloudflare':
+        specifier: 'catalog:'
+        version: 5.1.0(@sveltejs/kit@2.56.1(@opentelemetry/api@1.9.1)(@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.54.0)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))(svelte@5.54.0)(typescript@6.0.2)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))(wrangler@4.80.0(@cloudflare/workers-types@4.20260404.1))
+      '@sveltejs/kit':
+        specifier: 'catalog:'
+        version: 2.56.1(@opentelemetry/api@1.9.1)(@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.54.0)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))(svelte@5.54.0)(typescript@6.0.2)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))
+      '@sveltejs/vite-plugin-svelte':
+        specifier: 'catalog:'
+        version: 7.0.0(svelte@5.54.0)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))
+      '@tailwindcss/vite':
+        specifier: 'catalog:'
+        version: 4.2.2(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.12.2
+      eslint:
+        specifier: 'catalog:'
+        version: 10.2.0(jiti@2.6.1)
+      eslint-config-prettier:
+        specifier: 'catalog:'
+        version: 10.1.8(eslint@10.2.0(jiti@2.6.1))
+      eslint-plugin-svelte:
+        specifier: 'catalog:'
+        version: 3.17.0(eslint@10.2.0(jiti@2.6.1))(svelte@5.54.0)
+      globals:
+        specifier: 'catalog:'
+        version: 17.4.0
+      prettier:
+        specifier: 'catalog:'
+        version: 3.8.1
+      prettier-plugin-svelte:
+        specifier: 'catalog:'
+        version: 3.5.1(prettier@3.8.1)(svelte@5.54.0)
+      prettier-plugin-tailwindcss:
+        specifier: 'catalog:'
+        version: 0.7.2(@ianvs/prettier-plugin-sort-imports@4.7.1(prettier@3.8.1))(prettier-plugin-organize-imports@4.3.0(prettier@3.8.1)(typescript@6.0.2))(prettier-plugin-svelte@3.5.1(prettier@3.8.1)(svelte@5.54.0))(prettier@3.8.1)
+      svelte:
+        specifier: 'catalog:'
+        version: 5.54.0
+      svelte-check:
+        specifier: 'catalog:'
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.54.0)(typescript@6.0.2)
+      tailwindcss:
+        specifier: 'catalog:'
+        version: 4.2.2
+      typescript-eslint:
+        specifier: 'catalog:'
+        version: 8.58.0(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2)
+      vite:
+        specifier: 'catalog:'
+        version: 8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)
       wrangler:
         specifier: 'catalog:'
         version: 4.80.0(@cloudflare/workers-types@4.20260404.1)
@@ -2462,6 +2550,9 @@ packages:
   '@tanstack/query-core@5.90.2':
     resolution: {integrity: sha512-k/TcR3YalnzibscALLwxeiLUub6jN5EDLwKDiO7q5f4ICEoptJ+n9+7vcEFy5/x/i6Q+Lb/tXrsKCggf5uQJXQ==}
 
+  '@tanstack/query-devtools@5.90.1':
+    resolution: {integrity: sha512-GtINOPjPUH0OegJExZ70UahT9ykmAhmtNVcmtdnOZbxLwT7R5OmRztR5Ahe3/Cu7LArEmR6/588tAycuaWb1xQ==}
+
   '@tanstack/store@0.9.3':
     resolution: {integrity: sha512-8reSzl/qGWGGVKhBoxXPMWzATSbZLZFWhwBAFO9NAyp0TxzfBP0mIrGb8CP8KrQTmvzXlR/vFPPUrHTLBGyFyw==}
 
@@ -2469,6 +2560,12 @@ packages:
     resolution: {integrity: sha512-SdR6rfRSQ5H3WZBxW8CStvOC5w0dv1ew0+UB/mNsb06WDTpabEqKEkoA8fLvo8LOQ2XGplC3R0h1g2So1fBOTQ==}
     peerDependencies:
       svelte: ^5.0.0
+
+  '@tanstack/svelte-query-devtools@5.90.2':
+    resolution: {integrity: sha512-Mk6FWRz7rBr1zFlX2aBmRM8RIehCwE3VBE5/SX3L/pG5mFIBOCQqIUeyw+eNIW8RBbPvWDv9MrLohi/8cj9J4A==}
+    peerDependencies:
+      '@tanstack/svelte-query': ^5.90.2
+      svelte: ^3.54.0 || ^4.0.0 || ^5.0.0
 
   '@tanstack/svelte-query@5.90.2':
     resolution: {integrity: sha512-owjnp0w8sOXlMhLZhucHrsYvCjgjHrVyII/wlqMGefxKFyroZS3xCwTee+IUx7UHbL+QmKr/HQTeTqhgxmxPQw==}
@@ -5814,12 +5911,21 @@ snapshots:
 
   '@tanstack/query-core@5.90.2': {}
 
+  '@tanstack/query-devtools@5.90.1': {}
+
   '@tanstack/store@0.9.3': {}
 
   '@tanstack/svelte-form@1.28.6(svelte@5.54.0)':
     dependencies:
       '@tanstack/form-core': 1.28.6
       '@tanstack/svelte-store': 0.10.3(svelte@5.54.0)
+      svelte: 5.54.0
+
+  '@tanstack/svelte-query-devtools@5.90.2(@tanstack/svelte-query@5.90.2(svelte@5.54.0))(svelte@5.54.0)':
+    dependencies:
+      '@tanstack/query-devtools': 5.90.1
+      '@tanstack/svelte-query': 5.90.2(svelte@5.54.0)
+      esm-env: 1.2.2
       svelte: 5.54.0
 
   '@tanstack/svelte-query@5.90.2(svelte@5.54.0)':

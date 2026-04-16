@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/dev.js",
-    "dev:orgz": "pnpm --filter @hms/orgz dev",
+    "dev:org": "pnpm --filter @hms/org dev",
     "dev:admin": "pnpm --filter @hms/admin dev",
     "dev:api": "pnpm --filter @hms/api dev",
     "db:seed": "pnpm --filter @hms/db db:seed",
